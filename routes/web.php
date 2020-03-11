@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
+
+Route::get('/', 'EmpresaController@index');
+
+Route::get('administracion/empresa', 'EmpresaController@index');
+//Route::get('administracion/items', 'ItemController@index');
+
+Route::resource('administracion/items','ItemController');
