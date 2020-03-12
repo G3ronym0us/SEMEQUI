@@ -19,7 +19,7 @@ class ItemController extends Controller
     public function index()
     {
         $item = Item::all();
-        return view("items.create",["items"=>$item]);
+        return view("items.index",["items"=>$item]);
     }
 
     /**
@@ -45,11 +45,20 @@ class ItemController extends Controller
         $item->cod_item=$request->get('cod_item');
         $item->nom_item=$request->get('nom_item');
         $item->costo_item=$request->get('costo_item');
-        $item->servicio=$request->get('servicio');
-        $item->activo=$request->get('activo');
+        if ($request->get('servicio') == "true") {
+            $item->servicio = true;
+        }else{
+            $item->servicio = false;
+        }
+        if ($request->get('activo') == "true") {
+            $item->activo = true;
+        }else{
+            $item->activo = false;
+        }
+        
 
         $item->save();
-        return Redirect::to('almacen/articulo');
+        return Redirect::to('administracion/items');
     }
 
     /**
