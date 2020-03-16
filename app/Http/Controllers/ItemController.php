@@ -80,7 +80,7 @@ class ItemController extends Controller
      */
     public function edit($id)
     {
-        //
+        echo $id;
     }
 
     /**
@@ -92,7 +92,24 @@ class ItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $item=Item::findOrFail($id);
+
+        $item->cod_item=$request->get('cod_item');
+        $item->nom_item=$request->get('nom_item');
+        $item->costo_item=$request->get('costo_item');
+        if ($request->get('servicio') == "true") {
+            $item->servicio = true;
+        }else{
+            $item->servicio = false;
+        }
+        if ($request->get('activo') == "true") {
+            $item->activo = true;
+        }else{
+            $item->activo = false;
+        }
+
+        $item->update();
+        return Redirect::to('administracion/items');
     }
 
     /**
@@ -103,6 +120,9 @@ class ItemController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $item=Articulo::findOrFail($id);
+        $item->estado='Inactivo';
+        $item->update();
+        return Redirect::to('administracion/items');
     }
 }

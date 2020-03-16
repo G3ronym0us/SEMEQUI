@@ -13,13 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
+
 
 Route::get('/', 'EmpresaController@index');
 
-Route::get('administracion/empresa', 'EmpresaController@index');
-//Route::get('administracion/items', 'ItemController@index');
 
-Route::resource('administracion/items','ItemController');
+
+Route::resources([
+    'administracion/items' => 'ItemController',
+    'administracion/equipos' => 'EquiposController',
+    'administracion/consecutivos' => 'ConsecutivosController',
+    'administracion/clientes' => 'ClientesController',
+    'administracion/areas' => 'AreasController',
+    'administracion/area_equipo' => 'AreaEquipoController',
+    'administracion/empresa' => 'EmpresaController'
+]);

@@ -54,7 +54,7 @@
                                       <th scope="col" class="col-lg-1 col-md-1 col-sm-1 col-xs-12">ACTIVO</th>
                                       <th scope="col" class="col-lg-2 col-md-2 col-sm-2 col-xs-12">OPCIONES</th>
                                     </tr>
-                                  </thead>
+                                  </thead>0
                                   <tbody>
                                     @foreach ($items as $item)
                                         <tr class="row">
@@ -70,10 +70,12 @@
                                                 @endif
                                                 <td scope="col" class="col-lg-1 col-md-1 col-sm-1 col-xs-12">{{$item->activo}}</td>
                                                 <td scope="col" class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                    <a href="{{URL::action('ItemController@edit',$item->id_item)}}"><button class="btn btn-info">Editar</button></a>
-            <a href="" data-target="#modal-delete-{{$item->id_item}}" data-toggle="modal"><button class="btn btn-danger">Eliminar</button></a>
+                                    <a data-target="#modal-edit-{{$item->id_item}}" data-toggle="modal"><button class="btn btn-info">Editar</button></a>
+            
           </td>
                                         </tr>
+
+                                        @include('items.edit')
                                         @endforeach
                                     
                                   </tbody>
