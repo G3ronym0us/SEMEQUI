@@ -1,80 +1,148 @@
-<div class="modal fade moda-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-equipos-{{$cliente->id_cliente}}">
- 	<div class="modal-dialog">
+<div class="modal fade moda-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-equipos-{{$cl->id}}">
+ 	<div class="modal-dialog modal-lg">
  		<div class="modal-content">
  			<div class="modal-header">
-				<div class="row">
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<h3>ADMINISTRACION DE EQUIPOS DE </h3>
-						@if(count($errors)>0)
-						<div class="alert alert-danger">
-							<ul>
-								@foreach($errors->all() as $error)
-								<li>{{$error}}</li>
-								@endforeach
-							</ul>
-						</div>
-						@endif
-					</div>
-				</div>
+				<h5 class="modal-title">ADMINISTRACIÓN DE EQUIPOS DE <b>{{$cl->nom_cliente}}</b></h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          	<span aria-hidden="true">&times;</span>
+		        </button>
 			</div>
   			
-			<div class="row">
-			<form method="POST" action="{{ url('administracion/area_equipo') }}">
-				{{ csrf_field() }}
-			      	<input type="text" name="id_cliente" class="form-control bg-info text-white" value="{{$cliente->id}}" hidden>
+  			<div class="modal-body">
+				<div class="row">
+					<form method="POST" action="{{ url('administracion/area_equipo') }}">
+						{{ csrf_field() }}
+			      		<input type="text" name="id_cliente" class="form-control bg-info text-white" value="{{$cl->id}}" hidden>
 
-			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
-			      		<label>AREA:</label>
-			      		<select name="area_id">
+		      			@if($cl->tipo_cliente == 'JURIDICO')
+			    		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
+			      			<label>AREA:</label>
+			      			<select name="area_id" class="form-control bg-info text-white">
+				      			@foreach($areas as $area)
+				      				<option value="{{ $area->id }}">{{ $area->cod_area }} - {{ $area->nombre_area}}</option>
+				      			@endforeach
+			      			</select >
+			      		</div>
+			      		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
+				    		<label>EQUIPO:</label>
+				    		<select name="equipo_id" class="form-control bg-info text-white">
+				      			@foreach($equipos as $equipo)
+				 6     				<option value="{{ $equipo->id_equipo }}">{{ $equipo->cod_equipo }} - {{ $equipo->nom_equipo}}</option>
+				      			@endforeach
+				      		</select>
+				    	</div>
+			      		@else
 			      			@foreach($areas as $area)
-			      				<option value="{{ $area->id_area }}">{{ $area->cod_area }} - {{ $area->nombre_area}}</option>
+			      				<input type="text" name="area_id" value="{{ $area->id }}" hidden>
 			      			@endforeach
-			      		</select >
+			      			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+					    		<label>EQUIPO:</label>
+					    		<select name="equipo_id" class="form-control bg-info text-white">
+					      			@foreach($equipos as $equipo)
+					      				<option value="{{ $equipo->id_equipo }}">{{ $equipo->cod_equipo }} - {{ $equipo->nom_equipo}}</option>
+					      			@endforeach
+					      		</select>
+					    	</div>
+			      		@endif
+			    	
+			    	 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+			    		<label>SERIAL:</label>
+			    		<input type="text" name="serial" id="serial" class="form-control bg-info text-white" required>
 			    	</div>
-			        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
-			    		<label>EQUIPO:</label>
-			    		<select name="equipo_id">
-			      			@foreach($equipos as $equipo)
-			      				<option value="{{ $equipo->id_equipo }}">{{ $equipo->cod_equipo }} - {{ $equipo->nom_equipo}}</option>
-			      			@endforeach
-			      		</select>
+			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+			    		<label>PLACA:</label>
+			    		<input type="text" name="placa" id="placa" class="form-control bg-info text-white" required>
 			    	</div>
+			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+			    		<label>DESCRIPCION:</label>
+			    		<input type="text" name="descripcion" id="descripcion" class="form-control bg-info text-white" required>
+			    	</div>
+
 					<div class="col-lg-12 col-md-12 col-sm-12">
                           <div class="form-group">
-                            <button class="btn btn-primary" type="submit">Guardar</button> 
+                            <button class="btn btn-success" type="submit">Guardar</button> 
                           </div>
                         </div> </form>
               
 
 					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 						<div class="row">
-							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-								AREA
+							@if($cl->tipo_cliente == 'JURIDICO')
+							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
+								<b>AREA</b>
 							</div>
-							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-								EQUIPO
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								<b>EQUIPO</b>
 							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
+								<b>SERIAL</b>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
+								<b>PLACA</b>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								<b>DESCRIPCION</b>
+							</div>
+							@else
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								<b>EQUIPO</b>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								<b>SERIAL</b>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								<b>PLACA</b>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								<b>DESCRIPCION</b>
+							</div>
+							@endif
 
 						</div>
 						
-						@foreach($areas as $area)
-						
-						    @foreach($area->area_equipos as $ae)
-						    <?php $equipo = App\Equipos::find($ae->equipos_id) ?>
+						@foreach($rel as $r)
 						<div class="row">
-						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-								{{ $area->nombre_area }}
+							@if($cl->tipo_cliente == 'JURIDICO')
+							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
+								{{ $r->nombre_area }}
 							</div>
-							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-								{{ $equipo->nom_equipo}}
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								{{ $r->nom_equipo }}
 							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
+								{{ $r->serial }}
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
+								{{ $r->placa }}
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								{{ $r->descripcion }}
+							</div>
+							@else
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								{{ $r->nom_equipo }}
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								{{ $r->serial }}
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								{{ $r->placa }}
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+								{{ $r->descripcion }}
+							</div>
+							@endif
 						</div>
-							@endforeach
-							@endforeach
+						@endforeach
                     </div>
 
 
   </div>
+</div>
+<div class="modal-footer">
+
+                	<button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+                </div>
                         
                        
                 	

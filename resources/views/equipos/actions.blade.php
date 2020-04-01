@@ -1,0 +1,2 @@
+<a data-target="#modal-edit" data-toggle="modal"><button class="btn btn-info">EDITAR</button></a>
+<button type="button" id="modal_editar" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit">Editar</button>

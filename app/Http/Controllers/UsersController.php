@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Input;
-use App\Http\Requests\AreaEquipoFormRequest;
-use App\AreaEquipo;
 use DB;
 
-class AreaEquipoController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +15,13 @@ class AreaEquipoController extends Controller
      */
     public function index()
     {
-        //
+        return view('users');
+    }
+    public function usersList()
+    {
+        $users = DB::table('users')->select('*');
+        return datatables()->of($users)
+            ->make(true);
     }
 
     /**
@@ -39,15 +42,7 @@ class AreaEquipoController extends Controller
      */
     public function store(Request $request)
     {
-        $areas = new AreaEquipo;
-        $areas->areas_id=$request->get('area_id');
-        $areas->equipos_id=$request->get('equipo_id');
-        $areas->serial=$request->get('serial');
-        $areas->placa=$request->get('placa');
-        $areas->descripcion=$request->get('descripcion');
-
-        $areas ->save(); 
-        return Redirect::to('administracion/clientes');
+        //
     }
 
     /**

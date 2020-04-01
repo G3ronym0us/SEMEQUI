@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +15,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('clientes', function(){
+	
+return datatables()
+	->eloquent(App\Clientes::query())
+	->addColumn('btn', 'clientes.actions')
+	->rawColumns(['btn'])
+	->toJson();
 });
+
+Route::get('equipos', function(){
+	
+return datatables()
+	->eloquent(App\Equipos::query())
+	->addColumn('btn', 'equipos.actions')
+	->rawColumns(['btn'])
+	->toJson();
+});
+

@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'EmpresaController@index');
 
+Route::get('users', 'UsersController@index');
+
+Route::get('users-list', 'UsersController@usersList'); 
+
 
 
 Route::resources([
@@ -26,5 +30,37 @@ Route::resources([
     'administracion/clientes' => 'ClientesController',
     'administracion/areas' => 'AreasController',
     'administracion/area_equipo' => 'AreaEquipoController',
-    'administracion/empresa' => 'EmpresaController'
+    'administracion/empresa' => 'EmpresaController',
+    'operacion/orden_servicio' => 'OrdenController',
+    'facturacion/cotizacion' => 'CotizacionController',
+    'facturacion/facturacion' => 'FacturacionController'
 ]);
+
+Route::get('/obtenerEquipos', 'OrdenController@obtenerEquipos');
+
+Route::get('cotizacion/con_orden/{id}', 'CotizacionController@con_orden');
+
+Route::get('/getArea/{id}', 'CotizacionController@getArea');
+Route::get('/getEquipos/{id}', 'CotizacionController@getEquipos');
+Route::get('/getCotizaciones/{id}', 'OrdenController@getCotizaciones');
+Route::get('/getDetallesOrden/{id}', 'OrdenController@getDetallesOrden');
+Route::get('/getOrdenes/{id}', 'FacturacionController@getOrdenes');
+Route::get('/getMunicipios/{id}', 'ClientesController@getMunicipios');
+Route::get('/getConsecutivo/{nom}', 'ConsecutivosController@getConsecutivo');
+Route::get('/getItem/{id}', 'CotizacionController@getItem');
+Route::get('/getUbicacion/{id}', 'CotizacionController@getUbicacion');
+
+Route::get('/operacion/informes', 'OrdenController@generarInformes');
+
+Route::get('/agregarCotizacion/{id}', 'OrdenController@agregarCotizacion');
+Route::get('/agregarOrden/{id}', 'FacturacionController@agregarOrden');
+Route::post('/agregarClase', 'EquiposController@agregarClase');
+
+
+Route::get('clientes-list', 'ClientesController@ClientesList'); 
+
+Route::post('/administracion/activar/{id}', 'ClientesController@activarClientes');
+Route::post('/administracion/activarEquipo/{id}', 'EquiposController@activarEquipo');
+Route::post('/administracion/activarItem/{id}', 'ItemController@activarItem');
+
+Route::name('print')->get('/facturacion/informes', 'GeneradorController@imprimirFactura');

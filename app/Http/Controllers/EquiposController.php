@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests\EquiposFormRequest;
 use App\Equipos;
+use App\ClaseEquipo;
+use App\Consecutivos;
 use DB;
 
 class EquiposController extends Controller
@@ -18,8 +20,17 @@ class EquiposController extends Controller
      */
     public function index()
     {
-         $equipos = Equipos::all();
-        return view('equipos.index', ['equipos' => $equipos]);
+        $cod = DB::table('adm_consecutivo')
+                    ->select('*')
+                    ->where('nom_consecutivo','=','EQUIPOS')
+                    ->get();
+         $equipos = DB::table('adm_equipo as e')
+            ->join('adm_clase_equipo as ce', 'e.id_clase_equipo', '=', 'ce.id_clase_equipo')
+            ->select('e.*', 'ce.nom_clase_equipo')
+            ->get();
+
+        $clase_equipos = DB::table('adm_clase_equipo')->get();
+        return view('equipos.index', ['equipos' => $equipos, 'clase_equipos' => $clase_equipos, 'cod' => $cod]);
     }
 
     /**
@@ -41,15 +52,22 @@ class EquiposController extends Controller
     public function store(Request $request)
     {
         $equipos=new Equipos;
-            $equipos->id_clase_equipo=$request->get('id_clase_equipo');
+            $equipos->id_clase_equipo=$request->get('clase_equipo');
             $equipos->cod_equipo=$request->get('cod_equipo');
             $equipos->nom_equipo=$request->get('nom_equipo');
             $equipos->marca=$request->get('marca');
             $equipos->caracteristica_equipo=$request->get('caracteristica_equipo');
-            $equipos->activo=$request->get('activo');
+            $equipos->activo=1;
             $equipos->obs_equipo=$request->get('obs_equipo'); 
 
             $equipos->save(); 
+
+            $id_consecutivo = $request->get('id_consecutivo');
+        $num_actual = $request->get('num_actual');
+        $con = Consecutivos::findOrFail($id_consecutivo);
+        $con->num_actual = (int)$num_actual + 1;
+        $con->update();
+
             return Redirect::to('administracion/equipos');
     }
 
@@ -90,7 +108,6 @@ class EquiposController extends Controller
             $equipos->nom_equipo=$request->get('nom_equipo');
             $equipos->marca=$request->get('marca');
             $equipos->caracteristica_equipo=$request->get('caracteristica_equipo');
-            $equipos->activo=$request->get('activo');
             $equipos->obs_equipo=$request->get('obs_equipo'); 
 
             $equipos->update(); 
@@ -106,6 +123,40 @@ class EquiposController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $equipos = Equipos::findOrFail($id);
+        $equipos->activo=0;
+
+        $equipos->update(); 
+        return Redirect::to('administracion/equipos');
+    }
+
+    public function activarEquipo($id)
+    {
+        $equipos = Equipos::findOrFail($id);
+        $equipos->activo=1;
+
+        $equipos->update(); 
+        return Redirect::to('administracion/equipos');
+        
+    } 
+
+    public function agregarClase(Request $request)
+    {
+
+        $clase_equipo=new ClaseEquipo;
+
+        $clase_equipo->nom_clase_equipo=$request->nom_clase_equipo;
+        $clase_equipo->des_clase_equipo=$request->des_clase_equipo;
+        $clase_equipo->activo=1;
+
+        $clase_equipo->save();
+
+        return response()->json(
+            [
+                'success' => true,
+                'message' => 'Data inserted successfully',
+                'id' => $clase_equipo->id_clase_equipo
+            ]
+        );
     }
 }

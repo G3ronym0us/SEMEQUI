@@ -120,9 +120,19 @@ class ItemController extends Controller
      */
     public function destroy($id)
     {
-        $item=Articulo::findOrFail($id);
-        $item->estado='Inactivo';
+        $item=Item::findOrFail($id);
+        $item->activo=0;
         $item->update();
         return Redirect::to('administracion/items');
     }
+
+    public function activarItem($id)
+    {
+        $item = Item::findOrFail($id);
+        $item->activo=1;
+
+        $item->update(); 
+        return Redirect::to('administracion/items');
+        
+    } 
 }

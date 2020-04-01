@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
-use App\Http\Requests\AreaEquipoFormRequest;
-use App\AreaEquipo;
+use App\Http\Requests\OrdenFormRequest;
+use App\Facturacion;
+use App\DetalleCotizacion;
+use App\Clientes;
+use App\Equipos;
 use DB;
 
-class AreaEquipoController extends Controller
+class FacturacionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +21,9 @@ class AreaEquipoController extends Controller
      */
     public function index()
     {
-        //
+        $facturas=DB::table('facturacion as f')
+                    ->join('adm_clientes as cli', 'f.clientes_id','=','cli.id')->get();
+        return view("facturacion.index",["facturas"=>$facturas]);
     }
 
     /**
@@ -28,7 +33,8 @@ class AreaEquipoController extends Controller
      */
     public function create()
     {
-        //
+        $clientes = Clientes::all();
+        return view("facturacion.create",["clientes"=>$clientes]);
     }
 
     /**
@@ -39,15 +45,7 @@ class AreaEquipoController extends Controller
      */
     public function store(Request $request)
     {
-        $areas = new AreaEquipo;
-        $areas->areas_id=$request->get('area_id');
-        $areas->equipos_id=$request->get('equipo_id');
-        $areas->serial=$request->get('serial');
-        $areas->placa=$request->get('placa');
-        $areas->descripcion=$request->get('descripcion');
-
-        $areas ->save(); 
-        return Redirect::to('administracion/clientes');
+        //
     }
 
     /**
@@ -94,4 +92,28 @@ class AreaEquipoController extends Controller
     {
         //
     }
+
+     public function getOrdenes(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $ordenes=DB::table('orden_servicio')
+            ->where('clientes_id','=',$id)
+            ->where('estado','=','PENDIENTE')
+            ->get();
+         return response()->json($ordenes);
+        }
+        
+    } 
+
+    public function agregarOrden(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $cotizacion=DB::table('detalles_orden_servicio as do')
+            ->join('adm_equipo as eq','eq.id_equipo','=','do.equipo_id')
+            ->where('orden_servicio_id','=',$id)
+            ->get();
+         return response()->json($cotizacion);
+        }
+        
+    } 
 }

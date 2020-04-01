@@ -12,7 +12,7 @@ class Clientes extends Model
 
     protected $fillable = [
     	'id_municipio',
-    	'nom_consecutivo',
+        'cod_cliente',
     	'nom_cliente',
     	'nit_cliente', 
     	'tipo_cliente',

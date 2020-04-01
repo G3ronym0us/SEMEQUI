@@ -40,14 +40,33 @@ class ConsecutivosController extends Controller
      */
     public function store(Request $request)
     {
-        $consecutivos = new Consecutivos;
+
+        $nom_consecutivo = $request->get('nom_consecutivo');
+        $consecutivo = DB::table('adm_consecutivo')
+                                ->where('nom_consecutivo','=',$nom_consecutivo)
+                                ->get();
+
+        if (count($consecutivo) > 0) {
+            foreach ($consecutivo as $con) {
+                $id = $con->id_adm_consecutivo;
+                $consecutivos=Consecutivos::findOrFail($id);
+            }
+        }else{
+            $consecutivos = new Consecutivos;
+        }
+
         $consecutivos->prefijo_doc=$request->get('prefijo_doc');
         $consecutivos->nom_consecutivo=$request->get('nom_consecutivo');
         $consecutivos->num_ini=$request->get('num_ini');
         $consecutivos->num_actual=$request->get('num_actual');
         $consecutivos->num_final=$request->get('num_final'); 
 
-        $consecutivos ->save(); 
+        
+        if (count($consecutivo) > 0) {
+            $consecutivos ->update();
+        }else{
+            $consecutivos ->save();
+        } 
         return Redirect::to('administracion/consecutivos');
     }
 
@@ -101,6 +120,16 @@ class ConsecutivosController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $consecutivos = Consecutivos::find($id);
+        $consecutivos->delete();
+        return Redirect::to('administracion/consecutivos');
+    }
+
+    public function getConsecutivo($nom)
+    {
+        $consecutivo = DB::table('adm_consecutivo')
+                                ->where('nom_consecutivo','=',$nom)
+                                ->get();
+        return response()->json($consecutivo);
     }
 }

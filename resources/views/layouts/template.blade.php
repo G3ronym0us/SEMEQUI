@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SEMEQUI</title>
+    <title>SIMEQUI</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<!--  Bootstrap 3.3.5 -->
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-    <!-- Font Awesome 
-    <link rel="stylesheet" href="{{asset('css/font-awesome.css')}}">
+
+    <link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">
     <!-- Boostrap select 
     <link rel="stylesheet" href="{{asset('css/bootstrap-select.min.css')}}">
     <!-- Theme style -->
@@ -32,7 +32,7 @@
           <!-- mini logo for sidebar mini 50x50 pixels -->
           <span class="logo-mini"><b></b>V</span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>SEMEQUI</b></span>
+          <span class="logo-lg"><b>SIMEQUI</b></span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->
@@ -101,8 +101,8 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="{{url('almacen/articulo')}}"><i class="fa fa-circle-o"></i> Orden de Servivio</a></li>
-                <li><a href="{{url('almacen/categoria')}}"><i class="fa fa-circle-o"></i> Informes</a></li>
+                <li><a href="{{url('operacion/orden_servicio')}}"><i class="fa fa-circle-o"></i>ORDEN DE SERVICIO</a></li>
+                <li><a href="{{url('operacion/informes')}}"><i class="fa fa-circle-o"></i>INFORMES</a></li>
               </ul>
             </li>
 
@@ -114,9 +114,9 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="{{url('almacen/articulo')}}"><i class="fa fa-circle-o"></i> Cotización</a></li>
-                <li><a href="{{url('almacen/categoria')}}"><i class="fa fa-circle-o"></i> Facturación</a></li>
-                <li><a href="{{url('almacen/categoria')}}"><i class="fa fa-circle-o"></i> Inforemes</a></li>
+                <li><a href="{{url('facturacion/cotizacion')}}"><i class="fa fa-circle-o"></i> COTIZACION</a></li>
+                <li><a href="{{url('facturacion/facturacion')}}"><i class="fa fa-circle-o"></i> FACTURACION</a></li>
+                <li><a href="{{url('facturacion/informes')}}"><i class="fa fa-circle-o"></i> INFORMES</a></li>
               </ul>
             </li>
 
@@ -127,11 +127,11 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="{{url('administracion/empresa')}}"><i class="fa fa-circle-o"></i> Empresa</a></li>
-                <li><a href="{{url('administracion/clientes')}}"><i class="fa fa-circle-o"></i> Clientes</a></li>
-                <li><a href="{{url('administracion/equipos')}}"><i class="fa fa-circle-o"></i> Equipos</a></li>
-                <li><a href="{{url('administracion/items')}}"><i class="fa fa-circle-o"></i> Items</a></li>
-                <li><a href="{{url('administracion/consecutivos')}}"><i class="fa fa-circle-o"></i> Consecutivos</a></li>
+                <li><a href="{{url('administracion/empresa')}}"><i class="fa fa-circle-o"></i> EMPRESA</a></li>
+                <li><a href="{{url('administracion/clientes')}}"><i class="fa fa-circle-o"></i> CLIENTES</a></li>
+                <li><a href="{{url('administracion/equipos')}}"><i class="fa fa-circle-o"></i> EQUIPOS</a></li>
+                <li><a href="{{url('administracion/items')}}"><i class="fa fa-circle-o"></i> ITEMS</a></li>
+                <li><a href="{{url('administracion/consecutivos')}}"><i class="fa fa-circle-o"></i> CONSECUTIVOS</a></li>
               </ul>
             </li>
 
@@ -142,8 +142,8 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="{{url('almacen/articulo')}}"><i class="fa fa-circle-o"></i>Usuario</a></li>
-                <li><a href="{{url('almacen/categoria')}}"><i class="fa fa-circle-o"></i>Roles</a></li>
+                <li><a href="{{url('almacen/articulo')}}"><i class="fa fa-circle-o"></i>USUARIOS</a></li>
+                <li><a href="{{url('almacen/categoria')}}"><i class="fa fa-circle-o"></i>ROLES</a></li>
               </ul>
             </li>
             
@@ -247,7 +247,7 @@
             <div class="col-md-12">
               <div class="box">
                 <div class="box-header with-border">
-                  <h3 class="box-title">Sistema de Ventas</h3>
+                  <h3 class="box-title">SIMEQUI</h3>
                   <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     
@@ -283,12 +283,18 @@
 
       
     <!-- jQuery 2.1.4 -->
-    <script src="{{asset('js/jQuery-2.1.4.min.js')}}"></script>
+    <script src="{{asset('js/jQuery-3.4.1.min.js')}}"></script>
     @stack('scripts')
     <!-- Bootstrap 3.3.5 -->
     <script src="{{asset('js/bootstrap.min.js')}}"></script>
     <!-- AdminLTE App -->
     <script src="{{asset('js/app.min.js')}}"></script>
+
+
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js "></script>
+
+    @yield('script')
 
     
   </body>
