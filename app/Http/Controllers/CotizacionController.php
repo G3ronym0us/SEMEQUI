@@ -16,6 +16,10 @@ use DB;
 
 class CotizacionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -41,6 +45,7 @@ class CotizacionController extends Controller
                     ->select('*')
                     ->where('nom_consecutivo','=','COTIZACION')
                     ->get();
+
         $clientes = Clientes::all();
         $items = Item::all();
         $equipos=DB::table('adm_equipo as e')
@@ -86,8 +91,8 @@ class CotizacionController extends Controller
 
                 }
 
-                $id_consecutivo = $request->get('id_consecutivo');
-        $num_actual = $request->get('num_actual');
+                $id_consecutivo = $request->get('id_consecutivo_cot');
+        $num_actual = $request->get('num_actual_cot');
         $con = Consecutivos::findOrFail($id_consecutivo);
         $con->num_actual = (int)$num_actual + 1;
         $con->update();
@@ -150,7 +155,9 @@ class CotizacionController extends Controller
         ->where('dc.cotizacion_id','=',$id)
         ->get();
 
-        return view("cotizacion.edit",["cotizacion"=>$cotizacion, "detalles"=>$detalles]);
+        $items = Item::all();
+
+        return view("cotizacion.edit",["cotizacion"=>$cotizacion, "detalles"=>$detalles, "items"=>$items]);
     }
 
     /**
@@ -273,6 +280,43 @@ class CotizacionController extends Controller
             ->get();
          return response()->json($equipos);
         }
+        
+    } 
+
+    public function getCodigoCliente()
+    {
+        $cod = DB::table('adm_consecutivo')
+                    ->select('*')
+                    ->where('nom_consecutivo','=','CLIENTES')
+                    ->get();
+         return response()->json($cod);
+        
+        
+    } 
+
+    public function getCodigoArea()
+    {
+        $cod = DB::table('adm_consecutivo')
+                    ->select('*')
+                    ->where('nom_consecutivo','=','AREAS')
+                    ->get();
+         return response()->json($cod);    
+    } 
+
+    public function getDepartamentos()
+    {
+        $departamentos = DB::table('departamentos')->get();
+         return response()->json($departamentos);
+    }
+
+    public function getCodigo($nom_consecutivo)
+    {
+        $cod = DB::table('adm_consecutivo')
+                    ->select('*')
+                    ->where('nom_consecutivo','=',$nom_consecutivo)
+                    ->get();
+         return response()->json($cod);
+        
         
     } 
 

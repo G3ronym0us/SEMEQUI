@@ -4,7 +4,7 @@
   
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <table class="table table-striped table-bordered table-condensed table-hover" id="detalles_orden" name="detalles_orden">
+        <table class="table table-striped table-bordered table-condensed table-hover" id="orden_tabla" name="orden_tabla">
             <thead>
                 <tr>
                     <th>ORDEN No.</th>
@@ -45,5 +45,37 @@
 @section('script')
 
     <script src="http://localhost:8000/js/orden.js"></script>
+    <script type="text/javascript">
+  $(document).ready(function() {
+      $('#orden_tabla').DataTable({
+        language: {
+          info: "_TOTAL_ REGISTROS",
+          search: "BUSCAR",
+          paginate: {
+            next: "SIGUIENTE",
+            previous: "ANTERIOR"
+          },
+          lengthMenu: 'MOSTRAR <select>'+
+                      '<option value="10">10</option>'+
+                      '<option value="25">25</option>'+
+                      '<option value="50">50</option>'+
+                      '</select> REGISTROS',
+          loadingRecords:"CARGANDO...",
+          processing:"PROCESANDO...",
+          emptyTable:"NO HAY DATOS",
+          zeroRecords:"NO HAY CONCIDENCIAS",
+          infoEmpty:"",
+          infoFiltered:""
+        }
+
+      });
+      
+  });
+
+  function mayusculas(e) {
+    e.value = e.value.toUpperCase();
+  }
+
+</script> 
 
 @endsection

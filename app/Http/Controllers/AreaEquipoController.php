@@ -11,6 +11,10 @@ use DB;
 
 class AreaEquipoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -40,14 +44,25 @@ class AreaEquipoController extends Controller
     public function store(Request $request)
     {
         $areas = new AreaEquipo;
-        $areas->areas_id=$request->get('area_id');
+        if ($request->get('ajax')) {
+            $areas->areas_id=$request->get('area_id_me');
+            $areas->equipos_id=$request->get('equipo_id_me');
+        }else{
+            $areas->areas_id=$request->get('area_id');
         $areas->equipos_id=$request->get('equipo_id');
+        }
+        
         $areas->serial=$request->get('serial');
         $areas->placa=$request->get('placa');
         $areas->descripcion=$request->get('descripcion');
 
         $areas ->save(); 
-        return Redirect::to('administracion/clientes');
+        if ($request->get('ajax')) {
+            return response()->json($areas);
+        }else{
+            return Redirect::to('administracion/clientes');
+        }
+        
     }
 
     /**
@@ -93,5 +108,16 @@ class AreaEquipoController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getEquiposForArea($id)
+    {
+        $rel = DB::table('rel_area_equipo as rel')
+                          ->join('adm_areas as aa','aa.id','=','rel.areas_id')
+                          ->join('adm_equipo as ae','ae.id_equipo','=','rel.equipos_id')
+                          ->where('aa.clientes_id','=',$id)
+                          ->select('aa.nombre_area','ae.nom_equipo','rel.*')
+                          ->get(); 
+        return response()->json($rel);   
     }
 }

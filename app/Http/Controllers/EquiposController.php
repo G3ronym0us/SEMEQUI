@@ -13,6 +13,10 @@ use DB;
 
 class EquiposController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -158,5 +162,10 @@ class EquiposController extends Controller
                 'id' => $clase_equipo->id_clase_equipo
             ]
         );
+    }
+
+    public function getEquiposList(){
+        $equipos = Equipos::all();
+        return response()->json($equipos);
     }
 }

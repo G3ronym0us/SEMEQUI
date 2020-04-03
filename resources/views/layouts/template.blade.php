@@ -50,7 +50,7 @@
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <small class="bg-red">Online</small>
-                  <span class="hidden-xs"> Usuario</span>
+                  <span class="hidden-xs"> {{ Auth::user()->name }}</span>
                 </a>
                 <ul class="dropdown-menu">
                   <!-- User image -->
@@ -142,8 +142,8 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="{{url('almacen/articulo')}}"><i class="fa fa-circle-o"></i>USUARIOS</a></li>
-                <li><a href="{{url('almacen/categoria')}}"><i class="fa fa-circle-o"></i>ROLES</a></li>
+                <li><a href="{{url('seguridad/usuarios')}}"><i class="fa fa-circle-o"></i>USUARIOS</a></li>
+                <li><a href="{{url('seguridad/roles')}}"><i class="fa fa-circle-o"></i>ROLES</a></li>
               </ul>
             </li>
             

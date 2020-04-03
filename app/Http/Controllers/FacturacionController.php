@@ -10,10 +10,15 @@ use App\Facturacion;
 use App\DetalleCotizacion;
 use App\Clientes;
 use App\Equipos;
+use App\Item;
 use DB;
 
 class FacturacionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -34,7 +39,13 @@ class FacturacionController extends Controller
     public function create()
     {
         $clientes = Clientes::all();
-        return view("facturacion.create",["clientes"=>$clientes]);
+        $cod = DB::table('adm_consecutivo')
+                    ->select('*')
+                    ->where('nom_consecutivo','=','FACTURACION')
+                    ->get();
+        $items = Item::all();
+        $tecnicos = DB::table('users');
+        return view("facturacion.create",["clientes"=>$clientes, "cod"=>$cod, "items"=>$items, "tecnicos"=>$tecnicos]);
     }
 
     /**

@@ -10,7 +10,7 @@
         
 	<input type="text" name="id_cotizacion" id="id_cotizacion" value="{{ $cot->id_cotizacion }}" hidden>
   	<div class="row">
-    	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 form-group">
+    	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
       		<label>ORDEN No.</label>
       		<input type="text" name="cod_cotizacion" class="form-control bg-info text-white" value="{{ $cot->cod_cotizacion }}" readonly="readonly">
     	</div>
@@ -20,15 +20,10 @@
             	<option value="{{ $cot->cliente_id }}">{{ $cot->nom_cliente }}</option>
             </select>
         </div>
-    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+    	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
     		<label>UBICACION:</label>
     		<input type="text" name="ubicacion" class="form-control bg-info text-white" value="{{ $cot->nom_departamento.' - '.$cot->nom_municipio }}" readonly="readonly">
     	</div>
-
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-            <label>FECHA ING:</label>
-            <input type="datetime" name="fecha_ingreso" class="form-control bg-info text-white" value="{{ $cot->created_at }}" readonly="readonly">
-        </div>
     	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
     		<label>ESTADO:</label>
     		<input type="text" name="estado" class="form-control bg-info text-white" value="PENDIENTE" readonly="readonly" required>
@@ -49,6 +44,15 @@
             <label>EQUIPO</label>
             <select name="equipo_id" id="equipo_id" class="form-control bg-info text-white" >
 
+            </select>
+            
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+            <label>ITEM</label>
+            <select name="item_id" id="item_id" class="form-control bg-info text-white" >
+                @foreach($items as $it)
+                <option value="{{ $it->id_item }}">{{ $it->nom_item }}</option>
+                @endforeach
             </select>
             
         </div>
@@ -78,6 +82,7 @@
                 <th>No.</th>
                 <th>CANTIDAD</th>
                 <th>EQUIPO</th>
+                <th>ITEM</th>
                 <th>DESCRIPCION</th>
                 <th>Vr. UNITARIO</th>
                 <th>Vr. TOTAL</th>
@@ -89,10 +94,12 @@
             <tfoot>
 				<th>TOTAL</th>
 				<th></th>
+                <th></th>
+				<th></th>
+                <th></th>
 				<th></th>
 				<th></th>
-				<th></th>
-				<th><H4 id="totalv">Bs/. 0.00</H4></th>
+				<th><H4 id="totalv">COP/. 0.00</H4></th>
 			</tfoot>
         </table>
     </div>

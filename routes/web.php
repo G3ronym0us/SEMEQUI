@@ -21,7 +21,7 @@ Route::get('users', 'UsersController@index');
 
 Route::get('users-list', 'UsersController@usersList'); 
 
-
+Auth::routes();
 
 Route::resources([
     'administracion/items' => 'ItemController',
@@ -33,7 +33,8 @@ Route::resources([
     'administracion/empresa' => 'EmpresaController',
     'operacion/orden_servicio' => 'OrdenController',
     'facturacion/cotizacion' => 'CotizacionController',
-    'facturacion/facturacion' => 'FacturacionController'
+    'facturacion/facturacion' => 'FacturacionController',
+    'seguridad/usuarios' => 'UsersController'
 ]);
 
 Route::get('/obtenerEquipos', 'OrdenController@obtenerEquipos');
@@ -49,6 +50,14 @@ Route::get('/getMunicipios/{id}', 'ClientesController@getMunicipios');
 Route::get('/getConsecutivo/{nom}', 'ConsecutivosController@getConsecutivo');
 Route::get('/getItem/{id}', 'CotizacionController@getItem');
 Route::get('/getUbicacion/{id}', 'CotizacionController@getUbicacion');
+Route::get('/getCodigoCliente/', 'CotizacionController@getCodigoCliente');
+Route::get('/getCodigoArea/', 'CotizacionController@getCodigoArea');
+Route::get('/getDepartamentos/', 'CotizacionController@getDepartamentos');
+Route::get('/getDatosCliente/{id}', 'ClientesController@getDatosCliente');
+Route::get('/getEquiposList/', 'EquiposController@getEquiposList');
+Route::get('/getEquiposForArea/{id}', 'AreaEquipoController@getEquiposForArea');
+Route::get('/getCodigo/{nom_consecutivo}', 'CotizacionController@getCodigo');
+
 
 Route::get('/operacion/informes', 'OrdenController@generarInformes');
 
@@ -64,3 +73,6 @@ Route::post('/administracion/activarEquipo/{id}', 'EquiposController@activarEqui
 Route::post('/administracion/activarItem/{id}', 'ItemController@activarItem');
 
 Route::name('print')->get('/facturacion/informes', 'GeneradorController@imprimirFactura');
+
+
+Route::get('/home', 'HomeController@index')->name('home');

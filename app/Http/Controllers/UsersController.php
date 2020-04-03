@@ -4,10 +4,17 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Input;
+use App\User;
 use DB;
 
 class UsersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +22,8 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return view('users');
+        $users = User::All();
+        return view('seguridad.usuarios.index',[ 'users'=>$users ]);
     }
     public function usersList()
     {
@@ -42,7 +50,6 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -64,7 +71,7 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -76,7 +83,13 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->name = $request->get('name');
+        $user->email = $request->get('email');
+        $user->rol = $request->get('rol');
+        $user->update();
+
+        return Redirect::to('seguridad/usuarios');
     }
 
     /**

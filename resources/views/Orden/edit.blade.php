@@ -77,6 +77,7 @@
             	<th></th>
                 <th>No.</th>
                 <th>CANTIDAD</th>
+                <th>ITEM</th>
                 <th>EQUIPO</th>
                 <th>SERIAL</th>
                	<th>PLACA</th>
@@ -92,12 +93,13 @@
 				<th>TOTAL</th>
 				<th></th>
 				<th></th>
+                <th></th>
 				<th></th>
 				<th></th>
 				<th></th>
 				<th></th>
 				<th></th>
-				<th><H4 id="totalv">Bs/. 0.00</H4></th>
+				<th><H4 id="totalv">COP/. 0.00</H4></th>
 			</tfoot>
         </table>
     </div>

@@ -7,10 +7,15 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests\ItemFormRequest;
 use App\Item;
+use App\Consecutivos;
 use DB;
 
 class ItemController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -58,7 +63,19 @@ class ItemController extends Controller
         
 
         $item->save();
-        return Redirect::to('administracion/items');
+
+        $id_consecutivo = $request->get('id_consecutivo_ni');
+        $num_actual = $request->get('num_actual_ni');
+        $con = Consecutivos::findOrFail($id_consecutivo);
+        $con->num_actual = (int)$num_actual + 1;
+        $con->update();
+
+
+        if ($request->get('ajax')) {
+            return response()->json($item->id_item);
+        }else{
+            return Redirect::to('administracion/items');
+        }
     }
 
     /**

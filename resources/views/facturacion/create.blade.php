@@ -6,6 +6,26 @@
   	{{ csrf_field() }}
   	<div class="row">
 
+    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+      		@foreach($cod as $c)
+            <label>CODIGO</label>
+            <input type="text" name="id_consecutivo_cot" id="id_consecutivo_cot" value="{{ $c->id_adm_consecutivo }}" hidden>
+            <input type="text" name="num_actual_cot" id="num_actual_cot" value="{{ $c->num_actual }}" hidden>
+            <input type="text" name="cod_facturacion"  class="form-control bg-info text-white" value="{{ $c->prefijo_doc.' - '.$c->num_actual }}" readonly="readonly" required>
+          @endforeach
+    	</div>
+        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 form-group">
+            <label>CLIENTE:</label>
+            <select name="clientes_id" id="clientes_id" class="form-control bg-info text-white" required>
+            	@foreach($clientes as $cliente)
+            	<option value="{{ $cliente->id }}">{{ $cliente->nom_cliente }}</option>
+            	@endforeach
+            </select>
+        </div>
+    	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
+    		<label>UBICACION:</label>
+    		<input type="text" name="ubicacion" id="ubicacion" class="form-control bg-info text-white" step="0.01" required>
+    	</div>
 
   		<div class="offset-2 col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
             <label>COTIZACIONES:</label>
@@ -36,22 +56,6 @@
 
     
 
-    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-      		<label>ORDEN No.</label>
-      		<input type="text" name="cod_orden" class="form-control bg-info text-white" required>
-    	</div>
-        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 form-group">
-            <label>CLIENTE:</label>
-            <select name="clientes_id" id="clientes_id" class="form-control bg-info text-white" required>
-            	@foreach($clientes as $cliente)
-            	<option value="{{ $cliente->id }}">{{ $cliente->nom_cliente }}</option>
-            	@endforeach
-            </select>
-        </div>
-    	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-    		<label>UBICACION:</label>
-    		<input type="text" name="ubicacion" class="form-control bg-info text-white" step="0.01" required>
-    	</div>
 
     	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
       		<label>TECNICO</label>
@@ -126,7 +130,7 @@
 				<th></th>
 				<th></th>
 				<th></th>
-				<th><H4 id="total">Bs/. 0.00</H4></th>
+				<th><H4 id="total">COP/. 0.00</H4></th>
 			</tfoot>
         </table>
     </div>

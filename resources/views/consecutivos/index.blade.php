@@ -19,6 +19,8 @@
           <option value="CLIENTES">CLIENTES</option>
           <option value="EQUIPOS">EQUIPOS</option>
           <option value="ITEMS">ITEMS</option>
+          <option value="AREAS">AREAS</option>
+          <option value="FACTURACION">FACTURACION</option>
         </select>
     	</div>
 
@@ -34,7 +36,7 @@
     		<label>NUMERO FINAL</label>
     		<input type="number" name="num_final" id="num_final" class="form-control bg-info text-white" step="0.01" required>
     	</div>
-    	<div class="col-lg-1 col-md-1 col-sm-1">
+    	<div class="col-lg-2 col-md-2 col-sm-12">
 			<div class="form-group">
         <label>&nbsp;</label>
 				<button class="btn btn-primary form-control" type="submit">Guardar</button> 

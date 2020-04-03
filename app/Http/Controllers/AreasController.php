@@ -7,11 +7,16 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests\AreasFormRequest;
 use App\Areas;
+use App\Consecutivos;
 use DB;
 
 
 class AreasController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -41,13 +46,33 @@ class AreasController extends Controller
     public function store(Request $request)
     {
         $areas = new Areas;
-        $areas->clientes_id=$request->get('id_cliente');
-        $areas->cod_area=$request->get('cod_area');
-        $areas->nombre_area=$request->get('nombre_area');
 
+        if ($request->get('ajax')) {
+            $areas->cod_area=$request->get('cod_area_ma');
+            $areas->nombre_area=$request->get('nombre_area_ma'); 
+            $areas->clientes_id=$request->get('id_cliente_ma');       
+        }else{
+            $areas->cod_area=$request->get('cod_area');
+            $areas->nombre_area=$request->get('nombre_area');
+            $areas->clientes_id=$request->get('id_cliente');
+        }
 
-        $areas ->save(); 
-        return Redirect::to('administracion/clientes');
+        
+        $areas ->save();
+
+        $id_consecutivo = $request->get('id_consecutivo_ma');
+        $num_actual = $request->get('num_actual_ma');
+        $con = Consecutivos::findOrFail($id_consecutivo);
+        $con->num_actual = (int)$num_actual + 1;
+        $con->update();
+
+        if ($request->get('ajax')) {
+            return response()->json($areas);
+        }else{
+            return Redirect::to('administracion/clientes');
+        }
+       
+
     }
 
     /**

@@ -38,12 +38,16 @@
         </div>
     	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
     		<label>UBICACION:</label>
-    		<input type="text" name="ubicacion" id="ubicacion" class="form-control bg-info text-white" step="0.01" required>
+    		<input type="text" name="ubicacion" id="ubicacion"  class="form-control bg-info text-white" required>
     	</div>
 
     	<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 form-group">
       		<label>TECNICO</label>
-      		<input type="text" name="tecnico_id" class="form-control bg-info text-white" required>
+      		<select name="tecnico_id" id="tecnico_id" class="form-control bg-info text-white">
+                @foreach($tecnicos as $tec)
+                    <option value="{{ $tec->id }}">{{ $tec->name }}</option>
+                @endforeach    
+            </select>
     	</div>
         
     	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
@@ -110,6 +114,7 @@
 
                     <th>No.</th>
                     <th>CANTIDAD</th>
+                    <th>ITEM</th>
                     <th>EQUIPO</th>
                     <th>SERIAL</th>
                     <th>PLACA</th>
@@ -129,11 +134,12 @@
 				<th>TOTAL</th>
 				<th></th>
 				<th></th>
+                <th></th>
 				<th></th>
 				<th></th>
 				<th></th>
 				<th></th>
-				<th><H4 id="totalv">Bs/. 0.00</H4></th>
+				<th><H4 id="totalv">COP/. 0.00</H4></th>
 			</tfoot>
         </table>
     </div>

@@ -13,6 +13,10 @@ use DB;
 
 class ClientesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -77,7 +81,12 @@ class ClientesController extends Controller
         $con->num_actual = (int)$num_actual + 1;
         $con->update();
 
-        return Redirect::to('administracion/clientes');
+        if ($request->get('ajax')) {
+            return response()->json($clientes->id);
+        }else{
+            return Redirect::to('administracion/clientes');
+        }
+
     }
 
     /**
@@ -164,6 +173,14 @@ class ClientesController extends Controller
 
         $clientes->update(); 
         return Redirect::to('administracion/clientes');
+        
+    } 
+    public function getDatosCliente(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $cliente = Clientes::findOrFail($id);
+            return response()->json($cliente);
+        }
         
     } 
 }

@@ -1,23 +1,31 @@
 $( document ).ready(function() {
+
+	// EVENTOS INICIADOS AL CARGAR LA PAGINA
+	
 	id = $("#clientes_id").val();
+	getUbicacion(id);
+	getAreas(id);
+	getCotizaciones(id);
+	getOrdenes(id);
+
+	//FIN DE LOS EVENTOS INICIADOS AL CARGAR LA PAGINA
 			
 	
-	getAreas(id);
-	getCotizaciones(id);
-	getOrdenes(id);
-
+	//CAMBIA LOS DATOS AL CAMBIAR DE CLIENTE
 	$("#clientes_id").change(function(){
 		id = $("#clientes_id").val();
-	getAreas(id);
-	getCotizaciones(id);
-	getOrdenes(id);
+		getAreas(id);
+		getCotizaciones(id);
+		getOrdenes(id);
 	});
 
+	//AGREGA COTIZACION PENDIENTE
 	$("#btn_agregarCotizacion").click(function(){
 		id = $("#cotizaciones").val();
 		agregarCotizacion(id);
 	});
 
+	//AGREGA ORDEN DE SERVICIO PENDIENTE
 	$("#btn_agregarOrden").click(function(){
 		id = $("#ordenes").val();
 		agregarOrden(id);
@@ -180,6 +188,15 @@ function agregarOrden(id){
 					$("#total").html("Bs/. "+total);
 					evaluar();
 					$('#detalles_orden').append(fila);
+				}
+			});
+}
+
+//OBTIENE LA UBICACION DEL CLIENTE AL CARGAR LA PAGINA (DEPARTAMENTO - MUNICIPIO)
+function getUbicacion(id){
+	$.get("/getUbicacion/"+id,function(response) {
+				for (i =0; i<response.length ; i++) {
+					$("#ubicacion").val(response[i].nom_municipio+' - '+response[i].nom_departamento);
 				}
 			});
 }

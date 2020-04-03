@@ -27,7 +27,7 @@
 				    		<label>EQUIPO:</label>
 				    		<select name="equipo_id" class="form-control bg-info text-white">
 				      			@foreach($equipos as $equipo)
-				 6     				<option value="{{ $equipo->id_equipo }}">{{ $equipo->cod_equipo }} - {{ $equipo->nom_equipo}}</option>
+				      				<option value="{{ $equipo->id_equipo }}">{{ $equipo->cod_equipo }} - {{ $equipo->nom_equipo}}</option>
 				      			@endforeach
 				      		</select>
 				    	</div>
