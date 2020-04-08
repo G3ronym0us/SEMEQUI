@@ -12,6 +12,7 @@ use App\DetalleCotizacion;
 use App\Clientes;
 use App\Equipos;
 use App\Item;
+use App\TarifaCliente;
 use DB;
 
 class CotizacionController extends Controller
@@ -73,6 +74,7 @@ class CotizacionController extends Controller
                 $equipo_id = $request->get('equipo_id');
                 $cantidad = $request->get('cantidad');
                 $item_id = $request->get('item_id');
+                $area_id = $request->get('area_id');
                 $valor_unitario = $request->get('valor_unitario');
                 $valor_total = $request->get('valor_total');
 
@@ -83,12 +85,19 @@ class CotizacionController extends Controller
                     $detalle->cotizacion_id= $cot->id_cotizacion;
                     $detalle->equipo_id= $equipo_id[$cont];
                     $detalle->item_id= $item_id[$cont];
+                    $detalle->area_id= $area_id[$cont];
                     $detalle->cantidad= $cantidad[$cont];
                     $detalle->valor_unitario= $valor_unitario[$cont];
                     $detalle->valor_total= $valor_total[$cont];
                     $detalle->save();
-                    $cont++;
 
+                    $tarifa = new TarifaCliente;
+                    $tarifa->item_id = $item_id[$cont];
+                    $tarifa->cliente_id = $request->get('clientes_id');;
+                    $tarifa->precio_venta = $valor_unitario[$cont];
+                    $tarifa->save();
+
+                    $cont++;
                 }
 
                 $id_consecutivo = $request->get('id_consecutivo_cot');
@@ -96,6 +105,8 @@ class CotizacionController extends Controller
         $con = Consecutivos::findOrFail($id_consecutivo);
         $con->num_actual = (int)$num_actual + 1;
         $con->update();
+
+
 
 
 
@@ -177,6 +188,8 @@ class CotizacionController extends Controller
 
                 $equipo_id = $request->get('equipo_id');
                 $cantidad = $request->get('cantidad');
+                $item_id = $request->get('item_id');
+                $area_id = $request->get('area_id');
                 $valor_unitario = $request->get('valor_unitario');
                 $valor_total = $request->get('valor_total');
                 $id_detalle = $request->get('id');
@@ -189,6 +202,8 @@ class CotizacionController extends Controller
                     }else{
                         $detalle = new DetalleCotizacion();
                         $detalle->cotizacion_id= $id;
+                        $detalle->item_id= $item_id[$cont];
+                        $detalle->area_id= $area_id[$cont];
                         $detalle->equipo_id= $equipo_id[$cont];
                         $detalle->cantidad= $cantidad[$cont];
                         $detalle->valor_unitario= $valor_unitario[$cont];
@@ -214,11 +229,21 @@ class CotizacionController extends Controller
     public function destroy($id)
     {
         $cotizacion = Cotizacion::findOrFail($id);
-        $cotizacion->estado='INACTIVO';
+        $cotizacion->estado='ANULADA';
 
         $cotizacion->update(); 
         return Redirect::to('facturacion/cotizacion');
     }
+
+     public function activarClientes($id)
+    {
+        $cotizacion = Clientes::findOrFail($id);
+        $cotizacion->estado='ACTIVO';
+
+        $cotizacion->update(); 
+        return Redirect::to('administracion/clientes');
+        
+    } 
 
     public function con_orden($id)
     {
@@ -263,8 +288,30 @@ class CotizacionController extends Controller
     public function getItem(Request $request, $id)
     {
         if ($request->ajax()) {
+            
             $item = Item::findOrFail($id);
-         return response()->json($item);
+            return response()->json($item);
+        }
+        
+    } 
+
+        public function getTarifa(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $item_id = $request->get('item_id');
+            $cliente_id = $request->get('cliente_id');
+            $item = DB::table('tarifas_clientes')
+                        ->where('item_id','=',$item_id)
+                        ->where('cliente_id','=',$cliente_id)
+                        ->where('cliente_id','=',$cliente_id)
+                        ->orderBy('created_at', 'desc')
+                        ->first();
+            if ($item) {
+                return response()->json($item);
+            }else{
+               $item = Item::findOrFail($id);
+                return response()->json($item);
+            }
         }
         
     } 

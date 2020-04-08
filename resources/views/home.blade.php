@@ -1,23 +1,14 @@
-@extends('layouts.app')
+@extends('layouts.template')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    You are logged in!
-                </div>
-            </div>
-        </div>
-    </div>
+@section('contenido')
+ 
+<div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title"><b>ORDENES DE SERVICIO</b></h5>
+    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+    <p class="card-text">450</p>
+    <p class="card-text">AUMENTO 45% LOS ULTIMOS 28 DIAS</p>
+  </div>
 </div>
+
 @endsection

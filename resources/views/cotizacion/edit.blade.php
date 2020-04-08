@@ -29,11 +29,20 @@
     		<input type="text" name="estado" class="form-control bg-info text-white" value="PENDIENTE" readonly="readonly" required>
     	</div>
 
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+            <label>ITEM</label>
+            <select name="item_id" id="item_id" class="form-control bg-info text-white" >
+                @foreach($items as $it)
+                <option value="{{ $it->id_item }}">{{ $it->nom_item }}</option>
+                @endforeach
+            </select>
+            
+        </div>
     	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 form-group">
       		<label>CANTIDAD</label>
       		<input type="text" name="cantidad" id="cantidad" class="form-control bg-info text-white" >
     	</div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group" id="div_area_id">
             <label>AREA</label>
             <select name="area_id" id="area_id" class="form-control bg-info text-white" >
 
@@ -47,15 +56,7 @@
             </select>
             
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-            <label>ITEM</label>
-            <select name="item_id" id="item_id" class="form-control bg-info text-white" >
-                @foreach($items as $it)
-                <option value="{{ $it->id_item }}">{{ $it->nom_item }}</option>
-                @endforeach
-            </select>
-            
-        </div>
+        
     	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
     		<label>VALOR UNITARIO</label>
     		<input type="number" name="valor_unitario" id="valor_unitario" class="form-control bg-info text-white" step="0.01" >
@@ -81,7 +82,7 @@
             	<th></th>
                 <th>No.</th>
                 <th>CANTIDAD</th>
-                <th>EQUIPO</th>
+                <th>EQUIPO (AREA)</th>
                 <th>ITEM</th>
                 <th>DESCRIPCION</th>
                 <th>Vr. UNITARIO</th>

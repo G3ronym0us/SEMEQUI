@@ -15,17 +15,21 @@
 				    {{ csrf_field() }}
 				    <input name="_method" type="hidden" value="PUT">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
-              <label>CODIGO No.</label>
+              <span class="text-danger">*</span><label>CODIGO No.</label>
               <input type="text" name="cod_item" class="form-control bg-info text-white" value="{{$item->cod_item}}" required>
             </div>
           	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
-          		<label>NOMBRE</label>
+          		<span class="text-danger">*</span><label>NOMBRE</label>
           		<input type="text" name="nom_item" class="form-control bg-info text-white" value="{{$item->nom_item}}" required>
           	</div>
-          	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
-          		<label>COSTO $:</label>
-          		<input type="number" name="costo_item" class="form-control bg-info text-white" value="{{$item->costo_item}}" step="0.01" required>
+          	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
+          		<label>PRECIO COMPRA:</label>
+          		<input type="number" name="precio_compra" class="form-control bg-info text-white" value="{{$item->precio_compra}}" step="0.01">
           	</div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
+              <label>PRECIO VENTA:</label>
+              <input type="number" name="precio_venta" class="form-control bg-info text-white" value="{{$item->precio_venta}}" step="0.01">
+            </div>
           	
             @if($item->servicio == true)
           	<div class="col-lg-1 col-md-1 col-sm-1"></div>
@@ -59,6 +63,9 @@
                 <label class="form-check-label" for="inlineCheckbox3">ACTIVO</label>
               </div>
               @endif
+              <div class="col-lg-12 col-md-12  col-sm-12 col-xs-12 form-group">
+              <span class="text-danger">* Campos Obligatorios</span>
+              </div>
 
             </div>
           </div>

@@ -4,7 +4,7 @@
 
 @foreach($orden as $ord)
 
-<form method="POST" action="{{ url('operacion/orden') }}/{{$ord->id}}">
+<form method="POST" action="{{ url('operacion/orden_servicio') }}/{{$ord->id}}">
 {{ csrf_field() }}
 <input name="_method" type="hidden" value="PUT">
         
@@ -33,7 +33,16 @@
     		<label>ESTADO:</label>
     		<input type="text" name="estado" class="form-control bg-info text-white" value="PENDIENTE" readonly="readonly" required>
     	</div>
-
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+            <label>ITEM</label>
+            <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-nuevo-item" id="btn_nuevo_item">+</a>
+            <select name="item_id" id="item_id" class="form-control bg-info text-white" >
+                @foreach($items as $it)
+                <option value="{{ $it->id_item }}">{{ $it->nom_item }}</option>
+                @endforeach
+            </select>
+            
+        </div>
     	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 form-group">
       		<label>CANTIDAD</label>
       		<input type="text" name="cantidad" id="cantidad" class="form-control bg-info text-white" >

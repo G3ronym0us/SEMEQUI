@@ -7,19 +7,19 @@
   <div class="row">
   	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
       @foreach($cod as $c)
-        <label>CODIGO No.</label>
+        <span class="text-danger">*</span><label>CODIGO No.</label>
         <input type="text" name="id_consecutivo" id="id_consecutivo" value="{{ $c->id_adm_consecutivo }}" hidden>
         <input type="text" name="num_actual" id="num_actual" value="{{ $c->num_actual }}" hidden>
         <input type="text" name="cod_equipo"  class="form-control bg-info text-white" value="{{ $c->prefijo_doc.' - '.$c->num_actual }}" readonly="readonly" required>
       @endforeach
   	</div>
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-  		<label>NOMBRE</label>
+  		<span class="text-danger">*</span><label>NOMBRE</label>
   		<input type="text" name="nom_equipo" class="form-control bg-info text-white" onkeyup="mayusculas(this);" required>
   	</div>
   	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-  		<label>CLASE</label>
-  		<select id="clase_equipo" name="clase_equipo" class="form-control bg-info text-white" required>
+  		<span class="text-danger">*</span><label>CLASE</label>
+  		<select id="clase_equipo" name="clase_equipo" class="form-control bg-info text-white selectpicker" data-live-search="true" required>
         @foreach($clase_equipos as $ce)
           <option value="{{ $ce->id_clase_equipo }}">{{ $ce->nom_clase_equipo }}</option>
         @endforeach  
@@ -32,22 +32,26 @@
       
     </div>
   	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-    		<label>MARCA</label>
+    		<span class="text-danger">*</span><label>MARCA</label>
     		<input type="text" name="marca" class="form-control bg-info text-white" onkeyup="mayusculas(this);" required>
   	</div>
 
     <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 form-group">
   		<label>CARACTERISTICAS</label>
-  		<textarea name="caracteristica_equipo" class="form-control bg-info text-white" onkeyup="mayusculas(this);" required></textarea>
+  		<textarea name="caracteristica_equipo" class="form-control bg-info text-white" onkeyup="mayusculas(this);"></textarea>
   	</div>
   	<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 form-group">
   		<label>OBSERVACIONES</label>
-  		<textarea name="obs_equipo" class="form-control bg-info text-white" onkeyup="mayusculas(this);" required></textarea>
+  		<textarea name="obs_equipo" class="form-control bg-info text-white" onkeyup="mayusculas(this);"></textarea>
   	</div>
     <div class="col-lg-2 col-md-2 col-sm-2 form-group">
       <label>&nbsp;</label>
-      <button class="btn btn-primary form-control" type="submit">GUARDAR</button> 
+      <button class="btn btn-primary form-control" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>GUARDAR</button> 
     </div>
+    <div class="col-lg-12 col-md-12  col-sm-12 col-xs-12 form-group">
+              <span class="text-danger">* Campos Obligatorios</span>
+              </div>
+
   </div>
 </form>
 
@@ -83,12 +87,14 @@
           <td>{{ $cl->caracteristica_equipo }}</td>
           <td>{{ $cl->obs_equipo }}</td>
           <td>
-            <button type="button" id="modal_editar" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-edit-{{$cl->id_equipo}}">EDITAR</button>
-            @if($cl->activo == 1)
-                <button type="button" id="modal_eliminar" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete-{{$cl->id_equipo}}">DESACTIVAR</button>
-                @else
-                <button type="button" id="modal_eliminar" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-activar-{{$cl->id_equipo}}">ACTIVAR</button>
-                @endif
+            <a data-toggle="tooltip" data-placement="top" title="EDITAR EQUIPO"><button type="button" id="modal_editar" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-{{$cl->id_equipo}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+            @if(Auth::user()->rol == 'ADMINISTRADOR')
+              @if($cl->activo == 1)
+              <a data-toggle="tooltip" data-placement="top" title="DESACTIVAR EQUIPO"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$cl->id_equipo}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
+              @else
+              <a data-toggle="tooltip" data-placement="top" title="ACTIVAR EQUIPO"><button type="button" id="modal_eliminar" class="btn btn-success" data-toggle="modal" data-target="#modal-activar-{{$cl->id_equipo}}"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></a>
+              @endif
+            @endif
           </td>
         </tr>
         @include('equipos.activar')

@@ -25,19 +25,14 @@
 			    	<div class="col-lg-12 col-md-12  col-sm-12 col-xs-12 form-group">
 			      		<label>ROL</label>
 			      		<select name="rol" id="rol" class="form-control bg-info text-white" >
-			      			@if($user->rol == 'ADMINISTRADOR')
-			      			<option value="OPERADOR">OPERADOR</option>
-			      			<option value="TECNICO">TECNICO</option>
-			      			<option value="ADMINISTRADOR" selected>ADMINISTRADOR</option>
-			      			@elseif($user->rol == 'TECNICO')
-			      			<option value="OPERADOR">OPERADOR</option>
-			      			<option value="TECNICO" selected>TECNICO</option>
-			      			<option value="ADMINISTRADOR" >ADMINISTRADOR</option>
-			      			@else
-			      			<option value="OPERADOR" selected>OPERADOR</option>
-			      			<option value="TECNICO">TECNICO</option>
-			      			<option value="ADMINISTRADOR" >ADMINISTRADOR</option>
-			      			@endif
+			      			@foreach($roles as $rol)
+			      				@if($rol->nom_rol == $user->rol)
+			      					<option value="{{$rol->id}}" selected>{{ $rol->nom_rol }}</option>
+			      				@else
+    			      				<option value="{{$rol->id}}">{{ $rol->nom_rol }}</option>  				
+			      				@endif
+
+			      			@endforeach
 			      		</select>
 			    	</div>
 			

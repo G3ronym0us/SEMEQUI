@@ -16,7 +16,7 @@
 
 		      			@if($cl->tipo_cliente == 'JURIDICO')
 			    		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
-			      			<label>AREA:</label>
+			      			<span class="text-danger">*</span><label>AREA:</label>
 			      			<select name="area_id" class="form-control bg-info text-white">
 				      			@foreach($areas as $area)
 				      				<option value="{{ $area->id }}">{{ $area->cod_area }} - {{ $area->nombre_area}}</option>
@@ -24,7 +24,7 @@
 			      			</select >
 			      		</div>
 			      		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
-				    		<label>EQUIPO:</label>
+				    		<span class="text-danger">*</span><label>EQUIPO:</label>
 				    		<select name="equipo_id" class="form-control bg-info text-white">
 				      			@foreach($equipos as $equipo)
 				      				<option value="{{ $equipo->id_equipo }}">{{ $equipo->cod_equipo }} - {{ $equipo->nom_equipo}}</option>
@@ -36,7 +36,7 @@
 			      				<input type="text" name="area_id" value="{{ $area->id }}" hidden>
 			      			@endforeach
 			      			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
-					    		<label>EQUIPO:</label>
+					    		<span class="text-danger">*</span><label>EQUIPO:</label>
 					    		<select name="equipo_id" class="form-control bg-info text-white">
 					      			@foreach($equipos as $equipo)
 					      				<option value="{{ $equipo->id_equipo }}">{{ $equipo->cod_equipo }} - {{ $equipo->nom_equipo}}</option>
@@ -45,18 +45,21 @@
 					    	</div>
 			      		@endif
 			    	
-			    	 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+			    	 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
 			    		<label>SERIAL:</label>
-			    		<input type="text" name="serial" id="serial" class="form-control bg-info text-white" required>
+			    		<input type="text" name="serial" onkeyup="mayusculas(this);" id="serial" class="form-control bg-info text-white">
 			    	</div>
-			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+			    	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
 			    		<label>PLACA:</label>
-			    		<input type="text" name="placa" id="placa" class="form-control bg-info text-white" required>
+			    		<input type="text" name="placa" onkeyup="mayusculas(this);" id="placa" class="form-control bg-info text-white">
 			    	</div>
 			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
 			    		<label>DESCRIPCION:</label>
-			    		<input type="text" name="descripcion" id="descripcion" class="form-control bg-info text-white" required>
+			    		<input type="text" name="descripcion" onkeyup="mayusculas(this);" id="descripcion" class="form-control bg-info text-white">
 			    	</div>
+			    	<div class="col-lg-12 col-md-12  col-sm-12 col-xs-12 form-group">
+			    		<span class="text-danger">* Campos Obligatorios</span>
+			        </div>
 
 					<div class="col-lg-12 col-md-12 col-sm-12">
                           <div class="form-group">

@@ -24,7 +24,11 @@ class ItemController extends Controller
     public function index()
     {
         $item = Item::all();
-        return view("items.index",["items"=>$item]);
+        $cod = DB::table('adm_consecutivo')
+                ->select('*')
+                ->where('nom_consecutivo','=','ITEMS')
+                ->get();
+        return view("items.index",["items"=>$item, "cod"=>$cod]);
     }
 
     /**
@@ -49,7 +53,8 @@ class ItemController extends Controller
         $item=new Item;
         $item->cod_item=$request->get('cod_item');
         $item->nom_item=$request->get('nom_item');
-        $item->costo_item=$request->get('costo_item');
+        $item->precio_compra=$request->get('precio_compra');
+        $item->precio_venta=$request->get('precio_venta');
         if ($request->get('servicio') == "true") {
             $item->servicio = true;
         }else{
@@ -64,8 +69,14 @@ class ItemController extends Controller
 
         $item->save();
 
-        $id_consecutivo = $request->get('id_consecutivo_ni');
-        $num_actual = $request->get('num_actual_ni');
+        if ($request->get('ajax')) {
+            $id_consecutivo = $request->get('id_consecutivo_ni');
+            $num_actual = $request->get('num_actual_ni');
+        }else{
+            $id_consecutivo = $request->get('id_consecutivo');
+            $num_actual = $request->get('num_actual');
+        }
+        
         $con = Consecutivos::findOrFail($id_consecutivo);
         $con->num_actual = (int)$num_actual + 1;
         $con->update();
@@ -113,7 +124,8 @@ class ItemController extends Controller
 
         $item->cod_item=$request->get('cod_item');
         $item->nom_item=$request->get('nom_item');
-        $item->costo_item=$request->get('costo_item');
+        $item->precio_compra=$request->get('precio_compra');
+        $item->precio_venta=$request->get('precio_venta');
         if ($request->get('servicio') == "true") {
             $item->servicio = true;
         }else{

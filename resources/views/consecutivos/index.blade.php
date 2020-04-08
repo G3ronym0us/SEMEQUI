@@ -39,7 +39,7 @@
     	<div class="col-lg-2 col-md-2 col-sm-12">
 			<div class="form-group">
         <label>&nbsp;</label>
-				<button class="btn btn-primary form-control" type="submit">Guardar</button> 
+				<button class="btn btn-primary form-control" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> GUARDAR</button> 
 			</div>
         </div>  	
     </div>
@@ -68,7 +68,7 @@
             <td>{{$con->num_final}}</td>
             <td>
               <!--<a data-target="#modal-edit-{{$con->id_adm_consecutivo}}" data-toggle="modal"><button class="btn btn-info">EDITAR</button></a>-->
-              <button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$con->id_adm_consecutivo}}">ELIMINAR</button>
+              <a data-toggle="tooltip" data-placement="top" title="ELIMINAR CONSECUTIVO"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$con->id_adm_consecutivo}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
             </td>    
         </tr>
             @include('consecutivos.delete')

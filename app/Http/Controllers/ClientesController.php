@@ -183,4 +183,12 @@ class ClientesController extends Controller
         }
         
     } 
+    public function getTipoCliente(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $cliente = Clientes::findOrFail($id);
+            return response()->json($cliente->tipo_cliente);
+        }
+        
+    }
 }

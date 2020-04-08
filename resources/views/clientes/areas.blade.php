@@ -15,13 +15,16 @@
 			      	<input type="text" name="id_cliente" class="form-control bg-info text-white" value="{{$cl->id}}" hidden>
 
 			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
-			      		<label>CODIGO No:</label>
+			      		<span class="text-danger">*</span><label>CODIGO No:</label>
 			      		<input type="text" name="cod_area" class="form-control bg-info text-white" required>
 			    	</div>
 			        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
-			    		<label>NOMBRE</label>
-			    		<input type="text" name="nombre_area" class="form-control bg-info text-white" required>
+			    		<span class="text-danger">*</span><label>NOMBRE</label>
+			    		<input type="text" name="nombre_area" onkeyup="mayusculas(this);" class="form-control bg-info text-white" required>
 			    	</div>
+			    	<div class="col-lg-12 col-md-12  col-sm-12 col-xs-12 form-group">
+			    		<span class="text-danger">* Campos Obligatorios</span>
+			        </div>
 					<div class="col-lg-12 col-md-12 col-sm-12">
                           <div class="form-group">
                             <button class="btn btn-success" type="submit">Guardar</button> 

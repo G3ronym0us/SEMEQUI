@@ -1,117 +1,81 @@
-@extends('layouts.template')
-@section('contenido')
-<h1>COTIZACION</h1>
-        
-@foreach($cotizacion as $cot)
-  	<div class="row">
-    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-      		<label>ORDEN No.</label>
-      		<input type="text" name="cod_cotizacion" class="form-control bg-info text-white" value="{{ $cot->cod_cotizacion }}" readonly="readonly">
-    	</div>
-        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 form-group">
-            <label>CLIENTE:</label>
-            <input type="text" name="cod_cotizacion" class="form-control bg-info text-white" value="{{ $cot->cod_cotizacion }}" readonly="readonly">
-        </div>
-    	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-    		<label>UBICACION:</label>
-    		<input type="text" name="ubicacion" class="form-control bg-info text-white" step="0.01" required>
-    	</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style type="text/css">
+        #detalles_cotizacion{
+            width: 100%;
+        }
 
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-            <label>FECHA ING:</label>
-            <input type="text" name="fecha_ingreso" class="form-control bg-info text-white" required>
-        </div>
-    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-    		<label>ESTADO:</label>
-    		<input type="text" name="estado" class="form-control bg-info text-white" step="0.01" value="PENDIENTE" readonly="readonly" required>
-    	</div>
+        .text-right{
+            text-align: right;
+        }
+        .text-center{
+            text-align: center;
+        }
+        .text-left{
+            text-align: left;
+        }
 
-    	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group"></div>
-    	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 form-group">
-      		<label>CANTIDAD</label>
-      		<input type="text" name="cantidad" id="cantidad" class="form-control bg-info text-white" >
-    	</div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-            <label>AREA</label>
-            <select name="area_id" id="area_id" class="form-control bg-info text-white" >
-
-            </select>
-            
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-            <label>EQUIPO</label>
-            <select name="equipo_id" id="equipo_id" class="form-control bg-info text-white" >
-
-            </select>
-            
-        </div>
-    	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-    		<label>VALOR UNITARIO</label>
-    		<input type="number" name="valor_unitario" id="valor_unitario" class="form-control bg-info text-white" step="0.01" >
-    	</div>
-    	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-    		<label>VALOR TOTAL</label>
-    		<input type="number" name="valor_total" id="valor_total" class="form-control bg-info text-white" step="0.01" readonly="readonly" >
-    	</div>
-        <input type="text" name="total" id="total" hidden>
-    	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-			<div class="form-group">
-				<label> </label>
-				<button type="button" id="bt_add" onclick="agregar()" class="btn btn-primary">Agregar</button>
-			</div>
-		</div>
+        thead, tfoot{
+            color: #FFF;
+            background-color: #717D7E;
+        }
 
 
-	</div>
-
-@endforeach
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <table class="table table-striped table-bordered table-condensed table-hover" id="detalles_orden" name="detalles_orden">
-            <thead>
-
-                    <th>No.</th>
-                    <th>CANTIDAD</th>
-                    <th>EQUIPO</th>
-                    <th>DESCRIPCION</th>
-                    <th>Vr. UNITARIO</th>
-                    <th>Vr. TOTAL</th>
-                           </thead>
-
-            <tbody>
-            </tbody>
-
-            <tfoot>
-				<th>TOTAL</th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th><H4 id="totalv">Bs/. 0.00</H4></th>
-			</tfoot>
-        </table>
-    </div>
-</div>
-<center>
+    </style>
+</head>
+<body>
+    @foreach($cotizacion as $cot)
     <div>
-        <div class="form-group">
-            <button class="btn btn-primary" type="submit">Guardar</button> 
-        </div>
+        {{ $cot->nom_municipio.' - '.$cot->nom_departamento.', '.$cot->created_at }}
+        <br>
+        <span>Señores</span>
+        <br>
+        {{ $cot->nom_cliente }}
+        <br><br>
     </div>
-</center>
+    
 
-</form>
-
-
-@endsection
-
-@section('script')
-
-	<script src="http://localhost:8000/js/cotizacion.js"></script>
-    <script>
-
-    </script>
-
-
-@endsection
-</div>
+    <div>
+        <center><h4>COTIZACION</h4></center>
+        <table id="detalles_cotizacion">
+            <thead>
+                <tr>
+                    <th class="col_cantidad text-center">CANT</th>
+                    <th class="col_item text-center">ITEM</th>
+                    <th class="col_equipo text-center">EQUIPO</th>
+                    <th class="col_v_unitario text-center">V. UNITARIO</th>
+                    <th class="col_v_total text-center">V. TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $c=1 ?>
+                @foreach($detalles as $det)
+                    
+                    @if($c % 2)
+                    <tr bgcolor="#FFF">
+                    @else
+                    <tr bgcolor="#F2F3F4">
+                    @endif
+                        <td class="col_cantidad text-center">{{ $det->cantidad }}</td>
+                        <td class="col_item text-left">{{ $det->nom_item }}</td>
+                        <td class="col_equipo text-left">{{ $det->nom_equipo }} ({{ $det->nombre_area }})</td>
+                        <td class="col_v_unitario text-right">{{ $det->valor_unitario }} $</td>
+                        <td class="col_v_total text-right">{{ $det->valor_total }} $</td>
+                    </tr>
+                    <?php $c++ ?>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="text-left" colspan="4"><b>TOTAL</b></td>
+                    <td class="text-right"><b><span>{{ $cot->total }} $</span></b></td>     
+                </tr>
+            </tfoot>
+        </table>
+    @endforeach
+    </div>
+    
+</body>
+</html>

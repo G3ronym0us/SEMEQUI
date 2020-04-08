@@ -27,10 +27,14 @@
   		<input type="text" name="nom_item" id="nom_item" class="form-control bg-info text-white" onkeyup="mayusculas(this);" required>
   	</div>
 
-  	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-  		<label>COSTO $:</label>
-  		<input type="number" name="costo_item" class="form-control bg-info text-white" step="0.01" required>
-  	</div>
+  	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 form-group">
+      <label>PRECIO COMPRA:</label>
+      <input type="number" name="precio_compra" class="form-control bg-info text-white" step="0.01" required>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 form-group">
+      <label>PRECIO VENTA:</label>
+      <input type="number" name="precio_venta" class="form-control bg-info text-white" step="0.01" required>
+    </div>
 
   	<div class="col-lg-2 col-md-2 col-sm-2 form-check form-check-inline">
       <input class="form-check-input" type="radio" id="servicio" name="servicio" value="true" checked="true">

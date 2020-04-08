@@ -13,7 +13,8 @@ class Item extends Model
     protected $fillable = [
     	'cod_item',
      	'nom_item', 
-     	'costo_item', 
+     	'precio_compra', 
+     	'precio_venta', 
      	'servivio', 
      	'activo'
      ];

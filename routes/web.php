@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/', 'EmpresaController@index');
+Route::get('/', 'HomeController@showDashboard');
 
 Route::get('users', 'UsersController@index');
 
@@ -34,7 +34,8 @@ Route::resources([
     'operacion/orden_servicio' => 'OrdenController',
     'facturacion/cotizacion' => 'CotizacionController',
     'facturacion/facturacion' => 'FacturacionController',
-    'seguridad/usuarios' => 'UsersController'
+    'seguridad/usuarios' => 'UsersController',
+    'seguridad/roles' => 'RolController'
 ]);
 
 Route::get('/obtenerEquipos', 'OrdenController@obtenerEquipos');
@@ -57,13 +58,27 @@ Route::get('/getDatosCliente/{id}', 'ClientesController@getDatosCliente');
 Route::get('/getEquiposList/', 'EquiposController@getEquiposList');
 Route::get('/getEquiposForArea/{id}', 'AreaEquipoController@getEquiposForArea');
 Route::get('/getCodigo/{nom_consecutivo}', 'CotizacionController@getCodigo');
+Route::get('/getTipoCliente/{id}', 'ClientesController@getTipoCliente');
+Route::get('/getOrden/{id}', 'OrdenController@getOrden');
+Route::get('/getTarifa/{id}', 'CotizacionController@getTarifa');
 
 
 Route::get('/operacion/informes', 'OrdenController@generarInformes');
+Route::get('/informes/filtrarOrden/', 'OrdenController@filtrarOrden');
+
+Route::get('/facturacion/informes', 'FacturacionController@generarInformes');
+Route::get('/informes/filtrarFacturas/', 'FacturacionController@filtrarFacturas');
 
 Route::get('/agregarCotizacion/{id}', 'OrdenController@agregarCotizacion');
 Route::get('/agregarOrden/{id}', 'FacturacionController@agregarOrden');
+Route::get('/agregarFacturacion/{id}', 'FacturacionController@agregarFacturacion');
 Route::post('/agregarClase', 'EquiposController@agregarClase');
+
+Route::get('/imprimir/cotizacion/{id}', 'GeneradorController@imprimirCotizacion');
+Route::get('/imprimir/orden_servicio/{id}', 'GeneradorController@imprimirOrden');
+Route::get('/imprimir/facturacion/{id}', 'GeneradorController@imprimirFacturacion');
+
+Route::post('/completar/orden_servicio/', 'OrdenController@completarOrden');
 
 
 Route::get('clientes-list', 'ClientesController@ClientesList'); 
@@ -72,7 +87,7 @@ Route::post('/administracion/activar/{id}', 'ClientesController@activarClientes'
 Route::post('/administracion/activarEquipo/{id}', 'EquiposController@activarEquipo');
 Route::post('/administracion/activarItem/{id}', 'ItemController@activarItem');
 
-Route::name('print')->get('/facturacion/informes', 'GeneradorController@imprimirFactura');
+Route::get('/dashboard', 'HomeController@showDashboard'); 
 
 
 Route::get('/home', 'HomeController@index')->name('home');

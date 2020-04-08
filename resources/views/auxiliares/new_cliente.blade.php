@@ -15,18 +15,18 @@
 				{{ csrf_field() }}
 				
 			    	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-			      		<label>CODIGO </label>
+			      		<span class="text-danger">*</span><label>CODIGO </label>
 			      		<input type="text" name="ajax" id="ajax" value="true" hidden>
 			      		<input type="text" name="id_consecutivo" id="id_consecutivo" hidden>
         				<input type="text" name="num_actual" id="num_actual" hidden>
-			      		<input type="text" name="cod_cliente" id="cod_cliente" class="form-control bg-info text-white" required>
+			      		<input type="text" name="cod_cliente" id="cod_cliente" class="form-control bg-info text-white" readonly="readonly">
 			    	</div>
 			    	<div class="col-lg-6 col-md-6  col-sm-6 col-xs-12 form-group">
 			      		<span class="text-danger">*</span><label>CLIENTE</label>
 			      		<input type="text" name="nom_cliente" id="nom_cliente" onkeyup="mayusculas(this);" class="form-control bg-info text-white" required>
 			    	</div>
 			    	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-				  		<label>TIPO:</label>
+				  		<span class="text-danger">*</span><label>TIPO:</label>
 				  		<select name="tipo_cliente" class="form-control bg-info text-white">
 				        <option value="NATURAL">NATURAL</option>
 				        <option value="JURIDICO">JURIDICO</option>  
@@ -35,7 +35,7 @@
 
 			    	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
 			    		<span class="text-danger">*</span><label>IDENTIFICACION</label>
-			    		<input type="text" name="nit_cliente" style="text-transform:uppercase" class="form-control bg-info text-white"   required>
+			    		<input type="text" name="nit_cliente" onkeyup="mayusculas(this);" class="form-control bg-info text-white"   required>
 			    	</div>
 			    	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
 				  		<span class="text-danger">*</span><label>DEPARTAMENTO:</label>
@@ -50,24 +50,24 @@
 
 			        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 form-group">
 			    		<span class="text-danger">*</span><label>DIRECCION</label>
-			    		<input type="text" name="dir_cliente" style="text-transform:uppercase" class="form-control bg-info text-white" required>
+			    		<input type="text" name="dir_cliente" onkeyup="mayusculas(this);" class="form-control bg-info text-white" required>
 			    	</div>
 
 			    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-			    		<span class="text-danger">*</span><label>TELEFONO</label>
-			    		<input type="text" name="tel_cliente" class="form-control bg-info text-white"   required>
+			    		<label>TELEFONO</label>
+			    		<input type="text" name="tel_cliente" class="form-control bg-info text-white">
 			    	</div>
 
 			    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
 			    		<label>CELULAR</label>
-			    		<input type="text" name="cel_cliente" class="form-control bg-info text-white"   required>
+			    		<input type="text" name="cel_cliente" class="form-control bg-info text-white">
 			    	</div>
 			    	<div class="col-lg-6 col-md-6  col-sm-6 col-xs-12 form-group">
 			      		<label>CORREO</label>
-			      		<input type="text" name="correo_cliente" style="text-transform:uppercase" class="form-control bg-info text-white"   required>
+			      		<input type="text" name="correo_cliente" onkeyup="mayusculas(this);" class="form-control bg-info text-white">
 			    	</div>
 			    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-				      <label>STATUS:</label>
+				      <span class="text-danger">*</span><label>STATUS:</label>
 				      <select name="status" class="form-control bg-info text-white">
 				        <option value="ACTIVO">ACTIVO</option>
 				        <option value="INACTIVO">INACTIVO</option>  

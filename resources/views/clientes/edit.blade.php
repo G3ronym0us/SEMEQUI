@@ -16,7 +16,7 @@
 				<input name="_method" type="hidden" value="PUT">
 			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
 			      		<label>CODIGO </label>
-			      		<input type="text" name="cod_cliente" class="form-control bg-info text-white" value="{{ $cl->cod_cliente }}" required>
+			      		<input type="text" name="cod_cliente" class="form-control bg-info text-white" value="{{ $cl->cod_cliente }}" readonly="readonly">
 			    	</div>
 			        
 
@@ -34,16 +34,16 @@
 			    	</div>
 			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
 			    		<label>TELEFONO</label>
-			    		<input type="text" name="tel_cliente" class="form-control bg-info text-white" value="{{ $cl->tel_cliente }}"  required>
+			    		<input type="text" name="tel_cliente" class="form-control bg-info text-white" value="{{ $cl->tel_cliente }}">
 			    	</div>
 
 			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
 			    		<label>CELULAR</label>
-			    		<input type="text" name="cel_cliente" class="form-control bg-info text-white" value="{{ $cl->cel_cliente }}"  required>
+			    		<input type="text" name="cel_cliente" class="form-control bg-info text-white" value="{{ $cl->cel_cliente }}">
 			    	</div>
 			    	<div class="col-lg-12 col-md-12  col-sm-12 col-xs-12 form-group">
 			      		<label>CORREO</label>
-			      		<input type="text" name="correo_cliente" style="text-transform:uppercase" class="form-control bg-info text-white" value="{{ $cl->correo_cliente }}"  required>
+			      		<input type="text" name="correo_cliente" style="text-transform:uppercase" class="form-control bg-info text-white" value="{{ $cl->correo_cliente }}">
 			    	</div>
 			        
 			    	

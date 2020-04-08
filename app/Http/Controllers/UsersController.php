@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use App\User;
+use App\Rol;
 use DB;
 
 class UsersController extends Controller
@@ -23,7 +24,8 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::All();
-        return view('seguridad.usuarios.index',[ 'users'=>$users ]);
+        $roles = Rol::All();
+        return view('seguridad.usuarios.index',[ 'users'=>$users, 'roles'=>$roles ]);
     }
     public function usersList()
     {

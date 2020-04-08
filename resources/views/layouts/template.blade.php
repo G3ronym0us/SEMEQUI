@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="{{asset('css/bootstrap-select.min.css')}}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('css/AdminLTE.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/bootstrap-select.min.css')}}">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. 
     <link rel="stylesheet" href="{{asset('css/_all-skins.min.css')}}">
@@ -66,7 +68,12 @@
                   <li class="user-footer">
                     
                     <div class="pull-right">
-                      <a href="{{url('/logout')}}" class="btn btn-default btn-flat">Cerrar</a>
+                      <a class="btn btn-default btn-flat" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                          @csrf
+                      </form>
                     </div>
                   </li>
                 </ul>
@@ -88,7 +95,7 @@
             <li class="header"></li>
 
             <li>
-              <a href="{{url('compras/proveedor')}}">
+              <a href="{{url('/dashboard')}}">
                 <i class="fa fa-user"></i>
                 <span>DASHBOARD</span>
               </a>
@@ -109,7 +116,7 @@
 
             <li class="treeview">
               <a href="#">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-file-text" aria-hidden="true"></i>
                 <span>FACTURACIÓN</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
@@ -135,9 +142,10 @@
               </ul>
             </li>
 
+            @if(Auth::user()->rol == 'ADMINISTRADOR')
             <li class="treeview">
               <a href="#">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-cogs" aria-hidden="true"></i>
                 <span>SEGURIDAD</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
@@ -146,6 +154,7 @@
                 <li><a href="{{url('seguridad/roles')}}"><i class="fa fa-circle-o"></i>ROLES</a></li>
               </ul>
             </li>
+            @endif
             
  <!--
             <li>
@@ -286,6 +295,7 @@
     <script src="{{asset('js/jQuery-3.4.1.min.js')}}"></script>
     @stack('scripts')
     <!-- Bootstrap 3.3.5 -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="{{asset('js/bootstrap.min.js')}}"></script>
     <!-- AdminLTE App -->
     <script src="{{asset('js/app.min.js')}}"></script>
@@ -294,6 +304,7 @@
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js "></script>
 
+    <script src="{{asset('js/bootstrap-select.min.js')}}"></script>
     @yield('script')
 
     

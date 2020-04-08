@@ -6,41 +6,52 @@
   {{ csrf_field() }}
   <div class="row">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-      <label>CODIGO No.</label>
-      <input type="text" name="cod_item" class="form-control bg-info text-white" required>
+      @foreach($cod as $c)
+        <span class="text-danger">*</span><label>CODIGO No.</label>
+        <input type="text" name="id_consecutivo" id="id_consecutivo" value="{{ $c->id_adm_consecutivo }}" hidden>
+        <input type="text" name="num_actual" id="num_actual" value="{{ $c->num_actual }}" hidden>
+        <input type="text" name="cod_item"  class="form-control bg-info text-white" value="{{ $c->prefijo_doc.' - '.$c->num_actual }}" readonly="readonly" required>
+      @endforeach
     </div>
 
   	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 form-group">
-  		<label>NOMBRE</label>
+  		<span class="text-danger">*</span><label>NOMBRE</label>
   		<input type="text" name="nom_item" class="form-control bg-info text-white" onkeyup="mayusculas(this);" required>
   	</div>
 
-  	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-  		<label>COSTO $:</label>
-  		<input type="number" name="costo_item" class="form-control bg-info text-white" step="0.01" required>
+  	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 form-group">
+  		<label>PRECIO COMPRA:</label>
+  		<input type="number" name="precio_compra" class="form-control bg-info text-white" step="0.01" required>
   	</div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 form-group">
+      <label>PRECIO VENTA:</label>
+      <input type="number" name="precio_venta" class=" number form-control bg-info text-white"  step="0.01" required>
+    </div>
 
-  	<div class="col-lg-2 col-md-2 col-sm-2 form-check form-check-inline">
+  	<div class="col-lg-1 col-md-1 col-sm-3 form-check form-check-inline">
       <input class="form-check-input" type="radio" id="servicio" name="servicio" value="true" checked="true">
       <label class="form-check-label" for="inlineCheckbox1">SERVICIO</label>
     </div>
 
-    <div class="col-lg-2 col-md-2 col-sm-2 form-check form-check-inline">
+    <div class="col-lg-1 col-md-1 col-sm-3 form-check form-check-inline">
       <input class="form-check-input" type="radio" id="servicio" name="servicio" value="false ">
       <label class="form-check-label" for="inlineCheckbox2">PRODUCTO</label>
     </div>
 
-    <div class="col-lg-2 col-md-2 col-sm-2 form-check form-check-inline">
+    <div class="col-lg-1 col-md-1 col-sm-3 form-check form-check-inline">
       <input class="form-check-input" type="checkbox" id="activo" name="activo" value="true" checked="true">
       <label class="form-check-label" for="inlineCheckbox3">ACTIVO</label>
     </div>
 
-    <div class="col-lg-1 col-md-1 col-sm-1">
+    <div class="col-lg-2 col-md-2 col-sm-3">
       <div class="form-group">
         <label>&nbsp;</label>
-        <button class="btn btn-primary" type="submit">Guardar</button> 
+        <button class="btn btn-primary form-control" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>  GUARDAR</button> 
       </div>
     </div>
+    <div class="col-lg-12 col-md-12  col-sm-12 col-xs-12 form-group">
+              <span class="text-danger">* Campos Obligatorios</span>
+              </div>
                                      	
   </div>
 </form>
@@ -53,7 +64,8 @@
         <tr>
           <th>CODIGO</th>
           <th>NOMBRE</th>
-          <th>COSTO</th>
+          <th>P. COMPRA</th>
+          <th>P. VENTA</th>
           <th>S/P</th>
           <th>STATUS</th>
           <th>OPCIONES</th>
@@ -68,7 +80,8 @@
         @endif
           <td>{{$item->cod_item}}</td>
           <td>{{$item->nom_item}}</td>
-          <td>{{$item->costo_item}}</td>
+          <td>{{$item->precio_compra}}</td>
+          <td>{{$item->precio_venta}}</td>
           @if($item->servicio == true)
             <td>SERVICIO</td>
           @else
@@ -80,12 +93,14 @@
             <td>INACTIVO</td>
           @endif
             <td>
-              <button type="button" id="modal_editar" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-{{$item->id_item}}">EDITAR</button>
+              <a data-toggle="tooltip" data-placement="top" title="EDITAR ITEM"><button type="button" id="modal_editar" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-{{$item->id_item}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+          @if(Auth::user()->rol == 'ADMINISTRADOR')
             @if($item->activo == 1)
-                <button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$item->id_item}}">DESACTIVAR</button>
+                <a data-toggle="tooltip" data-placement="top" title="DESACTIVAR ITEM"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$item->id_item}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
                 @else
-                <button type="button" id="modal_eliminar" class="btn btn-success" data-toggle="modal" data-target="#modal-activar-{{$item->id_item}}">ACTIVAR</button>
+                <a data-toggle="tooltip" data-placement="top" title="ACTIVAR ITEM"><button type="button" id="modal_eliminar" class="btn btn-success" data-toggle="modal" data-target="#modal-activar-{{$item->id_item}}"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></a>
                 @endif
+            @endif
         </tr>
 
         @include('items.edit')
@@ -133,6 +148,8 @@
   function mayusculas(e) {
     e.value = e.value.toUpperCase();
   }
+
+
 
 </script>
 

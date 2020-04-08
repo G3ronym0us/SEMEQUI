@@ -1,27 +1,36 @@
 $( document ).ready(function() {
 
+	$('#btn_asignar_areas').hide();
+	$('#btn_asignar_equipo').hide();
 	$("#btn_guardar_cotizacion").hide();
 
 	id_cotizacion = $("#id_cotizacion").val();
 	agregarCotizacion(id_cotizacion);
 
-	id = $("#clientes_id").val();
-	getArea(id);
-	getUbicacion(id);
+	//OBTIENE LOS DATOS DEL CLIENTE PARA LA VISATA EDIT
+
+	if($("#clientes_id").val() != 0){
+		id = $("#clientes_id").val();
+		getArea(id);
+		getUbicacion(id);
+		gestionarBotones(id); // Activa o Desactiva botones segun el tipo de cliente (personal/juridico)
+	}
 	
+	//SELECCIONA EL VALOR UNITARIO DEL ITEM
 	$("#item_id").change(function(){
 		item_id = $("#item_id").val();
 		getItem(item_id);
 	});
 
-	$("#cantidad").change(calcular);
-	$("#valor_unitario").change(calcular);
+	$("#cantidad").keyup(calcular);
+	$("#valor_unitario").keyup(calcular);
 
+	// OBTIENE LOS DATOS PARA PODER GENERARLE UNA FACTURA AL CLIENTE SELECCIONADO
 	$("#clientes_id").change(function(){
 		id = $("#clientes_id").val();
 		getArea(id);
 		getUbicacion(id);
-
+		gestionarBotones(id); // Activa o Desactiva botones segun el tipo de cliente (personal/juridico)
      });
 
 	$("#area_id").change(function(){
@@ -66,6 +75,7 @@ $( document ).ready(function() {
 	           		nom_cliente = $('#nom_cliente').val();
 	           		fila = '<option value="'+response+'" selected>'+nom_cliente+'</option>';
 	           		$('#clientes_id').append(fila);
+	           		$('#clientes_id').selectpicker('refresh');
 	           }
 	         });
 
@@ -164,6 +174,7 @@ $( document ).ready(function() {
 	           		nom_item= $('#nom_item').val();
 	           		fila = '<option value="'+response+'" selected>'+nom_item+'</option>';
 	           		$('#item_id').append(fila);
+	           		$('#item_id').selectpicker('refresh');
 	           }
 	         });
 
@@ -186,12 +197,15 @@ var tipo_cliente='';
  
 function agregar(){
 
+	$('#clientes_id option:not(:selected)').remove();
 	equipo=$("#equipo_id option:selected").text();
+	area=$("#area_id option:selected").text();
 	item=$("#item_id option:selected").text();
 	cantidad=$("#cantidad").val();
 	valor_unitario=$("#valor_unitario").val();
 	valor_total=$("#valor_total").val();
 	item_id=$("#item_id").val();
+	area_id=$("#area_id").val();
 	equipo_a=document.getElementById('equipo_id').value.split('_');
 	equipo_id = equipo_a[0];
 	descripcion = equipo_a[1];
@@ -201,7 +215,7 @@ function agregar(){
 		total=total+subtotal[cont];
 		$("#total").val(total);
 		f = cont + 1;
-		var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button>   '+f+'</td><td><input type="number" name="cantidad[]" value="'+cantidad+'" hidden>'+cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+equipo_id+'">'+equipo+'</td><td><input type="hidden" name="item_id[]" value="'+item_id+'">'+item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+valor_unitario+'" hidden>'+valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+valor_total+'" hidden>'+valor_total+'</td></tr>';		
+		var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button>   '+f+'</td><td><input type="number" name="cantidad[]" value="'+cantidad+'" hidden>'+cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+equipo_id+'"><input type="hidden" name="area_id[]" value="'+area_id+'">'+equipo+' ('+area+')</td><td><input type="hidden" name="item_id[]" value="'+item_id+'">'+item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+valor_unitario+'" hidden>'+valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+valor_total+'" hidden>'+valor_total+'</td></tr>';		
 		cont++;
 		limpiar();
 		$("#totalv").html("COP/. "+total);
@@ -248,21 +262,30 @@ function calcular(){
 function getArea(id) {
 	$.get("/getArea/"+id,function(response) {
 			$("#area_id").empty();
-			$("#equipo_id").empty();
-			for (i =0; i<response.length ; i++) {
-			if (i === 0) {
-				getEquipo(response[i].id);
-			}	
-				$("#area_id").append('<option value="'+response[i].id+'">'+response[i].nombre_area+'</option>');
-			}
+			$.get("/getTipoCliente/"+id,function(data) {
+				if (data == 'JURIDICO') {
+					$("#area_id").append('<option value="">SELECCIONE UN AREA</option>');
+				}
+				$("#equipo_id").empty();
+				$("#equipo_id").append('<option value="">SELECCIONE UN EQUIPO</option>');
+				for (i =0; i<response.length ; i++) {
+				if (i === 0) {
+					getEquipo(response[i].id);
+				}	
+					$("#area_id").append('<option value="'+response[i].id+'">'+response[i].nombre_area+'</option>');
+					$('#area_id').selectpicker('refresh');
+				}
+			});
 		});
 }
 
 function getEquipo(id){
 	$.get("/getEquipos/"+id,function(response) {
 				$("#equipo_id").empty();
+				$("#equipo_id").append('<option value="">SELECCIONE UN EQUIPO</option>');
 				for (i =0; i<response.length ; i++) {
 					$("#equipo_id").append('<option value="'+response[i].id_equipo+'_'+response[i].descripcion+'">'+response[i].nom_equipo+'</option>');
+					$('#equipo_id').selectpicker('refresh');
 				}
 			});
 }
@@ -274,7 +297,7 @@ function agregarCotizacion(id){
 					subtotal[cont]=(response[i].cantidad*response[i].valor_unitario);
 					total=total+subtotal[cont];
 					$("#total").val(total);
-					var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="'+response[i].id_detalle_cotizacion+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'">'+response[i].nom_equipo+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="text" name="descripcion[]" value="'+response[i].descripcion+'" hidden>'+response[i].descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
+					var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="'+response[i].id_detalle_cotizacion+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'"><input type="hidden" name="area_id[]" value="'+response[i].id_area+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="text" name="descripcion[]" value="'+response[i].descripcion+'" hidden>'+response[i].descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
 					cont++;
 					f++;
 					limpiar();
@@ -285,13 +308,17 @@ function agregarCotizacion(id){
 			});
 }
 
-function getItem(id){
-	$.get("/getItem/"+id,function(response) {
+// SELECCIONA EL VALOR UNITARIO DEL ITEM
 
-					$("#valor_unitario").val(response.costo_item);
+function getItem(id){
+	cliente_id = $("#clientes_id").val();
+	item_id = $("#item_id").val();
+	$.get( "/getTarifa/"+id, { cliente_id: cliente_id, item_id: item_id } )
+	  .done(function( data ) {
+	    			$("#valor_unitario").val(data.precio_venta);
+					$('#cantidad').focus();
 					calcular();
-				
-			});
+	  });
 }
 
 function getUbicacion(id){
@@ -315,7 +342,10 @@ function getDepartamentos(){
   $.get("/getDepartamentos/",function(response) {
     for (i =0; i<response.length ; i++) {
       $("#id_departamento").append('<option value="'+response[i].id+'">'+response[i].nom_departamento+'</option>');
-      getMunicipio(response[i].id);
+      if (i == 0) {
+      	getMunicipio(response[i].id);
+      }
+      
     }
   });
 }
@@ -357,6 +387,7 @@ function getAreaME(id){
 				$("#area_id_me").empty();
 				for (i =0; i<response.length ; i++) {	
 					$("#area_id_me").append('<option value="'+response[i].id+'">'+response[i].nombre_area+'</option>');
+
 				}
 
 			});
@@ -444,3 +475,17 @@ function getCodigo(nom_consecutivo) {
 }
 
 /* FIN DE FUNCIONES PARA EL MODAL NUEVO ITEM */
+
+function gestionarBotones(id){
+	$.get("/getTipoCliente/"+id,function(response) {
+	
+		$('#btn_asignar_equipo').show();
+		if (response == 'JURIDICO') {
+			$('#btn_asignar_areas').show();
+			$('#div_area_id').show();
+		}else{
+			$('#btn_asignar_areas').hide();
+			$('#div_area_id').hide();
+		}
+	});
+}

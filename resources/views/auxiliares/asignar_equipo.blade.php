@@ -32,11 +32,11 @@
 			    	</div>
 			    	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
 			    		<label>PLACA:</label>
-			    		<input type="text" name="placa" id="placa" class="form-control bg-info text-white" required>
+			    		<input type="text" name="placa" id="placa" class="form-control bg-info text-white" >
 			    	</div>
 			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
 			    		<label>DESCRIPCION:</label>
-			    		<input type="text" name="descripcion" id="descripcion" class="form-control bg-info text-white" required>
+			    		<input type="text" name="descripcion" id="descripcion" class="form-control bg-info text-white" >
 			    	</div>
 
 					<div class="col-lg-12 col-md-12 col-sm-12">

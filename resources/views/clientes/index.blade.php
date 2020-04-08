@@ -9,15 +9,15 @@
 
   	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
       @foreach($cod as $c)
-    		<label>CODIGO No.</label>
+    		<span class="text-danger">*</span><label>CODIGO No.</label>
         <input type="text" name="id_consecutivo" id="id_consecutivo" value="{{ $c->id_adm_consecutivo }}" hidden>
         <input type="text" name="num_actual" id="num_actual" value="{{ $c->num_actual }}" hidden>
     		<input type="text" name="cod_cliente"  class="form-control bg-info text-white" value="{{ $c->prefijo_doc.' - '.$c->num_actual }}" readonly="readonly" required>
       @endforeach
   	</div>
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-  		<label>DEPARTAMENTO:</label>
-  		<select name="id_departamento"  id="id_departamento" class="form-control bg-info text-white">
+  		<span class="text-danger">*</span><label>DEPARTAMENTO:</label>
+  		<select name="id_departamento"  id="id_departamento" class="form-control bg-info text-white selectpicker" data-live-search="true">
         @foreach($departamentos as $d)
           <option value="{{ $d->id }}">{{ $d->nom_departamento }}</option>
         @endforeach  
@@ -25,17 +25,17 @@
   	</div>
 
   	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
-  		<label>MUNICIPIO:</label>
-  		<select name="id_municipio" id="id_municipio" class="form-control bg-info text-white">
+  		<span class="text-danger">*</span><label>MUNICIPIO:</label>
+  		<select name="id_municipio" id="id_municipio" class="form-control bg-info text-white selectpicker" data-live-search="true">
          
       </select>
   	</div>
   	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-    		<label>NIT/CC:</label>
+    		<span class="text-danger">*</span><label>NIT/CC:</label>
     		<input type="number" name="nit_cliente" class="form-control bg-info text-white" step="0.01" required>
   	</div>
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-  		<label>TIPO:</label>
+  		<span class="text-danger">*</span><label>TIPO:</label>
   		<select name="tipo_cliente" class="form-control bg-info text-white">
         <option value="NATURAL">NATURAL</option>
         <option value="JURIDICO">JURIDICO</option>  
@@ -43,15 +43,15 @@
   	</div>
 
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
-        <label>CLIENTE:</label>
+        <span class="text-danger">*</span><label>CLIENTE:</label>
         <input type="text" name="nom_cliente" onkeyup="mayusculas(this);" class="form-control bg-info text-white" step="0.01" required>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-      <label>DIRECCION</label>
+      <span class="text-danger">*</span><label>DIRECCION</label>
       <input type="text" name="dir_cliente" onkeyup="mayusculas(this);" class="form-control bg-info text-white" step="0.01" required>
     </div>
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-      <label>STATUS:</label>
+      <span class="text-danger">*</span><label>STATUS:</label>
       <select name="status" class="form-control bg-info text-white">
         <option value="ACTIVO">ACTIVO</option>
         <option value="INACTIVO">INACTIVO</option>  
@@ -75,9 +75,12 @@
   	<div class="col-lg-2 col-md-2 col-sm-2">
 			<div class="form-group">
         <label>&nbsp;</label>
-				<button class="btn btn-success form-control" type="submit">Guardar</button> 
+				<button class="btn btn-success form-control" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;GUARDAR</button> 
 			</div>
-    </div>  	
+    </div>
+    <div class="col-lg-12 col-md-12  col-sm-12 col-xs-12 form-group">
+              <span class="text-danger">* Campos Obligatorios</span>
+              </div>  	
   </div>
 </form>
 
@@ -113,16 +116,22 @@
               <td>{{ $cl->cel_cliente }}</td>
               <td>{{ $cl->correo_cliente }}</td>
               <td>
+                <div>
                 @if($cl->tipo_cliente == 'JURIDICO')
-                <button type="button" id="modal_editar" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-areas-{{$cl->id}}">AREAS</button>
+                  <a data-toggle="tooltip" data-placement="top" title="ASIGNAR AREAS"><button type="button" id="modal_areas" class="btn btn-info" data-toggle="modal" data-target="#modal-areas-{{$cl->id}}"><i class="fa fa-building-o" aria-hidden="true"></i></button></a>
                 @endif
-                <button type="button" id="modal_editar" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-equipos-{{$cl->id}}">EQUIPOS</button>
-                <button type="button" id="modal_editar" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{$cl->id}}">EDITAR</button>
-                @if($cl->status == 'ACTIVO')
-                <button type="button" id="modal_eliminar" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete-{{$cl->id}}">DESACTIVAR</button>
-                @else
-                <button type="button" id="modal_eliminar" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-activar-{{$cl->id}}">ACTIVAR</button>
-                @endif
+                  <a data-toggle="tooltip" data-placement="top" title="ASIGNAR EQUIPOS"><button type="button" id="modal_equipos" class="btn btn-info" data-toggle="modal" data-target="#modal-equipos-{{$cl->id}}"><i class="fa fa-laptop" aria-hidden="true"></i>  </button></a>
+                  
+                  <a data-toggle="tooltip" data-placement="top" title="EDITAR CLIENTE"><button type="button" id="modal_editar" class="btn btn-warning" data-toggle="modal" data-target="#modal-edit-{{$cl->id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
+
+                  @if(Auth::user()->rol == 'ADMINISTRADOR')
+                    @if($cl->status == 'ACTIVO')
+                      <a data-toggle="tooltip" data-placement="top" title="DESACTIVAR CLIENTE"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$cl->id}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
+                    @else
+                      <a data-toggle="tooltip" data-placement="top" title="ACTIVAR CLIENTE"><button type="button" id="modal_eliminar" class="btn btn-success" data-toggle="modal" data-target="#modal-activar-{{$cl->id}}"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></a>
+                    @endif
+                  @endif
+                  </div>
               </td>
             </tr>
 
@@ -149,7 +158,7 @@
   </div>
 </div>
 
-@include('clientes.edit')
+
         
 
 @endsection
@@ -157,6 +166,11 @@
 @section('script')
   <script type="text/javascript">
     $(document).ready(function() {
+
+   
+          $('[data-toggle="tooltip"]').tooltip();   
+      
+
         $('#clientes').DataTable({   
           language: {
             info: "_TOTAL_ REGISTROS",
@@ -180,17 +194,15 @@
         });
 
         id = $('#id_departamento').val();
-        console.log(id);
         getMunicipio(id);
     } );
 
     function getMunicipio(id){
-      console.log(id);
       $.get("/getMunicipios/"+id,function(response) {
         $("#id_municipio").empty();
-        console.log(response);
         for (i =0; i<response.length ; i++) {
           $("#id_municipio").append('<option value="'+response[i].id+'">'+response[i].nom_municipio+'</option>');
+          $('#id_municipio').selectpicker('refresh');
         }
       });
     }

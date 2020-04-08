@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests\OrdenFormRequest;
+use Barryvdh\DomPDF\Facade as PDF;
 use App\Orden;
 use App\Consecutivos;
 use App\Cotizacion;
@@ -13,6 +14,7 @@ use App\DetalleOrden;
 use App\Clientes;
 use App\Equipos;
 use App\Item;
+use App\observacionesOrden;
 use DB;
 
 class OrdenController extends Controller
@@ -45,7 +47,7 @@ class OrdenController extends Controller
         $clientes = Clientes::all();
         $cod = DB::table('adm_consecutivo')
                     ->select('*')
-                    ->where('nom_consecutivo','=','COTIZACION')
+                    ->where('nom_consecutivo','=','ORDEN')
                     ->get();
         $items = Item::all();
         $tecnicos = DB::table('users')
@@ -73,14 +75,16 @@ class OrdenController extends Controller
                 $orden->cod_orden=$request->get('cod_orden');
                 $orden->total=$request->get('total');
                 $orden->estado=$request->get('estado');
+                
                 $orden->save();
 
                 $equipo_id = $request->get('equipo_id');
                 $cantidad = $request->get('cantidad');
                 $item_id = $request->get('item_id');
+                $area_id = $request->get('area_id');
                 $valor_unitario = $request->get('valor_unitario');
                 $valor_total = $request->get('valor_total');
-                $cotizaciones = $request->get('cotizaciones');
+                $cotizaciones = $request->get('cotizaciones_p');
 
                 $cont = 0;
 
@@ -88,23 +92,27 @@ class OrdenController extends Controller
                     $detalle = new DetalleOrden();
                     $detalle->orden_servicio_id= $orden->id;
                     $detalle->item_id= $item_id[$cont];
+                    $detalle->area_id= $area_id[$cont];
                     $detalle->equipo_id= $equipo_id[$cont];
                     $detalle->cantidad= $cantidad[$cont];
                     $detalle->valor_unitario= $valor_unitario[$cont];
                     $detalle->valor_total= $valor_total[$cont];
+                    $detalle->completo=false;
                     $detalle->save();
                     $cont++;
 
                 }
 
+            if ($cotizaciones != null) {
                 for ($i=0; $i < count($cotizaciones) ; $i++) { 
                     $cotizacion = Cotizacion::findOrFail($cotizaciones[$i]);
                     $cotizacion->estado = 'PROCESADA/ORDEN';
                     $cotizacion->update();
                 }
+            }
 
-                $id_consecutivo = $request->get('id_consecutivo');
-        $num_actual = $request->get('num_actual');
+                $id_consecutivo = $request->get('id_consecutivo_or');
+        $num_actual = $request->get('num_actual_or');
         $con = Consecutivos::findOrFail($id_consecutivo);
         $con->num_actual = (int)$num_actual + 1;
         $con->update();
@@ -141,8 +149,9 @@ class OrdenController extends Controller
         ->where('os.id','=',$id)
         ->select('os.*','cl.nom_cliente','m.nom_municipio','d.nom_departamento')
         ->get();
+        $items = Item::all();
 
-        return view("orden.edit",["orden"=>$orden]);
+        return view("orden.edit",["orden"=>$orden, "items"=>$items]);
     }
 
     /**
@@ -154,7 +163,46 @@ class OrdenController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $orden = Orden::findOrFail($id);
+        $orden->clientes_id=$request->get('clientes_id');
+        $orden->cod_orden=$request->get('cod_orden');
+        $orden->total=$request->get('total');
+        $orden->estado=$request->get('estado');
+        $orden->update();
+
+        $equipo_id = $request->get('equipo_id');
+        $cantidad = $request->get('cantidad');
+        $item_id = $request->get('item_id');
+        $area_id = $request->get('area_id');
+        $valor_unitario = $request->get('valor_unitario');
+        $valor_total = $request->get('valor_total');
+        $id_detalle = $request->get('id');
+        $cotizaciones = $request->get('cotizaciones_p');
+
+        $cont = 0;
+        while ($cont < count($equipo_id)) {
+            if ($id_detalle[$cont]) {
+
+            }else{
+                $detalle = new DetalleOrden();
+                $detalle->orden_servicio_id= $orden->id;
+                $detalle->item_id= $item_id[$cont];
+                $detalle->area_id= $area_id[$cont];
+                $detalle->equipo_id= $equipo_id[$cont];
+                $detalle->cantidad= $cantidad[$cont];
+                $detalle->valor_unitario= $valor_unitario[$cont];
+                $detalle->valor_total= $valor_total[$cont];
+                $detalle->save();
+            }   
+            $cont++;
+
+                }
+        
+
+
+
+
+        return Redirect::to('operacion/orden_servicio');
     }
 
     /**
@@ -189,7 +237,7 @@ class OrdenController extends Controller
         if ($request->ajax()) {
             $cotizacion=DB::table('detalles_cotizacion as dc')
             ->join('cotizacion as c','c.id_cotizacion','=','dc.cotizacion_id')
-            ->join('adm_areas as a','a.clientes_id','=','c.cliente_id')
+            ->join('adm_areas as a','a.id','=','dc.area_id')
             ->join('adm_equipo as eq','eq.id_equipo','=','dc.equipo_id')
             ->join('adm_item as it','it.id_item','=','dc.item_id')
             ->join('rel_area_equipo as re',function($join){
@@ -197,7 +245,7 @@ class OrdenController extends Controller
                 $join->on('eq.id_equipo','=','re.equipos_id');
             })
             ->where('dc.cotizacion_id','=',$id)
-            ->select('dc.*','eq.*','re.serial','re.placa','re.descripcion', 'it.*')
+            ->select('dc.*','eq.*','re.serial','a.nombre_area','a.id as id_area','re.placa','re.descripcion', 'it.*')
             ->get();
          return response()->json($cotizacion);
         }
@@ -210,14 +258,14 @@ class OrdenController extends Controller
         if ($request->ajax()) {
             $orden=DB::table('detalles_orden_servicio as dos')
             ->join('orden_servicio as os','os.id','=','dos.orden_servicio_id')
-            ->join('adm_areas as a','a.clientes_id','=','os.clientes_id')
+            ->join('adm_areas as a','a.id','=','dos.area_id')
             ->join('adm_equipo as eq','eq.id_equipo','=','dos.equipo_id')
             ->join('adm_item as it','it.id_item','=','dos.item_id')
             ->join('rel_area_equipo as re',function($join){
                 $join->on('a.id','=','re.areas_id');
                 $join->on('eq.id_equipo','=','re.equipos_id');
             })
-            ->select('dos.*','eq.*','re.serial','re.placa','re.descripcion', 'it.*')
+            ->select('dos.*','eq.*','a.id as id_area','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
             ->where('dos.orden_servicio_id','=',$id)
             ->get();
          return response()->json($orden);
@@ -225,12 +273,121 @@ class OrdenController extends Controller
         
     } 
 
-    public function generarInformes(Request $request, $id)
+    public function generarInformes()
     {
         $ordenes = DB::table('orden_servicio as os')
-                        ->join('adm_clientes as cl', 'os.clientes_id','=','cl_id')
-                        ->select('os.*','cl.');
+                        ->join('adm_clientes as cl', 'os.clientes_id','=','cl.id')
+                        ->join('users as us', 'us.id','=','os.tecnico_id')
+                        ->join('municipios as m', 'm.id','=','cl.id_municipio')
+                        ->join('departamentos as d', 'm.departamento_id','=','d.id')
+                        ->select('os.*','cl.nom_cliente','us.name','m.nom_municipio','d.nom_departamento')
+                        ->get();
+
+        $tecnicos = DB::table('users')
+                        ->where('rol','=','TECNICO')
+                        ->get();
+
+        $clientes = Clientes::all();
+        $departamentos = DB::table('departamentos')->get();
+
+        return view("orden.informes",["ordenes"=>$ordenes, "tecnicos"=>$tecnicos, "clientes"=>$clientes, "departamentos"=>$departamentos]);
         
         
-    }   
+    }
+
+    public function filtrarOrden(Request $request)
+    {
+
+
+        $ordenes = Orden::query();
+        $ordenes = $ordenes->join('adm_clientes as cl', 'orden_servicio.clientes_id','=','cl.id')->join('users as us', 'us.id','=','orden_servicio.tecnico_id')->join('municipios as m', 'm.id','=','cl.id_municipio')->join('departamentos as d', 'm.departamento_id','=','d.id')->select('orden_servicio.*','cl.nom_cliente','us.name','m.nom_municipio','d.nom_departamento');
+                        
+
+        if($request->get('tecnico')){
+            $tecnico = $request->get('tecnico');
+            $tecnico_id = $request->get('tecnico_id');
+            $ordenes = $ordenes->where($tecnico,'=',$tecnico_id);
+        }
+
+        if($request->get('cliente')){
+            $cliente_id = $request->get('cliente_id');
+            $ordenes = $ordenes->where('cl.id','=',$cliente_id);
+        }
+
+        if($request->get('fecha')){
+            $fecha_inicio = $request->get('fecha_inicio');
+            $fecha_fin = $request->get('fecha_fin');
+            $ordenes = $ordenes->where('orden_servicio.created_at','>=',$fecha_inicio);
+            $ordenes = $ordenes->where('orden_servicio.created_at','<=',$fecha_fin);
+        }
+
+        if($request->get('f_estado')){
+            $estado = $request->get('estado');
+            $ordenes = $ordenes->where('orden_servicio.estado','=',$estado);
+        }
+
+        if($request->get('f_ubicacion')){
+            $id_municipio = $request->get('id_municipio');
+            $ordenes = $ordenes->where('id_municipio','=',$id_municipio);
+        }
+
+        $ordenes = $ordenes->get();
+        $tecnicos = DB::table('users')
+                        ->where('rol','=','TECNICO')
+                        ->get();
+
+        $clientes = Clientes::all();
+        $departamentos = DB::table('departamentos')->get();
+
+        //return view("orden.informes",["ordenes"=>$ordenes, "tecnicos"=>$tecnicos, "clientes"=>$clientes, "departamentos"=>$departamentos]);
+        $pdf = PDF::loadView('orden.informePDF', compact(['ordenes']))->setPaper('letter', 'landscape');
+        return $pdf->stream('Informe-de-Ordenes',array('Attachment'=>0));
+
+        
+    }
+
+    public function getOrden(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $orden = Orden::findOrFail($id);
+         return response()->json($orden);
+        }
+        
+    }    
+
+    public function completarOrden(Request $request){
+
+        $orden_id = $request->get('orden_id');
+        $detalles = $request->get('detalles');
+        $id_detalle = $request->get('id_detalle');
+        $observaciones = $request->get('observaciones');
+
+        $orden = Orden::findOrFail($orden_id);
+        $orden->estado = 'COMPLETADA';
+        $orden->update();
+
+        for ($i=0; $i < count($id_detalle) ; $i++) { 
+            $indice = array_search($id_detalle[$i],$detalles,false);
+            if(empty($indice)){
+                $detalle_orden = DetalleOrden::findOrFail($id_detalle[$i]);
+                $detalle_orden->completo = false;
+                $detalle_orden->update();
+
+                $observacion = new observacionesOrden;
+                $observacion->detalle_orden_id = $id_detalle[$i];
+                $observacion->observacion = $observaciones[$i];
+                $observacion->save();
+                
+            }else{
+                $detalle_orden = DetalleOrden::findOrFail($id_detalle[$i]);
+                $detalle_orden->completo = true;
+                $detalle_orden->update();
+            }
+        }
+        
+
+        return Redirect::to('operacion/orden_servicio');
+
+
+    }
 }
