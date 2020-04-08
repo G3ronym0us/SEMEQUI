@@ -18,11 +18,11 @@
     	</div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
             <span class="text-danger">*</span><label>CLIENTE:</label>
-            <a data-toggle="tooltip" data-placement="top" title="NUEVO CLIENTE"><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-nuevo-cliente" id="btn_nuevo_cliente"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i></button></a>
+            <a data-toggle="tooltip" data-placement="top" title="NUEVO CLIENTE"><a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-nuevo-cliente" id="btn_nuevo_cliente"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i></a></a>
 
-            <a data-toggle="tooltip" data-placement="top" title="ASIGNAR AREAS"><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-asignar-areas" id="btn_asignar_areas"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-building-o" aria-hidden="true"></i></button></a>
+            <a data-toggle="tooltip" data-placement="top" title="ASIGNAR AREAS"><a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-asignar-areas" id="btn_asignar_areas"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-building-o" aria-hidden="true"></i></a></a>
 
-            <a data-toggle="tooltip" data-placement="top" title="ASIGNAR EQUIPOS"><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-asignar-equipos" id="btn_asignar_equipo"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-laptop" aria-hidden="true"></i></button></a>
+            <a data-toggle="tooltip" data-placement="top" title="ASIGNAR EQUIPOS"><a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-asignar-equipos" id="btn_asignar_equipo"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-laptop" aria-hidden="true"></i></a></a>
             <select name="clientes_id" id="clientes_id" class="form-control bg-info text-white selectpicker" data-live-search="true" required>
                 <option value="0">SELECCIONE UN CLIENTE</option>
             	@foreach($clientes as $cliente)
@@ -39,7 +39,7 @@
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <div class="form-group">
                 <label>&nbsp;</label>
-                <button type="button" id="btn_agregarCotizacion" class="btn btn-primary form-control"><i class="fa fa-floppy-o" aria-hidden="true"></i> AGREGAR</button>
+                <a type="button" id="btn_agregarCotizacion" class="btn btn-primary form-control"><i class="fa fa-floppy-o" aria-hidden="true"></i> AGREGAR</a>
             </div>
         </div>
     	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
@@ -67,7 +67,7 @@
 
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
             <label>ITEM</label>
-            <a data-toggle="tooltip" data-placement="top" title="NUEVO ITEM"><button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-nuevo-item" id="btn_nuevo_item"><i class="fa fa-plus" aria-hidden="true"></i></button></a>
+            <a data-toggle="tooltip" data-placement="top" title="NUEVO ITEM"><a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-nuevo-item" id="btn_nuevo_item"><i class="fa fa-plus" aria-hidden="true"></i></a></a>
             <select name="item_id" id="item_id" class="form-control bg-info text-white selectpicker" data-live-search="true" >
                 @foreach($items as $it)
                 <option value="{{ $it->id_item }}">{{ $it->nom_item }}</option>
