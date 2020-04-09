@@ -28,12 +28,13 @@
   	</div>
 
   	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 form-group">
-      <label>PRECIO COMPRA:</label>
-      <input type="number" name="precio_compra" class="form-control bg-info text-white" step="0.01" required>
+      <label>COSTO:</label>
+      <input type="number" name="precio_compra" id="precio_compra" onkeyup="verificar()" class="form-control bg-info text-white" step="0.01" required>
+      <span id="error_costo" class="text-danger"></span>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 form-group">
       <label>PRECIO VENTA:</label>
-      <input type="number" name="precio_venta" class="form-control bg-info text-white" step="0.01" required>
+      <input type="number" name="precio_venta" id="precio_venta" onkeyup="verificar()" class="form-control bg-info text-white" step="0.01" required>
     </div>
 
   	<div class="col-lg-2 col-md-2 col-sm-2 form-check form-check-inline">
@@ -46,7 +47,7 @@
       <label class="form-check-label" for="inlineCheckbox2">PRODUCTO</label>
     </div>
 
-    <div class="col-lg-2 col-md-2 col-sm-2 form-check form-check-inline">
+    <div class="col-lg-1 col-md-1 col-sm-2 form-check form-check-inline">
       <input class="form-check-input" type="checkbox" id="activo" name="activo" value="true" checked="true">
       <label class="form-check-label" for="inlineCheckbox3">ACTIVO</label>
     </div>

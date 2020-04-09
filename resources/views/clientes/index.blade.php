@@ -60,15 +60,15 @@
 
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
       <label>TELEFONO:</label>
-      <input type="tel" name="tel_cliente" title="INGRESE UN NUMERO TELEFONICO" class="form-control bg-info text-white"  required>
+      <input type="tel" name="tel_cliente" title="INGRESE UN NUMERO TELEFONICO" class="form-control bg-info text-white" >
     </div>
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
         <label>CELULAR:</label>
-        <input type="tel" name="cel_cliente" class="form-control bg-info text-white" title="INGRESE UN NUMERO TELEFONICO" required>
+        <input type="tel" name="cel_cliente" class="form-control bg-info text-white" title="INGRESE UN NUMERO TELEFONICO">
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
       <label>CORREO</label>
-      <input type="email" name="correo_cliente" onkeyup="mayusculas(this);" class="form-control bg-info text-white" step="0.01" required>
+      <input type="email" name="correo_cliente" onkeyup="mayusculas(this);" class="form-control bg-info text-white">
     </div>
     
 
@@ -190,7 +190,9 @@
             zeroRecords:"NO HAY CONCIDENCIAS",
             infoEmpty:"",
             infoFiltered:""
-          }
+          },
+        order: [[0, "desc"]]
+
         });
 
         id = $('#id_departamento').val();

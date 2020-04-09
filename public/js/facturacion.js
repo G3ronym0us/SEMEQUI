@@ -3,6 +3,7 @@ $( document ).ready(function() {
 	// EVENTOS INICIADOS AL CARGAR LA PAGINA
 	$('#btn_asignar_areas').hide();
 	$('#btn_asignar_equipo').hide();	
+	$("#cantidad").val(1);
 	id = $("#clientes_id").val();
 
 	id_facturacion = $("#id_facturacion").val();
@@ -283,7 +284,7 @@ function agregar(){
 	}
 }
 function limpiar(){
-	$("#cantidad").val("");
+	$("#cantidad").val(1);
 	$("#valor_unitario").val("");
 	$("#valor_total").val("");
 }
@@ -621,3 +622,16 @@ function agregarFacturacion(id){
 				}
 			});
 }
+
+function verificar(){
+    costo = parseInt($('#precio_compra').val());
+    precio = parseInt($('#precio_venta').val());
+
+    if (costo > precio) {
+      $('#error_costo').html('El costo no puede ser mayor que el precio');
+      $('#btn_guardar').attr('disabled',true);
+    }else{
+      $('#error_costo').html('');
+      $('#btn_guardar').attr('disabled',false);
+    }
+  }

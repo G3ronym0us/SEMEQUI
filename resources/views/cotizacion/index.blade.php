@@ -18,7 +18,7 @@
         <table class="table table-striped table-bordered table-condensed table-hover" id="cotizacion_table" name="cotizacion_table">
             <thead class="thead-dark">
                 <tr>
-                    <th>ORDEN No.</th>
+                    <th>No. COT</th>
                     <th>CLIENTE</th>
                     <th>FECHA</th>
                     <th>TOTAL</th>
@@ -81,7 +81,8 @@
           zeroRecords:"NO HAY CONCIDENCIAS",
           infoEmpty:"",
           infoFiltered:""
-        }
+        },
+        order: [[2, "desc"]]
 
       });
       

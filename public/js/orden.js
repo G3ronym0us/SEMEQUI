@@ -2,6 +2,7 @@ $( document ).ready(function() {
 	
 	$('#btn_asignar_areas').hide();
 	$('#btn_asignar_equipo').hide();
+	$("#cantidad").val(1);
 
 	id_orden = $("#id").val();
 	getDetallesOrden(id_orden);
@@ -262,7 +263,7 @@ function agregar(){
 }
 
 function limpiar(){
-	$("#cantidad").val("");
+	$("#cantidad").val(1);
 	$("#valor_unitario").val("");
 	$("#valor_total").val("");
 }
@@ -577,3 +578,16 @@ function getCodigo(nom_consecutivo) {
 
 /* FIN DE FUNCIONES PARA EL MODAL NUEVO ITEM */
 
+
+function verificar(){
+    costo = parseInt($('#precio_compra').val());
+    precio = parseInt($('#precio_venta').val());
+
+    if (costo > precio) {
+      $('#error_costo').html('El costo no puede ser mayor que el precio');
+      $('#btn_guardar').attr('disabled',true);
+    }else{
+      $('#error_costo').html('');
+      $('#btn_guardar').attr('disabled',false);
+    }
+  }

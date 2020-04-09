@@ -30,6 +30,7 @@ class CotizacionController extends Controller
     {
         $cotizaciones=DB::table('cotizacion as co')
                     ->join('adm_clientes as cli', 'co.cliente_id','=','cli.id')
+                    ->select('co.*','cli.nom_cliente')
                     ->get();
 
         return view("cotizacion.index",["cotizaciones"=>$cotizaciones]);

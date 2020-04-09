@@ -3,6 +3,7 @@ $( document ).ready(function() {
 	$('#btn_asignar_areas').hide();
 	$('#btn_asignar_equipo').hide();
 	$("#btn_guardar_cotizacion").hide();
+	$("#cantidad").val(1);
 
 	id_cotizacion = $("#id_cotizacion").val();
 	agregarCotizacion(id_cotizacion);
@@ -76,6 +77,8 @@ $( document ).ready(function() {
 	           		fila = '<option value="'+response+'" selected>'+nom_cliente+'</option>';
 	           		$('#clientes_id').append(fila);
 	           		$('#clientes_id').selectpicker('refresh');
+					getUbicacion(response);
+					gestionarBotones(response);
 	           }
 	         });
 
@@ -209,6 +212,11 @@ function agregar(){
 	equipo_a=document.getElementById('equipo_id').value.split('_');
 	equipo_id = equipo_a[0];
 	descripcion = equipo_a[1];
+	console.log(descripcion);
+	if (descripcion == "null") {
+		descripcion = '';
+		console.log(descripcion);
+	}
 	if (equipo_id!="" && cantidad!="" && cantidad>0 && valor_unitario!="" && valor_total!="")
 	{
 		subtotal[cont]=(cantidad*valor_unitario);
@@ -229,7 +237,7 @@ function agregar(){
 }
 
 function limpiar(){
-	$("#cantidad").val("");
+	$("#cantidad").val(1);
 	$("#valor_unitario").val("");
 	$("#valor_total").val("");
 }
@@ -489,3 +497,16 @@ function gestionarBotones(id){
 		}
 	});
 }
+
+  function verificar(){
+    costo = parseInt($('#precio_compra').val());
+    precio = parseInt($('#precio_venta').val());
+
+    if (costo > precio) {
+      $('#error_costo').html('El costo no puede ser mayor que el precio');
+      $('#btn_guardar').attr('disabled',true);
+    }else{
+      $('#error_costo').html('');
+      $('#btn_guardar').attr('disabled',false);
+    }
+  }

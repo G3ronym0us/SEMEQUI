@@ -20,12 +20,13 @@
   	</div>
 
   	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 form-group">
-  		<label>PRECIO COMPRA:</label>
-  		<input type="number" name="precio_compra" class="form-control bg-info text-white" step="0.01" required>
+  		<label>COSTO:</label>
+  		<input type="number" name="precio_compra" id="precio_compra" onkeyup="verificar()" class="form-control bg-info text-white" step="0.01" required>
+      <span id="error_costo" class="text-danger"></span>
   	</div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 form-group">
       <label>PRECIO VENTA:</label>
-      <input type="number" name="precio_venta" class=" number form-control bg-info text-white"  step="0.01" required>
+      <input type="number" name="precio_venta" id="precio_venta" onkeyup="verificar()" class=" number form-control bg-info text-white"  step="0.01" required>
     </div>
 
   	<div class="col-lg-1 col-md-1 col-sm-3 form-check form-check-inline">
@@ -46,7 +47,7 @@
     <div class="col-lg-2 col-md-2 col-sm-3">
       <div class="form-group">
         <label>&nbsp;</label>
-        <button class="btn btn-primary form-control" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>  GUARDAR</button> 
+        <button id="btn_guardar" class="btn btn-primary form-control" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>  GUARDAR</button> 
       </div>
     </div>
     <div class="col-lg-12 col-md-12  col-sm-12 col-xs-12 form-group">
@@ -139,7 +140,8 @@
           zeroRecords:"NO HAY CONCIDENCIAS",
           infoEmpty:"",
           infoFiltered:""
-        }
+        },
+        order: [[0, "desc"]]
 
       });
       
@@ -147,6 +149,19 @@
 
   function mayusculas(e) {
     e.value = e.value.toUpperCase();
+  }
+
+  function verificar(){
+    costo = parseInt($('#precio_compra').val());
+    precio = parseInt($('#precio_venta').val());
+
+    if (costo > precio) {
+      $('#error_costo').html('El costo no puede ser mayor que el precio');
+      $('#btn_guardar').attr('disabled',true);
+    }else{
+      $('#error_costo').html('');
+      $('#btn_guardar').attr('disabled',false);
+    }
   }
 
 

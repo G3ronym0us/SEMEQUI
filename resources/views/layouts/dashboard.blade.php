@@ -28,7 +28,7 @@
 				    <div class="progress" style="height: 5px;">
 						<div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: {{ $porcentaje_ordenes }}%; height: 5px;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
 					</div>
-				    <p class="card-text">AUMENTO {{ $porcentaje_ordenes }} LOS ULTIMOS 30 DIAS</p>
+				    <p class="card-text">AUMENTO {{ $porcentaje_ordenes }}% LOS ULTIMOS 30 DIAS</p>
 		  		</div>
 		  	</div>
 		  </div>
