@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Input;
 use App\Http\Requests\EmpresaFormRequest;
 use App\Empresa;
 use DB;
@@ -44,8 +43,10 @@ class EmpresaController extends Controller
      */
     public function store(Request $request)
     {
-        
-            $empresa=new Empresa;
+            $empresa = Empresa::first();
+            if (!($empresa)) {
+                $empresa=new Empresa;
+            }
             $empresa->id_municipio=$request->get('id_municipio');
             $empresa->cod_empresa=$request->get('cod_empresa');
             $empresa->nit_empresa=$request->get('nit_empresa');
@@ -54,10 +55,16 @@ class EmpresaController extends Controller
             $empresa->tel_empresa=$request->get('tel_empresa');
             $empresa->cel_empresa=$request->get('cel_empresa');
             $empresa->mail=$request->get('mail');
-            $empresa->logo=$request->get('logo'); 
-
-            $empresa->save();    
-        
+            if($request->hasFile('logo')){
+                $file=$request->file('logo');
+                $file->move(public_path().'/img/empresa/',$file->getClientOriginalName());
+                $empresa->logo=$file->getClientOriginalName();
+            } 
+            if (!($empresa)) {
+                $empresa->save();    
+            }else{
+                $empresa->update();
+            }
         
         return Redirect::to('administracion/empresa');
     }

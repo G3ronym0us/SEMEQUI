@@ -3,10 +3,6 @@
 <head>
     <title></title>
     <style type="text/css">
-        #detalles_cotizacion{
-            width: 100%;
-        }
-
         .text-right{
             text-align: right;
         }
@@ -17,36 +13,127 @@
             text-align: left;
         }
 
-        thead, tfoot{
-            color: #FFF;
-            background-color: #717D7E;
+        table {
+          border-collapse: collapse;
+          width: 100%;
         }
 
+        .bordered {
+          border: 1px solid black;
+        }
+
+        .w-20{
+            width: 20%;
+        }
+
+        .w-18{
+            width: 18%;
+        }
+
+        .w-25{
+            width: 25%; 
+        }
+
+        .w-37{
+            width: 37%; 
+        }
+
+        .w-40{
+            width: 40%; 
+        }
+        .w-8{
+            width: 8%; 
+        }
+        .w-34{
+            width: 34%; 
+        }
+        .w-4{
+            width: 4%; 
+        }
+        .w-15{
+            width: 15%; 
+        }
+        .w-80{
+            width: 80%;
+        }
+        .w-60{
+            width: 60%;
+            margin: 0;
+        }
+
+        .align-left{
+            text-align: left;
+        }
+        .border-top{
+            border-top: 1px solid #000;
+        }
+        #logo{
+            padding: 0px;
+            margin: 0px;
+        }
+        footer {
+                position: fixed; 
+                bottom: -10px; 
+                left: 0px; 
+                right: 0px;
+                height: 50px; 
+            }
 
     </style>
 </head>
 <body>
-    @foreach($cotizacion as $cot)
-    <div>
-        {{ $cot->nom_municipio.' - '.$cot->nom_departamento.', '.$cot->created_at }}
-        <br>
-        <span>Señores</span>
-        <br>
-        {{ $cot->nom_cliente }}
-        <br><br>
-    </div>
-    
+    <center><h1>COTIZACIÓN</h1></center><br>
+    @foreach($empresa as $emp)
+    <table class="" id="datos_empresa">
+        <tr class="" >
+            <td style="width: 120px;" rowspan="6"><center><img id="logo" src="{{public_path('img/empresa/'.$emp->logo)}}" width="100px" height="100px"></center></td>
+            <td class="">{{ $emp->nom_empresa }}</td>
+            <td style="width: 120px; " class="text-center">Cotizacion</td>
+        </tr>
+        <tr class="">
+            <td class="">{{ $emp->dir_empresa }}</td>
+            <td class="text-center">N° de Cotización</td>
+        </tr>
+        <tr class="">
+            <td class="">EMAIL - {{ $emp->mail }}</td>
+            <td class="text-center border-top">{{ substr($cotizacion->cod_cotizacion,6) }}</td>
+        </tr>
+        <tr class="">
+            <td class="">TEL. {{ $emp->tel_empresa }} + CELULAR: {{ $emp->cel_empresa }}</td>
+            <td></td>
+        </tr>
+        <tr class="">
+            <td class="">NIT: {{ $emp->nit_empresa }}</td>
+            <td class="text-center border-top">Fecha</td>
+        </tr>
+        <tr class="">
+            <td class=""></td>
+            <td class="text-center border-top">{{ date("d.m.Y") }}</td>
+        </tr>
+    </table>
+    @endforeach
 
-    <div>
-        <center><h4>COTIZACION</h4></center>
+    <br>
+
+    <span>Cliente</span><br>
+    <div class="align-left">
+        <hr class="w-60">
+    </div>
+    <span>NOMBRE CLIENTE: {{$cotizacion->nom_cliente}}</span><br>
+    <span>NIT /CC: {{$cotizacion->nit_cliente}}</span><br>
+    <span>DIRECCION: {{$cotizacion->dir_cliente}}</span><br>
+    <span>UBICACION: {{$cotizacion->nom_departamento.' - '.$cotizacion->nom_municipio}}</span><br>
+    <span>TEL. CELULAR: {{$cotizacion->tel_cliente}}</span><br>
+    <span>CORREO: {{$cotizacion->correo_cliente}}</span><br><br><br>
         <table id="detalles_cotizacion">
             <thead>
-                <tr>
-                    <th class="col_cantidad text-center">CANT</th>
-                    <th class="col_item text-center">ITEM</th>
-                    <th class="col_equipo text-center">EQUIPO</th>
-                    <th class="col_v_unitario text-center">V. UNITARIO</th>
-                    <th class="col_v_total text-center">V. TOTAL</th>
+                <tr class="bordered">
+                    <th class="bordered col_cantidad text-center w-4">No.</th>
+                    <th class="bordered col_cantidad text-center w-8">CANT</th>
+                    <th class="bordered col_item text-center w-23">DESCRIPCION</th>
+                    <th class="bordered col_equipo text-center w-35">AREA/EQUIPO</th>
+                    <th class="bordered col_equipo text-center w-15">Vr. UNITARIO</th>
+                    <th class="bordered col_equipo text-center w-15">Vr. TOTAL</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,24 +145,41 @@
                     @else
                     <tr bgcolor="#F2F3F4">
                     @endif
-                        <td class="col_cantidad text-center">{{ $det->cantidad }}</td>
-                        <td class="col_item text-left">{{ $det->nom_item }}</td>
-                        <td class="col_equipo text-left">{{ $det->nom_equipo }} ({{ $det->nombre_area }})</td>
-                        <td class="col_v_unitario text-right">{{ $det->valor_unitario }} $</td>
-                        <td class="col_v_total text-right">{{ $det->valor_total }} $</td>
+                        <td class="bordered col_cantidad text-center w-4">{{ $c }}</td>
+                        <td class="bordered col_item text-center w-8">{{ $det->cantidad }}</td>
+                        <td class="bordered col_equipo text-left w-23">{{ $det->nom_item }}</td>
+                        <td class="bordered col_v_unitario text-left w-35">{{ $det->nombre_area.' - '.$det->nom_equipo }}</td>
+                        <td class="bordered col_v_unitario text-right w-15">$ {{ $det->valor_unitario }}</td>
+                        <td class="bordered col_v_unitario text-right w-15">$ {{ $det->valor_total }}</td>
                     </tr>
                     <?php $c++ ?>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
-                    <td class="text-left" colspan="4"><b>TOTAL</b></td>
-                    <td class="text-right"><b><span>{{ $cot->total }} $</span></b></td>     
+                    <th colspan="4"></th>
+                    <th class="bordered">TOTAL</th>
+                    <th class="bordered text-right">$ {{$cotizacion->total}}</th>
                 </tr>
             </tfoot>
         </table>
-    @endforeach
-    </div>
+
+    <br><br>
+
+
+    <footer>
+        <table class="bordered">
+            <tr>
+                <th class="bordered text-left w-20">FORMA DE PAGO</th>
+                <td class="bordered text-left w-80">{{$cotizacion->forma_pago}}</td>
+            </tr>
+            <tr>
+                <th class="bordered text-left w-20">OBSERVACION</th>
+                <td class="bordered text-left w-80">{{$cotizacion->observacion}}</td>
+            </tr>
+        </table>
+    </footer>
+
     
 </body>
 </html>

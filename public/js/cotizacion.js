@@ -100,15 +100,27 @@ $( document ).ready(function() {
 	           data: form.serialize(), // serializes the form's elements.
 	           success: function(response)
 	           {
+	           		placa = response.placa;
+	           		descripcion = response.descripcion;
+	           		if(response.placa == null){
+						placa = "";
+					}
+					if(response.descripcion == null){
+						descripcion = "";
+					}
 	           		nombre_area = $("#area_id_me option:selected").text();
 	           		nom_equipo = $("#equipo_id_me option:selected").text();
 	           		if (tipo_cliente == 'JURIDICO') {
-	           			fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+response.serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+response.placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+response.descripcion+'</div>';
+	           			fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+response.serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
 	    				$('#tabla-area-equipo').append(fila);
 	           		}else{
-	           			fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+response.serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+response.placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+response.descripcion+'</div>';
+	           			fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+response.serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
 	    				$('#tabla-area-equipo').append(fila);
 	           		}
+
+	           		$('#equipo_id').append('<option value="'+response.equipo_id+'_'+response.descripcion+'" selected>'+nom_equipo+'</option>');
+	           		$('#equipo_id').selectpicker('refresh');
+	           		$('#modal-asignar-equipos').modal('hide');
 	           		
 	           }
 	         });
@@ -177,6 +189,7 @@ $( document ).ready(function() {
 	           		nom_item= $('#nom_item').val();
 	           		fila = '<option value="'+response+'" selected>'+nom_item+'</option>';
 	           		$('#item_id').append(fila);
+	           		getItem(response);
 	           		$('#item_id').selectpicker('refresh');
 	           }
 	         });
@@ -187,6 +200,57 @@ $( document ).ready(function() {
 	});
 
 	/* FIN DE EVENTOS PARA EL MODAL NUEVO ITEM */
+
+	$("#form_nueva_cot").submit(function(e) {
+
+    	e.preventDefault(); // avoid to execute the actual submit of the form.
+
+	    var form = $(this);
+	    var url = form.attr('action');
+	    var data = form.serialize();
+
+
+	    $.ajax({
+	           type: "POST",
+	           url: url,
+	           data: form.serialize(), // serializes the form's elements.	           
+	           success: function(response)
+	           {
+	           		if ($('#imprimir').is(":checked")) {
+	           			$("#form_nueva_cot")[0].reset();
+		           		getClientes();
+		           		$("#area_id").empty();
+		           		$("#area_id").append('<option value="false">SELECCIONE UN AREA</option>');
+		           		$("#area_id").selectpicker('refresh');
+		           		$("#equipo_id").empty();
+		           		$("#equipo_id").append('<option value="false">SELECCIONE UN EQUIPO</option>');
+		           		$("#equipo_id").selectpicker('refresh');
+		           		$('#detalles_cotizacion tbody').empty();
+		           		cont = 0;
+		           		total=0;
+		           		$("#totalv").html("COP/. "+total);
+		           		limpiar();
+		           		getCodigoCot();
+		           		$('#mensaje').html('<div class="alert alert-success alert-dismissible fade show" role="alert">LA COTIZACION HA SIDO CREADA CON EXITO<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+		           		window.open('/imprimir/cotizacion/'+response,'_blank');
+	           		}else{
+	           			window.location.href = "/facturacion/cotizacion/create";
+	           		}
+	           		
+	           }
+	         });
+
+	    
+	});
+
+	$('#observacion').hide(); 	
+	$("#obs_check").click(function() {
+        if($(this).is(":checked")){
+            $('#observacion').show();         
+        }else{
+            $('#observacion').hide(); 
+        }
+    }); 
 
 });
 
@@ -200,7 +264,7 @@ var tipo_cliente='';
  
 function agregar(){
 
-	$('#clientes_id option:not(:selected)').remove();
+	
 	equipo=$("#equipo_id option:selected").text();
 	area=$("#area_id option:selected").text();
 	item=$("#item_id option:selected").text();
@@ -223,12 +287,13 @@ function agregar(){
 		total=total+subtotal[cont];
 		$("#total").val(total);
 		f = cont + 1;
-		var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button>   '+f+'</td><td><input type="number" name="cantidad[]" value="'+cantidad+'" hidden>'+cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+equipo_id+'"><input type="hidden" name="area_id[]" value="'+area_id+'">'+equipo+' ('+area+')</td><td><input type="hidden" name="item_id[]" value="'+item_id+'">'+item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+valor_unitario+'" hidden>'+valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+valor_total+'" hidden>'+valor_total+'</td></tr>';		
+		var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+cantidad+'" hidden>'+cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+equipo_id+'"><input type="hidden" name="area_id[]" value="'+area_id+'">'+equipo+' ('+area+')</td><td><input type="hidden" name="item_id[]" value="'+item_id+'">'+item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+valor_unitario+'" hidden>'+valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+valor_total+'" hidden>'+valor_total+'</td></tr>';		
 		cont++;
 		limpiar();
 		$("#totalv").html("COP/. "+total);
 		evaluar();
 		$('#detalles_cotizacion').append(fila);
+		$('#clientes_id option:not(:selected)').remove();
 	}
 	else
 	{
@@ -290,10 +355,22 @@ function getArea(id) {
 function getEquipo(id){
 	$.get("/getEquipos/"+id,function(response) {
 				$("#equipo_id").empty();
+				$('#equipo_id').selectpicker('refresh');
 				$("#equipo_id").append('<option value="">SELECCIONE UN EQUIPO</option>');
 				for (i =0; i<response.length ; i++) {
 					$("#equipo_id").append('<option value="'+response[i].id_equipo+'_'+response[i].descripcion+'">'+response[i].nom_equipo+'</option>');
 					$('#equipo_id').selectpicker('refresh');
+				}
+			});
+}
+
+function getClientes(){
+	$.get("/getClientes/",function(response) {
+				$("#clientes_id").empty();
+				$("#clientes_id").append('<option value="">SELECCIONE UN CLIENTE</option>');
+				for (i =0; i<response.length ; i++) {
+					$("#clientes_id").append('<option value="'+response[i].id+'">'+response[i].nom_cliente+'</option>');
+					$('#clientes_id').selectpicker('refresh');
 				}
 			});
 }
@@ -304,8 +381,11 @@ function agregarCotizacion(id){
 				for (i =0; i<response.length ; i++) {
 					subtotal[cont]=(response[i].cantidad*response[i].valor_unitario);
 					total=total+subtotal[cont];
+					if (response[i].descripcion == null) {
+						descripcion = "";
+					}
 					$("#total").val(total);
-					var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="'+response[i].id_detalle_cotizacion+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'"><input type="hidden" name="area_id[]" value="'+response[i].id_area+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="text" name="descripcion[]" value="'+response[i].descripcion+'" hidden>'+response[i].descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
+					var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="'+response[i].id_detalle_cotizacion+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'"><input type="hidden" name="area_id[]" value="'+response[i].id_area+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
 					cont++;
 					f++;
 					limpiar();
@@ -418,14 +498,27 @@ function mostrarAreasME(id, tipo_cliente){
 					fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>AREA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>EQUIPO</b></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>SERIAL</b></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>PLACA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>DESCRIPCION</b></div>';
     				$('#tabla-area-equipo').append(fila);
     				for (c =0; c<data.length ; c++) {
-						fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].descripcion+'</div>';
+    					if(data[c].placa == null){
+							placa = "";
+						}
+						if(data[c].descripcion == null){
+							descripcion = "";
+						}
+						fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
 	    				$('#tabla-area-equipo').append(fila);
+
 					}
 				}else{
 					fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>EQUIPO</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>SERIAL</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>PLACA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>DESCRIPCION</b></div>';
     				$('#tabla-area-equipo').append(fila);
     				for (c =0; c<data.length ; c++) {
-						fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].descripcion+'</div>';
+    					if(data[c].placa == null){
+							placa = "";
+						}
+						if(data[c].descripcion == null){
+							descripcion = "";
+						}
+						fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
 	    				$('#tabla-area-equipo').append(fila);
 					}
 				}
@@ -481,6 +574,17 @@ function getCodigo(nom_consecutivo) {
 
 	});
 }
+
+function getCodigoCot() {
+	$.get("/getCodigoCot/",function(response) {
+		console.log(response);
+		$('#cod_cotizacion').val(response.prefijo_doc+' - '+response.num_actual);
+		$('#num_actual_cot').val(response.num_actual);
+		$('#id_consecutivo_cot').val(response.id_adm_consecutivo);
+
+	});
+}
+
 
 /* FIN DE FUNCIONES PARA EL MODAL NUEVO ITEM */
 

@@ -236,6 +236,58 @@ $( document ).ready(function() {
 
 	/* FIN DE EVENTOS PARA EL MODAL NUEVO ITEM */
 
+	$("#form_nueva_factura").submit(function(e) {
+
+    	e.preventDefault(); // avoid to execute the actual submit of the form.
+
+	    var form = $(this);
+	    var url = form.attr('action');
+	    var data = form.serialize();
+
+
+	    $.ajax({
+	           type: "POST",
+	           url: url,
+	           data: form.serialize(), // serializes the form's elements.	           
+	           success: function(response)
+	           {
+	           		if ($('#imprimir').is(":checked")) {
+	           			$("#form_nueva_factura")[0].reset();
+		           		getClientes();
+		           		$("#area_id").empty();
+		           		$("#area_id").append('<option value="false">SELECCIONE UN AREA</option>');
+		           		$("#area_id").selectpicker('refresh');
+		           		$("#equipo_id").empty();
+		           		$("#equipo_id").append('<option value="false">SELECCIONE UN EQUIPO</option>');
+		           		$("#equipo_id").selectpicker('refresh');
+		           		$('#detalles_factura tbody').empty();
+		           		cont = 0;
+		           		total=0;
+		           		$("#totalv").html("COP/. "+total);
+		           		limpiar();
+		           		getCodigoFac();
+		           		$('#mensaje').html('<div class="alert alert-success alert-dismissible fade show" role="alert">LA FACTURA HA SIDO CREADA CON EXITO<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+		           		window.open('/imprimir/facturacion/'+response,'_blank');
+	           		}else{
+	           			$('#mensaje').html('<div class="alert alert-success alert-dismissible fade show" role="alert">LA FACTURA HA SIDO CREADA CON EXITO<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	           			window.location.href = "/facturacion/facturacion/create";
+	           		}
+	           		
+	           }
+	         });
+
+	    
+	});
+
+	$('#observacion').hide(); 	
+	$("#obs_check").click(function() {
+        if($(this).is(":checked")){
+            $('#observacion').show();         
+        }else{
+            $('#observacion').hide(); 
+        }
+    }); 
+
 });
 
 var f=1;
@@ -566,18 +618,31 @@ function mostrarAreasME(id, tipo_cliente){
 
 			$.get("/getEquiposForArea/"+id,function(data) {
 				$('#tabla-area-equipo').empty();
+
 				if (tipo_cliente == 'JURIDICO') {
 					fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>AREA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>EQUIPO</b></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>SERIAL</b></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>PLACA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>DESCRIPCION</b></div>';
     				$('#tabla-area-equipo').append(fila);
     				for (c =0; c<data.length ; c++) {
-						fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].descripcion+'</div>';
+    					if(data[c].placa == null){
+							placa = "";
+						}
+						if(data[c].descripcion == null){
+							descripcion = "";
+						}
+						fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
 	    				$('#tabla-area-equipo').append(fila);
 					}
 				}else{
 					fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>EQUIPO</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>SERIAL</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>PLACA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>DESCRIPCION</b></div>';
     				$('#tabla-area-equipo').append(fila);
     				for (c =0; c<data.length ; c++) {
-						fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].descripcion+'</div>';
+    					if(data[c].placa == null){
+							placa = "";
+						}
+						if(data[c].descripcion == null){
+							descripcion = "";
+						}
+						fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
 	    				$('#tabla-area-equipo').append(fila);
 					}
 				}
@@ -635,3 +700,23 @@ function verificar(){
       $('#btn_guardar').attr('disabled',false);
     }
   }
+
+    function getCodigoFac() {
+	$.get("/getCodigoFac/",function(response) {
+		$('#cod_factura').val(response.prefijo_doc+' - '+response.num_actual);
+		$('#num_actual_fac').val(response.num_actual);
+		$('#id_consecutivo_fac').val(response.id_adm_consecutivo);
+
+	});
+}
+
+function getClientes(){
+	$.get("/getClientes/",function(response) {
+				$("#clientes_id").empty();
+				$("#clientes_id").append('<option value="">SELECCIONE UN CLIENTE</option>');
+				for (i =0; i<response.length ; i++) {
+					$("#clientes_id").append('<option value="'+response[i].id+'">'+response[i].nom_cliente+'</option>');
+					$('#clientes_id').selectpicker('refresh');
+				}
+			});
+}

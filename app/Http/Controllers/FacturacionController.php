@@ -66,6 +66,8 @@ class FacturacionController extends Controller
         $factura->clientes_id=$request->get('clientes_id');
         $factura->cod_factura=$request->get('cod_factura');
         $factura->total=$request->get('total');
+        $factura->observacion=$request->get('observacion');
+        $factura->forma_pago=$request->get('forma_pago');
         $factura->estado=$request->get('estado');
         $factura->save();
 
@@ -117,10 +119,9 @@ class FacturacionController extends Controller
         $con->num_actual = (int)$num_actual + 1;
         $con->update();
 
+        return response()->json($factura->id_facturacion);
 
-
-
-        return Redirect::to('facturacion/facturacion');
+        //return Redirect::to('facturacion/facturacion');
     }
 
     /**
@@ -176,20 +177,30 @@ class FacturacionController extends Controller
         $id_detalle = $request->get('id');
 
         $cont = 0;
-       while ($cont < count($equipo_id)) {
-        if ($id_detalle[$cont]) {
+        $detalles = DB::table('detalles_factura')->where('factura_id','=',$id)->select('id')->get();
 
-        }else{
-            $detalle = new DetalleFactura();
-            $detalle->factura_id= $factura->id_facturacion;
-            $detalle->item_id= $item_id[$cont];
-            $detalle->area_id= $area_id[$cont];
-            $detalle->equipo_id= $equipo_id[$cont];
-            $detalle->cantidad= $cantidad[$cont];
-            $detalle->valor_unitario= $valor_unitario[$cont];
-            $detalle->valor_total= $valor_total[$cont];
-            $detalle->save();
-        }   
+       while ($cont < count($equipo_id)) {
+            if ($id_detalle[$cont]) {
+                foreach ($detalles as $det) {
+                    $buscar = array_search($det->id,$id_detalle,false);
+
+                    if (is_numeric($buscar)) {
+
+                    }else{
+                        DetalleFactura::destroy($det->id);      
+                    }
+                }
+            }else{
+                $detalle = new DetalleFactura();
+                $detalle->factura_id= $factura->id_facturacion;
+                $detalle->item_id= $item_id[$cont];
+                $detalle->area_id= $area_id[$cont];
+                $detalle->equipo_id= $equipo_id[$cont];
+                $detalle->cantidad= $cantidad[$cont];
+                $detalle->valor_unitario= $valor_unitario[$cont];
+                $detalle->valor_total= $valor_total[$cont];
+                $detalle->save();
+            }   
              $cont++;
 
         }
@@ -321,4 +332,15 @@ class FacturacionController extends Controller
 
         
     }
+
+   public function getCodigoFac()
+    {
+        $cod = DB::table('adm_consecutivo')
+                    ->select('*')
+                    ->where('nom_consecutivo','=','FACTURACION')
+                    ->first();
+         return response()->json($cod);
+        
+        
+    } 
 }

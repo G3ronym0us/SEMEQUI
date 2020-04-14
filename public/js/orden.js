@@ -207,7 +207,47 @@ $( document ).ready(function() {
 
 	/* FIN DE EVENTOS PARA EL MODAL NUEVO ITEM */
 
+	$("#form_nueva_orden").submit(function(e) {
 
+    	e.preventDefault(); // avoid to execute the actual submit of the form.
+
+	    var form = $(this);
+	    var url = form.attr('action');
+	    var data = form.serialize();
+
+
+	    $.ajax({
+	           type: "POST",
+	           url: url,
+	           data: form.serialize(), // serializes the form's elements.	           
+	           success: function(response)
+	           {
+	           		if ($('#imprimir').is(":checked")) {
+	           			$("#form_nueva_orden")[0].reset();
+		           		getClientes();
+		           		$("#area_id").empty();
+		           		$("#area_id").append('<option value="false">SELECCIONE UN AREA</option>');
+		           		$("#area_id").selectpicker('refresh');
+		           		$("#equipo_id").empty();
+		           		$("#equipo_id").append('<option value="false">SELECCIONE UN EQUIPO</option>');
+		           		$("#equipo_id").selectpicker('refresh');
+		           		$('#detalles_orden tbody').empty();
+		           		cont = 0;
+		           		total=0;
+		           		$("#totalv").html("COP/. "+total);
+		           		limpiar();
+		           		getCodigoOr();
+		           		$('#mensaje').html('<div class="alert alert-success alert-dismissible fade show" role="alert">LA ORDEN HA SIDO CREADA CON EXITO<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+		           		window.open('/imprimir/orden_servicio/'+response,'_blank');
+	           		}else{
+	           			window.location.href = "/operacion/orden/create";
+	           		}
+	           		
+	           }
+	         });
+
+	    
+	});
 
 
 
@@ -277,6 +317,17 @@ function evaluar(){
 	{
 		$("#guardar").hide();
 	}
+}
+
+function getClientes(){
+	$.get("/getClientes/",function(response) {
+				$("#clientes_id").empty();
+				$("#clientes_id").append('<option value="">SELECCIONE UN CLIENTE</option>');
+				for (i =0; i<response.length ; i++) {
+					$("#clientes_id").append('<option value="'+response[i].id+'">'+response[i].nom_cliente+'</option>');
+					$('#clientes_id').selectpicker('refresh');
+				}
+			});
 }
 
 function eliminar(index)
@@ -545,14 +596,26 @@ function mostrarAreasME(id, tipo_cliente){
 					fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>AREA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>EQUIPO</b></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>SERIAL</b></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>PLACA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>DESCRIPCION</b></div>';
     				$('#tabla-area-equipo').append(fila);
     				for (c =0; c<data.length ; c++) {
-						fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].descripcion+'</div>';
+    					if(data[c].placa == null){
+							placa = "";
+						}
+						if(data[c].descripcion == null){
+							descripcion = "";
+						}
+						fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
 	    				$('#tabla-area-equipo').append(fila);
 					}
 				}else{
 					fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>EQUIPO</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>SERIAL</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>PLACA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>DESCRIPCION</b></div>';
     				$('#tabla-area-equipo').append(fila);
     				for (c =0; c<data.length ; c++) {
-						fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].descripcion+'</div>';
+    					if(data[c].placa == null){
+							placa = "";
+						}
+						if(data[c].descripcion == null){
+							descripcion = "";
+						}
+						fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
 	    				$('#tabla-area-equipo').append(fila);
 					}
 				}
@@ -591,3 +654,13 @@ function verificar(){
       $('#btn_guardar').attr('disabled',false);
     }
   }
+
+  function getCodigoOr() {
+	$.get("/getCodigoOr/",function(response) {
+		console.log(response);
+		$('#cod_orden').val(response.prefijo_doc+' - '+response.num_actual);
+		$('#num_actual_or').val(response.num_actual);
+		$('#id_consecutivo_or').val(response.id_adm_consecutivo);
+
+	});
+}

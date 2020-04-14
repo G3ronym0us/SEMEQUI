@@ -5,7 +5,7 @@
 <form method="POST" action="{{ url('administracion/equipos') }}">
   {{ csrf_field() }}
   <div class="row">
-  	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
+  	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 form-group">
       @foreach($cod as $c)
         <span class="text-danger">*</span><label>CODIGO No.</label>
         <input type="text" name="id_consecutivo" id="id_consecutivo" value="{{ $c->id_adm_consecutivo }}" hidden>
@@ -17,7 +17,7 @@
   		<span class="text-danger">*</span><label>NOMBRE</label>
   		<input type="text" name="nom_equipo" class="form-control bg-info text-white" onkeyup="mayusculas(this);" required>
   	</div>
-  	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+  	<div class="col-lg-3 col-md-3 col-sm-10 col-xs-10 form-group">
   		<span class="text-danger">*</span><label>CLASE</label>
   		<select id="clase_equipo" name="clase_equipo" class="form-control bg-info text-white selectpicker" data-live-search="true" required>
         @foreach($clase_equipos as $ce)
@@ -26,7 +26,7 @@
       </select>
 
   	</div>
-    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 form-group">
+    <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 form-group">
       <label>&nbsp;</label>
       <button class="btn btn-primary form-control" data-toggle="modal" data-target="#modal-agregar-clase">+</button>
       
@@ -86,7 +86,7 @@
           <td>{{ $cl->marca }}</td>
           <td>{{ $cl->caracteristica_equipo }}</td>
           <td>{{ $cl->obs_equipo }}</td>
-          <td>
+          <td style="white-space:nowrap;">
             <a data-toggle="tooltip" data-placement="top" title="EDITAR EQUIPO"><button type="button" id="modal_editar" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-{{$cl->id_equipo}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
             @if(Auth::user()->rol == 'ADMINISTRADOR')
               @if($cl->activo == 1)

@@ -116,7 +116,7 @@
               <td>{{ $cl->cel_cliente }}</td>
               <td>{{ $cl->correo_cliente }}</td>
               <td>
-                <div>
+                <div style="white-space:nowrap;">
                 @if($cl->tipo_cliente == 'JURIDICO')
                   <a data-toggle="tooltip" data-placement="top" title="ASIGNAR AREAS"><button type="button" id="modal_areas" class="btn btn-info" data-toggle="modal" data-target="#modal-areas-{{$cl->id}}"><i class="fa fa-building-o" aria-hidden="true"></i></button></a>
                 @endif

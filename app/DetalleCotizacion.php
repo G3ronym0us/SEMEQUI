@@ -8,7 +8,7 @@ class DetalleCotizacion extends Model
 {
     protected $table='detalles_cotizacion';
 
-    protected $primaryKey='id';
+    protected $primaryKey='id_detalle_cotizacion';
 
     public $timestamps=true;
 

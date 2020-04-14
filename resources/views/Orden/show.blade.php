@@ -3,10 +3,6 @@
 <head>
     <title></title>
     <style type="text/css">
-        #detalles_orden{
-            width: 100%;
-        }
-
         .text-right{
             text-align: right;
         }
@@ -17,36 +13,116 @@
             text-align: left;
         }
 
-        thead, tfoot{
-            color: #FFF;
-            background-color: #717D7E;
+        table {
+          border-collapse: collapse;
+          width: 100%;
         }
 
+        .bordered {
+          border: 1px solid black;
+        }
+
+        .w-20{
+            width: 20%;
+        }
+
+        .w-18{
+            width: 18%;
+        }
+
+        .w-25{
+            width: 25%; 
+        }
+
+        .w-37{
+            width: 37%; 
+        }
+
+        .w-40{
+            width: 40%; 
+        }
+        .w-8{
+            width: 8%; 
+        }
+        .w-34{
+            width: 34%; 
+        }
 
     </style>
 </head>
 <body>
-    @foreach($orden as $or)
-    <div>
-        {{ $or->nom_municipio.' - '.$or->nom_departamento.', '.$or->created_at }}
-        <br>
-        <span>Señores</span>
-        <br>
-        {{ $or->nom_cliente }}
-        <br><br>
-    </div>
-    
+    <center><h1>ORDEN DE SERVICIO</h1></center><br>
+    @foreach($empresa as $emp)
+    <table class="bordered" id="datos_empresa">
+        <tr class="bordered" >
+            <td style="width: 120px;" rowspan="6"><center><img id="logo" src="{{public_path('img/empresa/'.$emp->logo)}}" width="100px" height="100px"></center></td>
+            <td class="bordered">{{ $emp->nom_empresa }}</td>
+        </tr>
+        <tr class="bordered">
+            <td class="bordered">{{ $emp->nom_empresa }}</td>
+        </tr>
+        <tr class="bordered">
+            <td class="bordered">NIT: {{ $emp->nit_empresa }}</td>
+        </tr>
+        <tr class="bordered">
+            <td class="bordered">DIRECCION: {{ $emp->dir_empresa }}</td>
+        </tr>
+        <tr class="bordered">
+            <td class="bordered">TEL. {{ $emp->tel_empresa }} + CELULAR: {{ $emp->cel_empresa }}</td>
+        </tr>
+        <tr class="bordered">
+            <td class="bordered">EMAIL - {{ $emp->mail }}</td>
+        </tr>
+    </table>
+    @endforeach
 
-    <div>
-        <center><h4>ORDEN</h4></center>
-        <table id="detalles_orden">
+    <br>
+    @foreach($orden as $or)
+    <table class="bordered" id="table_datos_clientes">
+        <tr class="bordered">
+            <td class="bordered w-20">CLIENTE:</td>
+            <td class="bordered w-37">{{ $or->nom_cliente }}</td>
+            <td class="bordered w-18">CONTACTO:</td>
+            <td class="bordered w-25"></td>
+        </tr>
+        <tr class="bordered">
+            <td class="bordered w-20">CIUDAD:</td>
+            <td class="bordered w-37">{{ $or->nom_municipio.' - '.$or->nom_departamento }}</td>
+            <td class="bordered w-18">FECHA:</td>
+            <td class="bordered w-25"></td>
+        </tr>
+        <tr class="bordered">
+            <td class="bordered w-20">FECHA INGRESO:</td>
+            <td class="bordered w-37">{{ substr($or->created_at,0,10) }}</td>
+            <td class="bordered w-18">FECHA SALIDA:</td>
+            <td class="bordered w-25">{{ substr($or->updated_at,0,10) }}</td>
+        </tr>
+        <!--<tr class="bordered">
+            <td class="bordered w-20">USUARIO:</td>
+            <td class="bordered w-37"></td>
+            <td class="bordered w-18">CARGO:</td>
+            <td class="bordered w-25"></td>
+        </tr>
+        <tr class="bordered">
+            <td class="bordered w-20">ID USUARIO:</td>
+            <td class="bordered w-37"></td>
+            <td class="bordered w-18">DEPENDENCIA:</td>
+            <td class="bordered w-25"></td>
+        </tr>-->
+    </table>
+    @endforeach
+
+
+
+
+    
+        <table id="detalles_cotizacion">
             <thead>
-                <tr>
-                    <th class="col_cantidad text-center">CANT</th>
-                    <th class="col_item text-center">ITEM</th>
-                    <th class="col_equipo text-center">EQUIPO</th>
-                    <th class="col_v_unitario text-center">V. UNITARIO</th>
-                    <th class="col_v_total text-center">V. TOTAL</th>
+                <tr class="bordered">
+                    <th class="bordered col_cantidad text-center w-8">No.</th>
+                    <th class="bordered col_cantidad text-center w-8">CANT</th>
+                    <th class="bordered col_item text-center w-34">DESCRIPCION</th>
+                    <th class="bordered col_equipo text-center w-40">AREA/EQUIPO</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,24 +134,39 @@
                     @else
                     <tr bgcolor="#F2F3F4">
                     @endif
-                        <td class="col_cantidad text-center">{{ $det->cantidad }}</td>
-                        <td class="col_item text-left">{{ $det->nom_item }}</td>
-                        <td class="col_equipo text-left">{{ $det->nom_equipo }} ({{ $det->nombre_area }})</td>
-                        <td class="col_v_unitario text-right">{{ $det->valor_unitario }} $</td>
-                        <td class="col_v_total text-right">{{ $det->valor_total }} $</td>
+                        <td class="bordered col_cantidad text-center w-8">{{ $c }}</td>
+                        <td class="bordered col_item text-center w-8">{{ $det->cantidad }}</td>
+                        <td class="bordered col_equipo text-left w-34">{{ $det->nom_item }}</td>
+                        <td class="bordered col_v_unitario text-left w-40">{{ $det->nombre_area.' - '.$det->nom_equipo }}</td>
                     </tr>
                     <?php $c++ ?>
                 @endforeach
             </tbody>
-            <tfoot>
-                <tr>
-                    <td class="text-left" colspan="4"><b>TOTAL</b></td>
-                    <td class="text-right"><b><span>{{ $or->total }} $</span></b></td>     
-                </tr>
-            </tfoot>
         </table>
-    @endforeach
-    </div>
+
+    <br><br>
+
+    <table class="bordered">
+        <tr class="bordered">
+            <td class="bordered w-20">FIRMA TECNICO:</td>
+            <td class="bordered w-37"></td>
+            <td class="bordered w-18">FIRMA USUARIO:</td>
+            <td class="bordered w-25"></td>
+        </tr>
+        <tr class="bordered">
+            <td class="bordered w-20">TECNICO</td>
+            <td class="bordered w-37">{{ $tecnico->name }}</td>
+            <td class="bordered w-18">USUARIO:</td>
+            <td class="bordered w-25"></td>
+        </tr>
+        <tr class="bordered">
+            <td class="bordered w-20">C.C</td>
+            <td class="bordered w-37"></td>
+            <td class="bordered w-18">C.C</td>
+            <td class="bordered w-25"></td>
+        </tr>
+    </table>
+
     
 </body>
 </html>

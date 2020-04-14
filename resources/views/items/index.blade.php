@@ -93,7 +93,7 @@
           @else
             <td>INACTIVO</td>
           @endif
-            <td>
+            <td style="white-space:nowrap;">
               <a data-toggle="tooltip" data-placement="top" title="EDITAR ITEM"><button type="button" id="modal_editar" class="btn btn-primary" data-toggle="modal" data-target="#modal-edit-{{$item->id_item}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
           @if(Auth::user()->rol == 'ADMINISTRADOR')
             @if($item->activo == 1)

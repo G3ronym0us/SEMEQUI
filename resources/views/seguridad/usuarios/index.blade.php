@@ -1,6 +1,13 @@
 @extends('layouts.template')
 @section('contenido')
-<h1>ADMINISTRACIÓN DE CLIENTES</h1>
+<style type="text/css">
+    #nuevo_usuario{
+        float: right;
+
+    }
+</style>
+<a data-toggle="modal" data-target="#modal-nuevo-usuario" id="nuevo_usuario"><button  class="btn btn-primary"><b>+ USUARIO</b></button></a>
+<h1>ADMINISTRACIÓN DE USUARIOS</h1>
         
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 table-responsive">
@@ -20,7 +27,7 @@
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
             <td>
-              <button type="button" id="modal_editar" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{$user->id}}">EDITAR</button>
+              <button type="button" id="modal_editar" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{$user->id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> EDITAR</button>
             </td>
           </tr>
 
@@ -34,7 +41,7 @@
 
 
         
-
+ @include('seguridad.usuarios.create')
 @endsection
 
 @section('script')
@@ -61,10 +68,25 @@
             infoFiltered:""
           }
         });
+        $('#password').keyup(verificar);
+        $('#password-confirm').keyup(verificar);
+
+        function verificar() {
+
+
+          password = $('#password').val();
+          confirm = $('#password-confirm').val();
+
+          if (password != "" & confirm != "") {
+            if (password != confirm) {
+              $('#confirmar').html('LAS CONTRASEÑAS NO COINCIDEN');
+            }else{
+              $('#confirmar').html('');
+            }
+          }
+        }
       });
 
-
-
-
   </script>
+
 @endsection

@@ -5,72 +5,65 @@
 <h1>INFORMES DE FACTURAS</h1>
 
 <div class="container">
-  <form id="filtrarImprimir" action="{{ url('informes/filtrarFacturas/') }}">
+  <form id="filtrarImprimir" action="{{ url('informes/filtrarFacturas/') }}" target="_blank">
 
     <div class="row">
-      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-        <input type="checkbox" class="cajas" name="fecha" value="true">
-        <label>FECHA</label>
-      </div>
-      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-        DESDE <input class=" form-control" type="date" name="fecha_inicio">
-      </div>
-      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-        HASTA <input class=" form-control" type="date" name="fecha_fin">
-      </div>
-    </div>
+      <div class="col-lg-3">
+        <br>
+        <h3>&nbsp;&nbsp;&nbsp;FILTROS</h3>
+        <br>
 
-    <div class="row">
-      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-        <input type="checkbox" class="cajas" name="cliente" value="true">
-        <label>CLIENTES</label>
+        <input type="checkbox" class="cajas" name="fecha" id="fecha" value="true">
+        <label>FECHA</label><br>
+
+        <input type="checkbox" class="cajas" name="cliente" id="cliente" value="true">
+        <label>CLIENTES</label><br>
+
+        <input type="checkbox" class="cajas" name="f_estado" id="f_estado" value="true">
+        <label>ESTADO</label><br>
+
+        <input type="checkbox" class="cajas" name="f_ubicacion" id="f_ubicacion" value="true">
+        <label>UBICACION</label><br>
+
+        <button type="submit" class="btn btn-danger" >FILTRAR E IMPRIMIR</button>
       </div>
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-        <select class="selectpicker" data-live-search="true" name="cliente_id">
+      <div class="col-lg-9">
+        <div class="row" id="fecha_div">
+          <div class="col-lg-2">DESDE</div>
+          <div class="col-lg-4"><input class="form-control" type="date" name="fecha_inicio"></div>
+          <div class="col-lg-2">HASTA</div>
+          <div class="col-lg-4"><input class="form-control" type="date" name="fecha_fin"></div>           
+        </div>
+        <br>
+        <div id="cliente_div">
+          <select class="selectpicker" data-live-search="true" title="SELECCIONE UN CLIENTE" name="cliente_id">
             @foreach($clientes as $cl)
               <option value="{{ $cl->id }}">{{ $cl->nom_cliente }}</option>
             @endforeach
-        </select>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-        <input type="checkbox" class="cajas" name="f_estado" value="true">
-        <label>ESTADO</label>
-      </div>
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-        <select class="selectpicker" name="estado">
-          <option value="PENDIENTE">PENDIENTE</option>
-          <option value="COMPLETADA">COMPLETADA</option>
-          <option value="PROCESADA/FACTURA">PROCESADA/FACTURA</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
-        <input type="checkbox" class="cajas" name="f_ubicacion" value="true">
-        <label>UBICACION</label>
-      </div>
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-        <label for="id_departamento">DEPARTAMENTO</label> 
-        <select name="id_departamento"  id="id_departamento" class="form-control bg-info text-white selectpicker" data-live-search="true">
-            <option value="null">SELECCIONE UN DEPARTAMENTO</option>
-          @foreach($departamentos as $d)
-            <option value="{{ $d->id }}">{{ $d->nom_departamento }}</option>
-          @endforeach  
-        </select>
-        <label for="id_municipio">MUNICIPIO:</label>
-        <select name="id_municipio" id="id_municipio" class="form-control bg-info text-white selectpicker" data-live-search="true">
+          </select>
+        </div>
+        <br>
+        <div id="estado_div">
+          <select class="selectpicker" name="estado" title="SELECCIONE UN ESTADO">
+            <option value="PENDIENTE">PENDIENTE</option>
+            <option value="COMPLETADA">COMPLETADA</option>
+            <option value="PROCESADA/FACTURA">PROCESADA/FACTURA</option>
+          </select>
+        </div>
+        <br>
+        <div id="ubicacion_div">
+          <label for="id_departamento">DEPARTAMENTO</label> 
+          <select name="id_departamento"  id="id_departamento" class="form-control bg-info text-white selectpicker" title="SELECCIONE UN DEPARTAMENTO" data-live-search="true">
+            @foreach($departamentos as $d)
+              <option value="{{ $d->id }}">{{ $d->nom_departamento }}</option>
+            @endforeach  
+          </select>
+          <label for="id_municipio">MUNICIPIO:</label>
+          <select name="id_municipio" id="id_municipio" class="form-control bg-info text-white selectpicker" title="SELECCIONE UN MUNICIPIO" data-live-search="true">
            
-        </select>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-        <button type="submit" class="btn btn-danger">FILTRAR E IMPRIMIR</button>
+          </select>
+        </div>
+        
       </div>
 
     </div>
@@ -166,6 +159,41 @@
       id = $('#id_departamento').val();
       getMunicipio(id);
         });
+    $('#fecha_div').hide(); 
+      $("#fecha").click(function() {
+        if($(this).is(":checked")){
+            $('#fecha_div').show();         
+        }else{
+            $('#fecha_div').hide(); 
+        }
+    });
+
+    $('#cliente_div').hide(); 
+      $("#cliente").click(function() {
+        if($(this).is(":checked")){
+            $('#cliente_div').show();         
+        }else{
+            $('#cliente_div').hide(); 
+        }
+    });
+
+    $('#estado_div').hide(); 
+      $("#f_estado").click(function() {
+        if($(this).is(":checked")){
+            $('#estado_div').show();         
+        }else{
+            $('#estado_div').hide(); 
+        }
+    });
+
+    $('#ubicacion_div').hide(); 
+      $("#f_ubicacion").click(function() {
+        if($(this).is(":checked")){
+            $('#ubicacion_div').show();         
+        }else{
+            $('#ubicacion_div').hide(); 
+        }
+    }); 
 
 </script> 
 

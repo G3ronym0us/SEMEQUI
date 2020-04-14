@@ -32,7 +32,8 @@ class OrdenController extends Controller
     {
         $ordenes=DB::table('orden_servicio as o')
                     ->join('adm_clientes as c', 'o.clientes_id','=','c.id')
-                    ->select('o.*', 'c.nom_cliente')
+                    ->join('users as u', 'u.id','=','o.tecnico_id')
+                    ->select('o.*', 'c.nom_cliente','u.name')
                     ->get();
                     return view("Orden.index",["ordenes"=>$ordenes]);
     }
@@ -118,9 +119,9 @@ class OrdenController extends Controller
         $con->update();
 
 
+        return response()->json($orden->id);
 
-
-        return Redirect::to('operacion/orden_servicio');
+        //return Redirect::to('operacion/orden_servicio');
     }
 
     /**
@@ -180,9 +181,17 @@ class OrdenController extends Controller
         $cotizaciones = $request->get('cotizaciones_p');
 
         $cont = 0;
+        $detalles = DB::table('detalles_orden_servicio')->where('orden_servicio_id','=',$id)->select('id')->get();
         while ($cont < count($equipo_id)) {
             if ($id_detalle[$cont]) {
+                foreach ($detalles as $det) {
+                    $buscar = array_search($det->id,$id_detalle,false);
+                    if (is_numeric($buscar)) {
 
+                    }else{
+                        DetalleOrden::destroy($det->id);      
+                    }
+                }
             }else{
                 $detalle = new DetalleOrden();
                 $detalle->orden_servicio_id= $orden->id;
@@ -192,6 +201,7 @@ class OrdenController extends Controller
                 $detalle->cantidad= $cantidad[$cont];
                 $detalle->valor_unitario= $valor_unitario[$cont];
                 $detalle->valor_total= $valor_total[$cont];
+                $detalle->completo= false;
                 $detalle->save();
             }   
             $cont++;
@@ -390,4 +400,15 @@ class OrdenController extends Controller
 
 
     }
+
+     public function getCodigoOr()
+    {
+        $cod = DB::table('adm_consecutivo')
+                    ->select('*')
+                    ->where('nom_consecutivo','=','ORDEN')
+                    ->first();
+         return response()->json($cod);
+        
+        
+    } 
 }

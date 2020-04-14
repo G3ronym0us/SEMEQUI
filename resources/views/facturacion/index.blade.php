@@ -32,10 +32,10 @@
                     <td>{{$factura->total}}</td>
                     <td>{{$factura->estado}}</td>
                     <td>
-                        <a href="{{url('imprimir/facturacion/'.$factura->id_facturacion)}}" data-toggle="tooltip" data-placement="top" title="IMPRIMIR"><button type="button" id="modal_mostrar" class="btn btn-info"><i class="fa fa-print" aria-hidden="true"></i></button></a>
+                        <a href="{{url('imprimir/facturacion/'.$factura->id_facturacion)}}" target="_blank" data-toggle="tooltip" data-placement="top" title="IMPRIMIR"><button type="button" id="modal_mostrar" class="btn btn-info"><i class="fa fa-print" aria-hidden="true"></i></button></a>
                         <a href="{{url('facturacion/facturacion/'.$factura->id_facturacion.'/edit')}}" data-toggle="tooltip" data-placement="top" title="EDITAR"><button type="button" id="modal_editar" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
                         @if(Auth::user()->rol == 'ADMINISTRADOR')
-                          <a href="" data-toggle="tooltip" data-placement="top" title="ELIMINAR"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$factura->id_facturacion}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
+                          <span data-toggle="tooltip" data-placement="top" title="ELIMINAR"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$factura->id_facturacion}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></span>
                         @endif
                     </td>
                 </tr>

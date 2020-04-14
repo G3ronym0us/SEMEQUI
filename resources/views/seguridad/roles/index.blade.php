@@ -27,7 +27,7 @@
             <td>{{ $rol->nom_rol }}</td>
             <td>{{ $rol->descripcion }}</td>
             <td>
-              <button type="button" id="modal_editar" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{$rol->id}}">EDITAR</button>
+              <button type="button" id="modal_editar" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{$rol->id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> EDITAR</button>
             </td>
           </tr>
 

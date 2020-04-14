@@ -191,4 +191,12 @@ class ClientesController extends Controller
         }
         
     }
+    public function getClientes(Request $request)
+    {
+        if ($request->ajax()) {
+            $cliente = Clientes::all();
+            return response()->json($cliente);
+        }
+        
+    }
 }

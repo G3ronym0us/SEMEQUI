@@ -35,12 +35,12 @@
                     <td>{{$cotizacion->total}}</td>
                     <td>{{$cotizacion->estado}}</td>
                     <td>
-                        <a href="{{url('imprimir/cotizacion/'.$cotizacion->id_cotizacion)}}" data-toggle="tooltip" data-placement="top" title="IMPRIMIR"><button type="button" id="modal_mostrar" class="btn btn-info"><i class="fa fa-print" aria-hidden="true"></i></button></a>
+                        <a href="{{url('imprimir/cotizacion/'.$cotizacion->id_cotizacion)}}" target="_blank" data-toggle="tooltip" data-placement="top" title="IMPRIMIR"><button type="button" id="modal_mostrar" class="btn btn-info"><i class="fa fa-print" aria-hidden="true"></i></button></a>
                         
                         <a href="{{url('facturacion/cotizacion/'.$cotizacion->id_cotizacion.'/edit')}}" data-toggle="tooltip" data-placement="top" title="EDITAR"><button type="button" id="modal_editar" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
                         
                         @if(Auth::user()->rol == 'ADMINISTRADOR')
-                          <a  href="" data-toggle="tooltip" data-placement="top" title="ELIMINAR"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$cotizacion->id_cotizacion}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
+                          <span data-toggle="tooltip" data-placement="top" title="ELIMINAR"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$cotizacion->id_cotizacion}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></span>
                         @endif
                     </td>
                 </tr>

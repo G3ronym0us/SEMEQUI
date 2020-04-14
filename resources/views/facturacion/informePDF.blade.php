@@ -32,8 +32,7 @@
             <tr>
                 <th>No. ORDEN </th>
                 <th>CLIENTE</th>
-                <th>UBICACION</th>
-                <th>TECNICO</th>  
+                <th>UBICACION</th> 
                 <th>FECHA ATENCION</th>
                 <th>ESTADO</th>
                 <th>Vr. ORDEN</th>
@@ -46,7 +45,6 @@
                 <td>{{$fac->cod_factura}}</td>
                 <td>{{$fac->nom_cliente}}</td>
                 <td>{{$fac->nom_municipio}} - {{$fac->nom_departamento}}</td>
-                <td>{{$fac->name}}</td>
                 <td>{{$fac->created_at}}</td>
                 <td>{{$fac->estado}}</td>
                 <td class="text-right">{{$fac->total}}$</td>

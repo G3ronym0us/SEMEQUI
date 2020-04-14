@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SIMEQUI</title>
+    <title>SEMEQUI</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<!--  Bootstrap 3.3.5 -->
@@ -30,11 +30,11 @@
       <header class="main-header">
 
         <!-- Logo -->
-        <a href="index2.html" class="logo">
+        <a href="{{url('/dashboard')}}" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"><b></b>V</span>
+          <span class="logo-mini"><b></b>S</span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>SIMEQUI</b></span>
+          <span class="logo-lg"><b style="font-family: Arial, Helvetica, sans-serif;">SEMEQUI</b></span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->
@@ -52,7 +52,7 @@
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <small class="bg-red">Online</small>
-                  <span class="hidden-xs"> {{ Auth::user()->name }}</span>
+                  <span class="hidden-xs"> {{ Auth::user()->email }}</span>
                 </a>
                 <ul class="dropdown-menu">
                   <!-- User image -->
@@ -60,7 +60,9 @@
                     
                     <p>
                       
-                      <small>Diohandres Hernandez</small>
+                      <center><h5 style="color: #000;">{{ Auth::user()->name }}</h5></center>
+                      <center><small style="color: #000;">{{ Auth::user()->rol }}</small></center>
+                      <center><button data-toggle="modal" data-target="#modal-cambiar-password" class="btn btn-danger"><i class="fa fa-cog" aria-hidden="true"></i> CONTRASEÑA</button></center>
                     </p>
                   </li>
                   
@@ -70,7 +72,7 @@
                     <div class="pull-right">
                       <a class="btn btn-default btn-flat" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+                                                     document.getElementById('logout-form').submit();">CERRAR SESION</a>
                       <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                           @csrf
                       </form>
@@ -92,7 +94,7 @@
                     
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">
-            <li class="header"></li>
+            <li class="header">&nbsp;</li>
 
             <li>
               <a href="{{url('/dashboard')}}">
@@ -256,7 +258,7 @@
             <div class="col-md-12">
               <div class="box">
                 <div class="box-header with-border">
-                  <h3 class="box-title">SIMEQUI</h3>
+                  <h3 class="box-title">SEMEQUI</h3>
                   <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     
@@ -283,6 +285,7 @@
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
       <!--Fin-Contenido-->
+      @include('seguridad.usuarios.cambiar_password')
       <footer class="main-footer">
         <div class="pull-right hidden-xs">
           <b>Version</b> 
@@ -306,6 +309,48 @@
 
     <script src="{{asset('js/bootstrap-select.min.js')}}"></script>
     @yield('script')
+    <script type="text/javascript">
+        $('#password_last').keyup(comprobar);
+        $('#cpassword').keyup(verificar);
+        $('#cconfirm').keyup(verificar);
+        $('#btn-np').hide();
+        function verificar() {
+
+
+          password = $('#cpassword').val();
+          confirm = $('#cconfirm').val();
+
+          if (password != "" & confirm != "") {
+
+            if (password != confirm) {
+              $('#cconfirmar').html('LAS CONTRASEÑAS NO COINCIDEN');
+              $('#btn-np').hide();
+            }else{
+              $('#cconfirmar').html('');
+              $('#btn-np').show();
+            }
+          }
+        }
+        
+
+        function comprobar() {
+
+          password_last = $('#password_last').val();
+          if (password_last != "") {
+            $.get("/comprobarPassword/"+password_last,function(response) {
+              if (response == false) {
+                $('#error_pl').html('LA CONTRASEÑA NO ES CORRECTA');
+                $('#btn-np').hide();
+              }else{
+                $('#error_pl').html('');
+                $('#btn-np').show();
+              }
+            });
+          }
+
+        }
+      
+    </script>
 
     
   </body>

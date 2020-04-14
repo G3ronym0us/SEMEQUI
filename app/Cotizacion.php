@@ -18,6 +18,8 @@ class Cotizacion extends Model
     	'cod_cotizacion',
     	'total',
     	'estado',
+        'forma_pago',
+        'observacion'
     ];
 
     protected $guarded =[

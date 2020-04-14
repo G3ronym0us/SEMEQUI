@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth as Auth;
 use App\User;
 use App\Rol;
 use DB;
@@ -52,6 +54,14 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        $clientes = new User;
+        $clientes->email=$request->get('email');
+        $clientes->name=$request->get('name');
+        $clientes->password=Hash::make($request->get('password'));
+        $clientes->rol='OPERADOR';
+
+        $clientes ->save(); 
+         return Redirect::to('seguridad/usuarios');
     }
 
     /**
@@ -103,5 +113,27 @@ class UsersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function cPassword(Request $request)
+    {
+        $id = Auth::user()->id;
+        $user = User::findOrFail($id);
+        $user->password = $request->get('cpassword');
+        $user->update();
+
+        return Redirect::to('/');
+    }
+
+    public function comprobarPAssword(Request $request, $password)
+    {
+        $aPassword = Auth::user()->password;
+        if (Hash::check($password, $aPassword)) {
+            $result = true;
+        }else{
+            $result = false;
+        }
+            return response()->json($result);
+
     }
 }

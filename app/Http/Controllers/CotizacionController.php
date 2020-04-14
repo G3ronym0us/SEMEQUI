@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests\OrdenFormRequest;
+use Barryvdh\DomPDF\Facade as PDF;
 use App\Cotizacion;
 use App\Consecutivos;
 use App\DetalleCotizacion;
@@ -70,6 +71,8 @@ class CotizacionController extends Controller
                 $cot->cod_cotizacion=$request->get('cod_cotizacion');
                 $cot->total=$request->get('total');
                 $cot->estado=$request->get('estado');
+                $cot->forma_pago = $request->get('forma_pago');
+                $cot->observacion = $request->get('observacion');
                 $cot->save();
 
                 $equipo_id = $request->get('equipo_id');
@@ -108,11 +111,44 @@ class CotizacionController extends Controller
         $con->update();
 
 
+         return response()->json($cot->id_cotizacion);
 
+        //return Redirect::to('facturacion/cotizacion');
+    }
 
+    public function imprimirCotizacion($id){
+        
+   
 
+      $cotizacion=DB::table('cotizacion as co')
+        ->join('adm_clientes as cl', 'co.cliente_id','=','cl.id')
+        ->join('municipios as m', 'm.id','=','cl.id_municipio')
+        ->join('departamentos as d', 'm.departamento_id','=','d.id')
+        ->where('co.id_cotizacion','=',$id)
+        ->select('co.*','cl.nom_cliente','cl.dir_cliente','cl.nit_cliente','cl.tel_cliente','cl.correo_cliente','m.nom_municipio','d.nom_departamento')
+        ->first();
 
-        return Redirect::to('facturacion/cotizacion');
+        $detalles=DB::table('detalles_cotizacion as dc')
+            ->join('cotizacion as c','c.id_cotizacion','=','dc.cotizacion_id')
+            ->join('adm_areas as a','a.id','=','dc.area_id')
+            ->join('adm_equipo as eq','eq.id_equipo','=','dc.equipo_id')
+            ->join('adm_item as it','it.id_item','=','dc.item_id')
+            ->join('rel_area_equipo as re',function($join){
+                $join->on('a.id','=','re.areas_id');
+                $join->on('eq.id_equipo','=','re.equipos_id');
+            })
+            ->where('dc.cotizacion_id','=',$id)
+            ->select('dc.*','eq.*','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
+            ->get();
+
+            $empresa = DB::table('adm_empresa')->get();
+
+   
+
+        //return view("cotizacion.show",["cotizacion" => $cotizacion, "detalles" => $detalles, "empresa" => $empresa]);
+        $pdf = PDF::loadView('cotizacion.show', compact(['cotizacion','detalles','empresa']));
+        return $pdf->stream('my.pdf',array('Attachment'=>0));
+
     }
 
     /**
@@ -197,9 +233,18 @@ class CotizacionController extends Controller
 
                 $cont = 0;
 
+                $detalles = DB::table('detalles_cotizacion')->where('cotizacion_id','=',$id)->select('id_detalle_cotizacion')->get();
+
                 while ($cont < count($equipo_id)) {
                     if ($id_detalle[$cont]) {
+                        foreach ($detalles as $det) {
+                            $buscar = array_search($det->id_detalle_cotizacion,$id_detalle,false);
+                            if (is_numeric($buscar)) {
 
+                            }else{
+                                DetalleCotizacion::destroy($det->id_detalle_cotizacion);      
+                            }
+                        }
                     }else{
                         $detalle = new DetalleCotizacion();
                         $detalle->cotizacion_id= $id;
@@ -363,6 +408,16 @@ class CotizacionController extends Controller
                     ->select('*')
                     ->where('nom_consecutivo','=',$nom_consecutivo)
                     ->get();
+         return response()->json($cod);
+        
+        
+    } 
+    public function getCodigoCot()
+    {
+        $cod = DB::table('adm_consecutivo')
+                    ->select('*')
+                    ->where('nom_consecutivo','=','COTIZACION')
+                    ->first();
          return response()->json($cod);
         
         

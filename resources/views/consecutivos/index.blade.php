@@ -66,7 +66,7 @@
             <td>{{$con->num_ini}}</td>
             <td>{{$con->num_actual}}</td>
             <td>{{$con->num_final}}</td>
-            <td>
+            <td style="white-space:nowrap;">
               <!--<a data-target="#modal-edit-{{$con->id_adm_consecutivo}}" data-toggle="modal"><button class="btn btn-info">EDITAR</button></a>-->
               <a data-toggle="tooltip" data-placement="top" title="ELIMINAR CONSECUTIVO"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$con->id_adm_consecutivo}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
             </td>    

@@ -33,8 +33,8 @@ class GeneradorController extends Controller
         ->join('municipios as m', 'm.id','=','cl.id_municipio')
         ->join('departamentos as d', 'm.departamento_id','=','d.id')
         ->where('co.id_cotizacion','=',$id)
-        ->select('co.*','cl.nom_cliente','m.nom_municipio','d.nom_departamento')
-        ->get();
+        ->select('co.*','cl.nom_cliente','cl.dir_cliente','cl.nit_cliente','cl.tel_cliente','cl.correo_cliente','m.nom_municipio','d.nom_departamento')
+        ->first();
 
         $detalles=DB::table('detalles_cotizacion as dc')
             ->join('cotizacion as c','c.id_cotizacion','=','dc.cotizacion_id')
@@ -49,10 +49,12 @@ class GeneradorController extends Controller
             ->select('dc.*','eq.*','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
             ->get();
 
+            $empresa = DB::table('adm_empresa')->get();
+
    
 
-		//return view("cotizacion.show",["cotizacion" => $cotizacion, "detalles" => $detalles]);
-		$pdf = PDF::loadView('cotizacion.show', compact(['cotizacion','detalles']));
+		//return view("cotizacion.show",["cotizacion" => $cotizacion, "detalles" => $detalles, "empresa" => $empresa]);
+		$pdf = PDF::loadView('cotizacion.show', compact(['cotizacion','detalles','empresa']));
      	return $pdf->stream('my.pdf',array('Attachment'=>0));
 	}
 
@@ -63,7 +65,7 @@ class GeneradorController extends Controller
         ->join('municipios as m', 'm.id','=','cl.id_municipio')
         ->join('departamentos as d', 'm.departamento_id','=','d.id')
         ->where('os.id','=',$id)
-        ->select('os.*','cl.nom_cliente','m.nom_municipio','d.nom_departamento')
+        ->select('os.*','cl.nom_cliente','cl.nit_cliente','m.nom_municipio','d.nom_departamento')
         ->get();
 
         $detalles=DB::table('detalles_orden_servicio as dos')
@@ -79,40 +81,47 @@ class GeneradorController extends Controller
             ->where('dos.orden_servicio_id','=',$id)
             ->get();
 
+             $empresa = DB::table('adm_empresa')->get();
+
+             $tecnico=DB::table('orden_servicio as os')
+                        ->join('users as us', 'os.tecnico_id','=','us.id')
+                        ->first();
    
 
         //return view("cotizacion.show",["cotizacion" => $cotizacion, "detalles" => $detalles]);
-        $pdf = PDF::loadView('orden.show', compact(['orden','detalles']));
+        $pdf = PDF::loadView('orden.show', compact(['orden','detalles','empresa','tecnico']));
         return $pdf->stream('my.pdf',array('Attachment'=>0));
     }
 
     public function imprimirFacturacion($id){
 
-        $facturas=DB::table('facturacion as fac')
-        ->join('adm_clientes as cl', 'fac.clientes_id','=','cl.id')
+        $factura=DB::table('facturacion as co')
+        ->join('adm_clientes as cl', 'co.clientes_id','=','cl.id')
         ->join('municipios as m', 'm.id','=','cl.id_municipio')
         ->join('departamentos as d', 'm.departamento_id','=','d.id')
-        ->where('fac.id_facturacion','=',$id)
-        ->select('fac.*','cl.nom_cliente','m.nom_municipio','d.nom_departamento')
+        ->where('co.id_facturacion','=',$id)
+        ->select('co.*','cl.nom_cliente','cl.dir_cliente','cl.nit_cliente','cl.tel_cliente','cl.correo_cliente','m.nom_municipio','d.nom_departamento')
         ->first();
 
-        $detalles=DB::table('detalles_factura as df')
-            ->join('facturacion as fac','fac.id_facturacion','=','df.factura_id')
-            ->join('adm_areas as a','a.id','=','df.area_id')
-            ->join('adm_equipo as eq','eq.id_equipo','=','df.equipo_id')
-            ->join('adm_item as it','it.id_item','=','df.item_id')
+        $detalles=DB::table('detalles_factura as dc')
+            ->join('facturacion as c','c.id_facturacion','=','dc.factura_id')
+            ->join('adm_areas as a','a.id','=','dc.area_id')
+            ->join('adm_equipo as eq','eq.id_equipo','=','dc.equipo_id')
+            ->join('adm_item as it','it.id_item','=','dc.item_id')
             ->join('rel_area_equipo as re',function($join){
                 $join->on('a.id','=','re.areas_id');
                 $join->on('eq.id_equipo','=','re.equipos_id');
             })
-            ->select('df.*','eq.*','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
-            ->where('df.factura_id','=',$id)
+            ->where('dc.factura_id','=',$id)
+            ->select('dc.*','eq.*','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
             ->get();
+
+            $empresa = DB::table('adm_empresa')->get();
 
    
 
         //return view("cotizacion.show",["cotizacion" => $cotizacion, "detalles" => $detalles]);
-        $pdf = PDF::loadView('facturacion.show', compact(['facturas','detalles']));
-        return $pdf->stream('Factura_'.$facturas->cod_factura.'.pdf',array('Attachment'=>0));
+        $pdf = PDF::loadView('facturacion.show', compact(['factura','detalles','empresa']));
+        return $pdf->stream('my.pdf',array('Attachment'=>0));
     }
 }

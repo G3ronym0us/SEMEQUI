@@ -17,6 +17,8 @@ class Facturacion extends Model
     	'cod_factura',
     	'total',
     	'estado',
+        'observacion',
+        'forma de pago'
     ];
 
     protected $guarded =[

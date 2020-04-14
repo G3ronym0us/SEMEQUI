@@ -61,7 +61,12 @@ Route::get('/getCodigo/{nom_consecutivo}', 'CotizacionController@getCodigo');
 Route::get('/getTipoCliente/{id}', 'ClientesController@getTipoCliente');
 Route::get('/getOrden/{id}', 'OrdenController@getOrden');
 Route::get('/getTarifa/{id}', 'CotizacionController@getTarifa');
+Route::get('/getClientes/', 'ClientesController@getClientes');
+Route::get('/getCodigoCot/', 'CotizacionController@getCodigoCot');
+Route::get('/getCodigoOr/', 'OrdenController@getCodigoOr');
+Route::get('/getCodigoFac/', 'FacturacionController@getCodigoFac');
 
+Route::get('/comprobarPassword/{password}', 'UsersController@comprobarPassword');
 
 Route::get('/operacion/informes', 'OrdenController@generarInformes');
 Route::get('/informes/filtrarOrden/', 'OrdenController@filtrarOrden');
@@ -79,6 +84,7 @@ Route::get('/imprimir/orden_servicio/{id}', 'GeneradorController@imprimirOrden')
 Route::get('/imprimir/facturacion/{id}', 'GeneradorController@imprimirFacturacion');
 
 Route::post('/completar/orden_servicio/', 'OrdenController@completarOrden');
+Route::post('/seguridad/usuarios/cPassword', 'UsersController@cPassword');
 
 
 Route::get('clientes-list', 'ClientesController@ClientesList'); 

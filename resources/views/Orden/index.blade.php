@@ -29,21 +29,24 @@
                 <tr>
                     <td>{{$orden->cod_orden}}</td>
                     <td>{{$orden->nom_cliente}}</td>
-                    <td>{{$orden->tecnico_id}}</td>
+                    <td>{{$orden->name}}</td>
                     <td>{{$orden->created_at}}</td>
                     <td>{{$orden->total}}</td>
                     <td>{{$orden->estado}}</td>
                     <td>
-                        <a href="{{url('imprimir/orden_servicio/'.$orden->id)}}" data-toggle="tooltip" data-placement="top" title="IMPRIMIR"><button type="button" id="modal_mostrar" class="btn btn-info"><i class="fa fa-print" aria-hidden="true"></i></button></a>
+                      <div style="white-space:nowrap;">
+                        <a href="{{url('imprimir/orden_servicio/'.$orden->id)}}" target="_blank" data-toggle="tooltip" data-placement="top" title="IMPRIMIR"><button type="button" id="modal_mostrar" class="btn btn-info"><i class="fa fa-print" aria-hidden="true"></i></button></a>
                         @if($orden->estado == 'PENDIENTE')
                           <a href="{{url('operacion/orden_servicio/'.$orden->id.'/edit')}}" data-toggle="tooltip" data-placement="top" title="EDITAR"><button type="button" id="modal_editar" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
                           @if(Auth::user()->rol == 'TECNICO' || Auth::user()->rol == 'ADMINISTRADOR')
-                            <a href="" data-toggle="tooltip" data-placement="top" title="COMPLETAR"><button type="button" id="modal_completar" class="btn btn-danger btn_completar" data-toggle="modal" data-target="#modal-completar-{{$orden->id}}"><i class="fa fa-check-square-o" aria-hidden="true"></i></button></a>
+                            <span data-toggle="tooltip" data-placement="top" title="COMPLETAR"><button type="button" id="modal_completar" class="btn btn-danger btn_completar" data-toggle="modal" data-target="#modal-completar-{{$orden->id}}"><i class="fa fa-check-square-o" aria-hidden="true"></i></button></span>
                           @endif
                         @endif
                         @if(Auth::user()->rol == 'ADMINISTRADOR')
-                          <a href="" data-toggle="tooltip" data-placement="top" title="ELIMINAR"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$orden->id}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></a>
+                          <span data-toggle="tooltip" data-placement="top" title="ELIMINAR"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$orden->id}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></span>
                         @endif
+                      </div>
+                        
                     </td>
                 </tr>
                 <?php
@@ -122,29 +125,11 @@ $('.btn_completar').click(function(){
     $('.observaciones').hide();
 });
 
-function abrirCompletar(id){
-  $('#modal-completar').modal('show');
 
-  $.get("/getOrden/"+id,function(response) {
-      $('#cod_orden').html(response.cod_orden);
-  });
-
-  $.get("/getDetallesOrden/"+id,function(response) {
-    console.log(response);
-    for (i =0; i<response.length ; i++) {
-      fila = '&nbsp;&nbsp;<input class="cajas" type="checkbox" id="'+response[i].id+'" name="cajas1" value="true" checked="true"><label class="form-check-label" for="inlineCheckbox3">'+response[i].nom_item+'</label>';
-      $('#items').append(fila);
-    }
-  });
-
-
-}
     
 
 </script> 
 
-<div >
-  <input type="text" name="obs_" id="obs_" placeholder="Especifique por que no pudo completar la tarea">
-</div>
+
 
 @endsection
