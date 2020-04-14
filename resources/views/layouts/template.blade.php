@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SEMEQUI</title>
+    <title>SIMEQUI</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<!--  Bootstrap 3.3.5 -->
@@ -34,7 +34,7 @@
           <!-- mini logo for sidebar mini 50x50 pixels -->
           <span class="logo-mini"><b></b>S</span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b style="font-family: Arial, Helvetica, sans-serif;">SEMEQUI</b></span>
+          <span class="logo-lg"><b style="font-family: Arial, Helvetica, sans-serif;">SIMEQUI</b></span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->
@@ -258,7 +258,7 @@
             <div class="col-md-12">
               <div class="box">
                 <div class="box-header with-border">
-                  <h3 class="box-title">SEMEQUI</h3>
+                  <h3 class="box-title">SIMEQUI</h3>
                   <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     
