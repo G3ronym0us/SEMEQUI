@@ -8,8 +8,8 @@
 		        </button>
 			</div>
   			
+			<form id="form_agregar_clase" method="POST" action="{{ url('/agregarClase') }}">
   			<div class="modal-body">
-			<form>
 			<div class="row">
 				{{ csrf_field() }}
 
@@ -25,13 +25,13 @@
 
 
   </div>
-					 </form>
     </div>
 
     <div class="modal-footer">
-    				<button class="btn btn-success" type="button" name="agregar_clase" id="agregar_clase">GUARDAR</button> 
+    				<button class="btn btn-success" type="submit" name="agregar_clase" id="agregar_clase">GUARDAR</button> 
                 	<button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
                 </div>
+					 </form>
                         
                        
                 	

@@ -58,7 +58,7 @@ class UsersController extends Controller
         $clientes->email=$request->get('email');
         $clientes->name=$request->get('name');
         $clientes->password=Hash::make($request->get('password'));
-        $clientes->rol='OPERADOR';
+        $clientes->rol=$request->get('rol');
 
         $clientes ->save(); 
          return Redirect::to('seguridad/usuarios');

@@ -18,7 +18,7 @@
   		<input type="text" name="nom_equipo" class="form-control bg-info text-white" onkeyup="mayusculas(this);" required>
   	</div>
   	<div class="col-lg-3 col-md-3 col-sm-10 col-xs-10 form-group">
-  		<span class="text-danger">*</span><label>CLASE</label>
+  		<span class="text-danger">*</span><label>CLASE DE EQUIPO</label>
   		<select id="clase_equipo" name="clase_equipo" class="form-control bg-info text-white selectpicker" data-live-search="true" required>
         @foreach($clase_equipos as $ce)
           <option value="{{ $ce->id_clase_equipo }}">{{ $ce->nom_clase_equipo }}</option>
@@ -28,7 +28,7 @@
   	</div>
     <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 form-group">
       <label>&nbsp;</label>
-      <button class="btn btn-primary form-control" data-toggle="modal" data-target="#modal-agregar-clase">+</button>
+      <button class="btn btn-primary form-control" data-toggle="modal" data-target="#modal-agregar-clase"><i class="fa fa-plus-circle" aria-hidden="true"></i> CLASE</button>
       
     </div>
   	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
@@ -137,25 +137,26 @@
 
         });
 
-        $('#agregar_clase').on('click',function(){
-          nom_clase_equipo = $('#nom_clase_equipo').val();
-          des_clase_equipo = $('#des_clase_equipo').val();
-         
-          activo = 1;
-          token = '{{csrf_token()}}';
+        $("#form_agregar_clase").submit(function(e) {
+
+          e.preventDefault();
+          var form = $(this);
+          var url = form.attr('action');
 
           $.ajax({
-           url:"/agregarClase",
+           url: url,
            method:'POST',
-           data:{ nom_clase_equipo: nom_clase_equipo, des_clase_equipo: des_clase_equipo, activo: activo, _token: token},
+           data:form.serialize(),
            success:function(response){
               if(response.success){
-                  nueva_clase = '<option value="'+response.id+'" selected>'+nom_clase_equipo+'</option>';
+                  nueva_clase = '<option value="'+response.id+'" selected>'+response.nom_clase_equipo+'</option>';
                   $('#clase_equipo').append(nueva_clase);
+                  $('#clase_equipo').selectpicker('refresh');
                   $('#modal-agregar-clase').modal('hide');
               }else{
                   alert("Error")
               }
+
            },
            error:function(error){
               console.log(error)

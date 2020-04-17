@@ -159,7 +159,8 @@ class EquiposController extends Controller
             [
                 'success' => true,
                 'message' => 'Data inserted successfully',
-                'id' => $clase_equipo->id_clase_equipo
+                'id' => $clase_equipo->id_clase_equipo,
+                'nom_clase_equipo' => $clase_equipo->nom_clase_equipo,
             ]
         );
     }

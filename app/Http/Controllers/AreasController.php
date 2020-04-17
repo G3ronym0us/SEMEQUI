@@ -60,8 +60,8 @@ class AreasController extends Controller
         
         $areas ->save();
 
-        $id_consecutivo = $request->get('id_consecutivo_ma');
-        $num_actual = $request->get('num_actual_ma');
+        $id_consecutivo = $request->get('id_consecutivo_ar');
+        $num_actual = $request->get('num_actual_ar');
         $con = Consecutivos::findOrFail($id_consecutivo);
         $con->num_actual = (int)$num_actual + 1;
         $con->update();

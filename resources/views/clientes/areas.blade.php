@@ -15,8 +15,10 @@
 			      	<input type="text" name="id_cliente" class="form-control bg-info text-white" value="{{$cl->id}}" hidden>
 
 			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
-			      		<span class="text-danger">*</span><label>CODIGO No:</label>
-			      		<input type="text" name="cod_area" class="form-control bg-info text-white" required>
+			      		<label>CODIGO No:</label>
+			      		<input type="text" name="id_consecutivo_ar" id="id_consecutivo_ar" class="id_consecutivo_ar" hidden>
+        				<input type="text" name="num_actual_ar" id="num_actual_ar" class="num_actual_ar" hidden>
+			      		<input type="text" name="cod_area" id="cod_area" class="cod_area form-control bg-info text-white" required>
 			    	</div>
 			        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
 			    		<span class="text-danger">*</span><label>NOMBRE</label>

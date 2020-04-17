@@ -218,5 +218,18 @@
 
          e.value = e.value.toUpperCase();
     }
+
+    $("#modal_areas").on('click', function(){
+          getCodigoArea();
+        })
+
+        function getCodigoArea() {
+          $.get("/getCodigoArea/",function(response) {
+            $('.cod_area').val(response[0].prefijo_doc+' - '+response[0].num_actual);
+            $('.num_actual_ar').val(response[0].num_actual);
+            $('.id_consecutivo_ar').val(response[0].id_adm_consecutivo);
+
+          });
+        }
   </script>
 @endsection

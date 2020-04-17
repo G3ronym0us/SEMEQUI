@@ -16,20 +16,20 @@
 				<input name="_method" type="hidden" value="PUT">
 			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
 			      		<label>NOMBRE </label>
-			      		<input type="text" name="name" class="form-control bg-info text-white" value="{{ $user->name }}" required>
+			      		<input type="text" name="name" class="mayusculas form-control bg-info text-white" value="{{ $user->name }}" required>
 			    	</div>
 			    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
 			    		<label>EMAIL</label>
-			    		<input type="text" name="email" style="text-transform:uppercase" class="form-control bg-info text-white" value="{{ $user->email }}"  required>
+			    		<input type="text" name="email" style="text-transform:uppercase" class="mayusculas form-control bg-info text-white" value="{{ $user->email }}"  required>
 			    	</div>
 			    	<div class="col-lg-12 col-md-12  col-sm-12 col-xs-12 form-group">
 			      		<label>ROL</label>
 			      		<select name="rol" id="rol" class="form-control bg-info text-white" >
 			      			@foreach($roles as $rol)
 			      				@if($rol->nom_rol == $user->rol)
-			      					<option value="{{$rol->id}}" selected>{{ $rol->nom_rol }}</option>
+			      					<option value="{{$rol->nom_rol}}" selected>{{ $rol->nom_rol }}</option>
 			      				@else
-    			      				<option value="{{$rol->id}}">{{ $rol->nom_rol }}</option>  				
+    			      				<option value="{{$rol->nom_rol}}">{{ $rol->nom_rol }}</option>  				
 			      				@endif
 
 			      			@endforeach

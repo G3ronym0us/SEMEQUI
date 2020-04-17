@@ -68,8 +68,13 @@
             infoFiltered:""
           }
         });
+
+        $('.mayusculas').keyup(function(){
+          this.value = this.value.toUpperCase();
+        });
         $('#password').keyup(verificar);
         $('#password-confirm').keyup(verificar);
+
 
         function verificar() {
 
@@ -85,6 +90,8 @@
             }
           }
         }
+
+        
       });
 
   </script>

@@ -24,11 +24,11 @@ Route::get('users-list', 'UsersController@usersList');
 Auth::routes();
 
 Route::resources([
+    'administracion/areas' => 'AreasController',
     'administracion/items' => 'ItemController',
     'administracion/equipos' => 'EquiposController',
     'administracion/consecutivos' => 'ConsecutivosController',
     'administracion/clientes' => 'ClientesController',
-    'administracion/areas' => 'AreasController',
     'administracion/area_equipo' => 'AreaEquipoController',
     'administracion/empresa' => 'EmpresaController',
     'operacion/orden_servicio' => 'OrdenController',
