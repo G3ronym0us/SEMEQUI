@@ -302,7 +302,7 @@ $("#guardar").hide();
 
 function agregar(){
 
-	$('#clientes_id option:not(:selected)').remove();
+	
 	equipo=$("#equipo_id option:selected").text();
 	area=$("#area_id option:selected").text();
 	item=$("#item_id option:selected").text();
@@ -329,6 +329,7 @@ function agregar(){
 		$("#totalv").html("COP/. "+total);
 		evaluar();
 		$('#detalles_factura').append(fila);
+		$('#clientes_id option:not(:selected)').remove();
 	}
 	else
 	{
@@ -688,10 +689,9 @@ function agregarFacturacion(id){
 			});
 }
 
-function verificar(){
+  $('.verificar').keyup(function(){
     costo = parseInt($('#precio_compra').val());
     precio = parseInt($('#precio_venta').val());
-
     if (costo > precio) {
       $('#error_costo').html('El costo no puede ser mayor que el precio');
       $('#btn_guardar').attr('disabled',true);
@@ -699,7 +699,7 @@ function verificar(){
       $('#error_costo').html('');
       $('#btn_guardar').attr('disabled',false);
     }
-  }
+  });
 
     function getCodigoFac() {
 	$.get("/getCodigoFac/",function(response) {

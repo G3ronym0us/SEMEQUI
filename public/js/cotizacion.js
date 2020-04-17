@@ -602,10 +602,9 @@ function gestionarBotones(id){
 	});
 }
 
-  function verificar(){
+  $('.verificar').keyup(function(){
     costo = parseInt($('#precio_compra').val());
     precio = parseInt($('#precio_venta').val());
-
     if (costo > precio) {
       $('#error_costo').html('El costo no puede ser mayor que el precio');
       $('#btn_guardar').attr('disabled',true);
@@ -613,4 +612,4 @@ function gestionarBotones(id){
       $('#error_costo').html('');
       $('#btn_guardar').attr('disabled',false);
     }
-  }
+  });

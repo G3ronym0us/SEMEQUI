@@ -74,8 +74,7 @@
         <div class="col-xl-4 col-lg-6 col-md-9 col-sm-9 col-xs-12 form-group">
             <label>ITEM</label>           
             <span data-toggle="tooltip" data-placement="top" title="NUEVO ITEM"><a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-nuevo-item" id="btn_nuevo_item"><i class="fa fa-plus" aria-hidden="true"></i></a></span>
-            <select name="item_id" id="item_id" class="form-control bg-info text-white selectpicker" data-live-search="true" >
-                <option value="false">SELECCIONE UN ITEM</option>
+            <select name="item_id" id="item_id" class="form-control bg-info text-white selectpicker" data-live-search="true" title="SELECCIONE UN ITEM">
                 @foreach($items as $it)
                 <option value="{{ $it->id_item }}">{{ $it->nom_item }}</option>
                 @endforeach

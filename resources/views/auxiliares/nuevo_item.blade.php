@@ -19,7 +19,7 @@
       				<input type="text" name="ajax" id="ajax" value="true" hidden>
 		      		<input type="text" name="id_consecutivo_ni" id="id_consecutivo_ni" hidden>
     				<input type="text" name="num_actual_ni" id="num_actual_ni" hidden>
-		      		<input type="text" name="cod_item" id="cod_item" class="form-control bg-info text-white" required>
+		      		<input type="text" name="cod_item" id="cod_item" class="form-control bg-info text-white" readonly="readonly" required>
    			 	</div>
 
   	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 form-group">
@@ -29,12 +29,12 @@
 
   	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 form-group">
       <label>COSTO:</label>
-      <input type="number" name="precio_compra" id="precio_compra" onkeyup="verificar()" class="form-control bg-info text-white" step="0.01" required>
+      <input type="number" name="precio_compra" id="precio_compra" class="verificar form-control bg-info text-white" step="0.01" required>
       <span id="error_costo" class="text-danger"></span>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 form-group">
       <label>PRECIO VENTA:</label>
-      <input type="number" name="precio_venta" id="precio_venta" onkeyup="verificar()" class="form-control bg-info text-white" step="0.01" required>
+      <input type="number" name="precio_venta" id="precio_venta" class="verificar form-control bg-info text-white" step="0.01" required>
     </div>
 
   	<div class="col-lg-2 col-md-2 col-sm-2 form-check form-check-inline">

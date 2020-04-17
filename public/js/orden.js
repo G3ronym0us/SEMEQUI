@@ -642,10 +642,9 @@ function getCodigo(nom_consecutivo) {
 /* FIN DE FUNCIONES PARA EL MODAL NUEVO ITEM */
 
 
-function verificar(){
+  $('.verificar').keyup(function(){
     costo = parseInt($('#precio_compra').val());
     precio = parseInt($('#precio_venta').val());
-
     if (costo > precio) {
       $('#error_costo').html('El costo no puede ser mayor que el precio');
       $('#btn_guardar').attr('disabled',true);
@@ -653,7 +652,7 @@ function verificar(){
       $('#error_costo').html('');
       $('#btn_guardar').attr('disabled',false);
     }
-  }
+  });
 
   function getCodigoOr() {
 	$.get("/getCodigoOr/",function(response) {
