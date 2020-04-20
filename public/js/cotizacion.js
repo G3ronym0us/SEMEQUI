@@ -1,7 +1,7 @@
 $( document ).ready(function() {
 
 	$('#btn_asignar_areas').hide();
-	$('#btn_asignar_equipo').hide();
+	$('#btn_asignar_equipos').hide();
 	$("#btn_guardar_cotizacion").hide();
 	$("#cantidad").val(1);
 
@@ -41,7 +41,6 @@ $( document ).ready(function() {
 
 	$("#area_id_me").change(function(){
 		id_area = $("#area_id_me").val();
-		getEquipoME(id_area);
    });
 
 	$("#btn_nuevo_cliente").on('click', function(){
@@ -49,10 +48,9 @@ $( document ).ready(function() {
 		getDepartamentos();
 	})
 
-	$("#btn_asignar_equipo").on('click', function(){
+	$("#btn_asignar_equipos").on('click', function(){
 		id = $("#clientes_id").val();
 		getDatosCliente(id);
-		mostrarAreasME(id);
 	})
 
 	$('#id_departamento').on('change',function(){
@@ -93,34 +91,46 @@ $( document ).ready(function() {
 
 	    var form = $(this);
 	    var url = form.attr('action');
-	    console.log(form.serialize());
 	    $.ajax({
 	           type: "POST",
 	           url: url,
 	           data: form.serialize(), // serializes the form's elements.
 	           success: function(response)
 	           {
+	           		$('#modal-asignar-equipos').modal('hide');
+
 	           		placa = response.placa;
 	           		descripcion = response.descripcion;
+	           		
 	           		if(response.placa == null){
 						placa = "";
 					}
 					if(response.descripcion == null){
 						descripcion = "";
 					}
-	           		nombre_area = $("#area_id_me option:selected").text();
-	           		nom_equipo = $("#equipo_id_me option:selected").text();
-	           		if (tipo_cliente == 'JURIDICO') {
-	           			fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+response.serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
-	    				$('#tabla-area-equipo').append(fila);
-	           		}else{
-	           			fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+response.serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
-	    				$('#tabla-area-equipo').append(fila);
-	           		}
 
-	           		$('#equipo_id').append('<option value="'+response.equipo_id+'_'+response.descripcion+'" selected>'+nom_equipo+'</option>');
-	           		$('#equipo_id').selectpicker('refresh');
-	           		$('#modal-asignar-equipos').modal('hide');
+	           		nombre_area = $("#area_id_me option:selected").text();
+	           		area_id = $('#area_id_me').val();
+	           		$('#area_id option[value="'+area_id+'"]').prop('selected',true);
+	           		$('#area_id').selectpicker('refresh');
+	           		
+
+	           		$.get("/getEquipos/"+area_id,function(data) {
+						$("#equipo_id").empty();
+						$('#equipo_id').selectpicker('refresh');
+						for (i =0; i<data.length ; i++) {
+							if (data[i].id == response.id) {
+								console.log('si');
+								$("#equipo_id").append('<option value="'+data[i].id+'_'+data[i].descripcion+'" selected>'+data[i].nom_equipo+'</option>');
+							}else{
+								console.log('no');
+								$("#equipo_id").append('<option value="'+data[i].id+'_'+data[i].descripcion+'">'+data[i].nom_equipo+'</option>');
+							}
+						}
+						$('#equipo_id').selectpicker('refresh');
+						toastr.success('EL EQUIPO HA SIDO ASIGNADO',  'PERFECTO!');
+						
+					});	
 	           		
 	           }
 	         });
@@ -146,7 +156,6 @@ $( document ).ready(function() {
 
 	    var form = $(this);
 	    var url = form.attr('action');
-	    console.log(form.serialize());
 	    $.ajax({
 	           type: "POST",
 	           url: url,
@@ -274,20 +283,18 @@ function agregar(){
 	item_id=$("#item_id").val();
 	area_id=$("#area_id").val();
 	equipo_a=document.getElementById('equipo_id').value.split('_');
-	equipo_id = equipo_a[0];
+	rel_id = equipo_a[0];
 	descripcion = equipo_a[1];
-	console.log(descripcion);
 	if (descripcion == "null") {
 		descripcion = '';
-		console.log(descripcion);
 	}
-	if (equipo_id!="" && cantidad!="" && cantidad>0 && valor_unitario!="" && valor_total!="")
+	if (rel_id!="" && cantidad!="" && cantidad>0 && valor_unitario!="" && valor_total!="")
 	{
 		subtotal[cont]=(cantidad*valor_unitario);
 		total=total+subtotal[cont];
 		$("#total").val(total);
 		f = cont + 1;
-		var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+cantidad+'" hidden>'+cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+equipo_id+'"><input type="hidden" name="area_id[]" value="'+area_id+'">'+equipo+' ('+area+')</td><td><input type="hidden" name="item_id[]" value="'+item_id+'">'+item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+valor_unitario+'" hidden>'+valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+valor_total+'" hidden>'+valor_total+'</td></tr>';		
+		var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+cantidad+'" hidden>'+cantidad+'</td><td><input type="hidden" name="rel_id[]" value="'+rel_id+'">'+equipo+' ('+area+')</td><td><input type="hidden" name="item_id[]" value="'+item_id+'">'+item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+valor_unitario+'" hidden>'+valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+valor_total+'" hidden>'+valor_total+'</td></tr>';		
 		cont++;
 		limpiar();
 		$("#totalv").html("COP/. "+total);
@@ -297,7 +304,7 @@ function agregar(){
 	}
 	else
 	{
-		alert("Error al ingresar los detalles de ingreso, revise los datos del articulo");
+		toastr.error('LOS DATOS DEL ITEM NO ESTAN COMPLETOS', 'ERROR!');
 	}
 }
 
@@ -336,11 +343,8 @@ function getArea(id) {
 	$.get("/getArea/"+id,function(response) {
 			$("#area_id").empty();
 			$.get("/getTipoCliente/"+id,function(data) {
-				if (data == 'JURIDICO') {
-					$("#area_id").append('<option value="">SELECCIONE UN AREA</option>');
-				}
 				$("#equipo_id").empty();
-				$("#equipo_id").append('<option value="">SELECCIONE UN EQUIPO</option>');
+
 				for (i =0; i<response.length ; i++) {
 				if (i === 0) {
 					getEquipo(response[i].id);
@@ -356,9 +360,8 @@ function getEquipo(id){
 	$.get("/getEquipos/"+id,function(response) {
 				$("#equipo_id").empty();
 				$('#equipo_id').selectpicker('refresh');
-				$("#equipo_id").append('<option value="">SELECCIONE UN EQUIPO</option>');
 				for (i =0; i<response.length ; i++) {
-					$("#equipo_id").append('<option value="'+response[i].id_equipo+'_'+response[i].descripcion+'">'+response[i].nom_equipo+'</option>');
+					$("#equipo_id").append('<option value="'+response[i].id+'_'+response[i].descripcion+'">'+response[i].nom_equipo+'</option>');
 					$('#equipo_id').selectpicker('refresh');
 				}
 			});
@@ -383,9 +386,11 @@ function agregarCotizacion(id){
 					total=total+subtotal[cont];
 					if (response[i].descripcion == null) {
 						descripcion = "";
+					}else{
+						descripcion = response[i].descripcion;
 					}
 					$("#total").val(total);
-					var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="'+response[i].id_detalle_cotizacion+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'"><input type="hidden" name="area_id[]" value="'+response[i].id_area+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
+					var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="'+response[i].id_detalle_cotizacion+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
 					cont++;
 					f++;
 					limpiar();
@@ -449,7 +454,6 @@ function getMunicipio(id){
 
 function getDatosCliente(id) {
 	$.get("/getDatosCliente/"+id,function(response) {
-    	console.log(response);
     	$('#cliente_me').html(response.nom_cliente);
     	$('#id_cliente_me').html(response.id);
 
@@ -500,9 +504,13 @@ function mostrarAreasME(id, tipo_cliente){
     				for (c =0; c<data.length ; c++) {
     					if(data[c].placa == null){
 							placa = "";
+						}else{
+							placa = data[c].placa;
 						}
 						if(data[c].descripcion == null){
 							descripcion = "";
+						}else{
+							descripcion = data[c].descripcion;
 						}
 						fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
 	    				$('#tabla-area-equipo').append(fila);
@@ -511,12 +519,16 @@ function mostrarAreasME(id, tipo_cliente){
 				}else{
 					fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>EQUIPO</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>SERIAL</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>PLACA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>DESCRIPCION</b></div>';
     				$('#tabla-area-equipo').append(fila);
-    				for (c =0; c<data.length ; c++) {
+    				for (c = 0; c < data.length ; c++) {
     					if(data[c].placa == null){
 							placa = "";
+						}else{
+							placa = data[c].placa;
 						}
 						if(data[c].descripcion == null){
-							descripcion = "";
+							var descripcion = "";
+						}else{
+							descripcion = data[c].descripcion;
 						}
 						fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
 	    				$('#tabla-area-equipo').append(fila);
@@ -533,7 +545,7 @@ function mostrarAreasME(id, tipo_cliente){
 
 function getDatosClienteMA(id) {
 	$.get("/getDatosCliente/"+id,function(response) {
-		console.log(response);
+	
     	$('#nom_cliente_ma').html(response.nom_cliente);
     	$('#id_cliente_ma').val(response.id);
   });
@@ -567,7 +579,6 @@ function getAreaMA(id) {
 
 function getCodigo(nom_consecutivo) {
 	$.get("/getCodigo/"+nom_consecutivo,function(response) {
-		console.log(response);
 		$('#cod_item').val(response[0].prefijo_doc+' - '+response[0].num_actual);
 		$('#num_actual_ni').val(response[0].num_actual);
 		$('#id_consecutivo_ni').val(response[0].id_adm_consecutivo);
@@ -577,7 +588,6 @@ function getCodigo(nom_consecutivo) {
 
 function getCodigoCot() {
 	$.get("/getCodigoCot/",function(response) {
-		console.log(response);
 		$('#cod_cotizacion').val(response.prefijo_doc+' - '+response.num_actual);
 		$('#num_actual_cot').val(response.num_actual);
 		$('#id_consecutivo_cot').val(response.id_adm_consecutivo);
@@ -591,7 +601,7 @@ function getCodigoCot() {
 function gestionarBotones(id){
 	$.get("/getTipoCliente/"+id,function(response) {
 	
-		$('#btn_asignar_equipo').show();
+		$('#btn_asignar_equipos').show();
 		if (response == 'JURIDICO') {
 			$('#btn_asignar_areas').show();
 			$('#div_area_id').show();

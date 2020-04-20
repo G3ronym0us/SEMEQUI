@@ -16,6 +16,7 @@ class Orden extends Model
     	'clientes_id',
     	'tecnico_id',
     	'cod_orden',
+        'contacto',
     	'total',
     	'estado',
     ];

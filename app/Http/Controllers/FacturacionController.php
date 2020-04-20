@@ -71,10 +71,9 @@ class FacturacionController extends Controller
         $factura->estado=$request->get('estado');
         $factura->save();
 
-        $equipo_id = $request->get('equipo_id');
+        $rel_id = $request->get('rel_id');
         $cantidad = $request->get('cantidad');
         $item_id = $request->get('item_id');
-        $area_id = $request->get('area_id');
         $valor_unitario = $request->get('valor_unitario');
         $valor_total = $request->get('valor_total');
         $cotizaciones = $request->get('cotizaciones_list');
@@ -82,12 +81,11 @@ class FacturacionController extends Controller
 
         $cont = 0;
 
-        while ($cont < count($equipo_id)) {
+        while ($cont < count($rel_id)) {
             $detalle = new DetalleFactura();
             $detalle->factura_id= $factura->id_facturacion;
             $detalle->item_id= $item_id[$cont];
-            $detalle->area_id= $area_id[$cont];
-            $detalle->equipo_id= $equipo_id[$cont];
+            $detalle->rel_id= $rel_id[$cont];
             $detalle->cantidad= $cantidad[$cont];
             $detalle->valor_unitario= $valor_unitario[$cont];
             $detalle->valor_total= $valor_total[$cont];
@@ -168,10 +166,9 @@ class FacturacionController extends Controller
         $factura->total=$request->get('total');
         $factura->update();
 
-        $equipo_id = $request->get('equipo_id');
+        $rel_id = $request->get('rel_id');
         $cantidad = $request->get('cantidad');
         $item_id = $request->get('item_id');
-        $area_id = $request->get('area_id');
         $valor_unitario = $request->get('valor_unitario');
         $valor_total = $request->get('valor_total');
         $id_detalle = $request->get('id');
@@ -179,7 +176,7 @@ class FacturacionController extends Controller
         $cont = 0;
         $detalles = DB::table('detalles_factura')->where('factura_id','=',$id)->select('id')->get();
 
-       while ($cont < count($equipo_id)) {
+       while ($cont < count($rel_id)) {
             if ($id_detalle[$cont]) {
                 foreach ($detalles as $det) {
                     $buscar = array_search($det->id,$id_detalle,false);
@@ -194,8 +191,7 @@ class FacturacionController extends Controller
                 $detalle = new DetalleFactura();
                 $detalle->factura_id= $factura->id_facturacion;
                 $detalle->item_id= $item_id[$cont];
-                $detalle->area_id= $area_id[$cont];
-                $detalle->equipo_id= $equipo_id[$cont];
+                $detalle->rel_id= $rel_id[$cont];
                 $detalle->cantidad= $cantidad[$cont];
                 $detalle->valor_unitario= $valor_unitario[$cont];
                 $detalle->valor_total= $valor_total[$cont];
@@ -235,15 +231,11 @@ class FacturacionController extends Controller
     {
         if ($request->ajax()) {
             $orden=DB::table('detalles_orden_servicio as dos')
-            ->join('orden_servicio as os','os.id','=','dos.orden_servicio_id')
-            ->join('adm_areas as a','a.id','=','dos.area_id')
-            ->join('adm_equipo as eq','eq.id_equipo','=','dos.equipo_id')
+            ->join('rel_area_equipo as rel','rel.id','=','dos.rel_id')
+            ->join('adm_areas as a','a.id','=','rel.areas_id')
+            ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
             ->join('adm_item as it','it.id_item','=','dos.item_id')
-            ->join('rel_area_equipo as re',function($join){
-                $join->on('a.id','=','re.areas_id');
-                $join->on('eq.id_equipo','=','re.equipos_id');
-            })
-            ->select('dos.*','eq.*','a.id as id_area','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
+            ->select('dos.*','eq.*','a.id as id_area','a.nombre_area','rel.serial','rel.placa','rel.descripcion', 'it.*')
             ->where('dos.orden_servicio_id','=',$id)
             ->where('dos.completo','=',true)
             ->get();
@@ -256,15 +248,11 @@ class FacturacionController extends Controller
     {
         if ($request->ajax()) {
             $orden=DB::table('detalles_factura as df')
-            ->join('facturacion as f','f.id_facturacion','=','df.factura_id')
-            ->join('adm_areas as a','a.id','=','df.area_id')
-            ->join('adm_equipo as eq','eq.id_equipo','=','df.equipo_id')
+            ->join('rel_area_equipo as rel','rel.id','=','df.rel_id')
+            ->join('adm_areas as a','a.id','=','rel.areas_id')
+            ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
             ->join('adm_item as it','it.id_item','=','df.item_id')
-            ->join('rel_area_equipo as re',function($join){
-                $join->on('a.id','=','re.areas_id');
-                $join->on('eq.id_equipo','=','re.equipos_id');
-            })
-            ->select('df.*','eq.*','a.id as id_area','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
+            ->select('df.*','eq.*','a.id as id_area','a.nombre_area','rel.serial','rel.placa','rel.descripcion', 'it.*')
             ->where('df.factura_id','=',$id)
             ->get();
          return response()->json($orden);

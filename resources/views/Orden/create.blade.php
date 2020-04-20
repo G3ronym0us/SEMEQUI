@@ -42,12 +42,12 @@
                 <a type="button" id="btn_agregarCotizacion" class="btn btn-primary form-control"><i class="fa fa-floppy-o" aria-hidden="true"></i> AGREGAR COT</a>
             </div>
         </div>
-    	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
+    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
     		<span class="text-danger">*</span><label>UBICACION:</label>
     		<input type="text" name="ubicacion" id="ubicacion"  class="form-control bg-info text-white" required readonly="readonly">
     	</div>
 
-    	<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 form-group">
+    	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
       		<span class="text-danger">*</span><label>TECNICO</label>
       		<select name="tecnico_id" id="tecnico_id" class="form-control bg-info text-white">
                 @foreach($tecnicos as $tec)
@@ -55,8 +55,13 @@
                 @endforeach    
             </select>
     	</div>
+
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+            <span class="text-danger">*</span><label>CONTACTO:</label>
+            <input type="text" name="contacto" class="form-control bg-info text-white">
+        </div>
         
-    	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
+    	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
     		<span class="text-danger">*</span><label>ESTADO:</label>
     		<input type="text" name="estado" class="form-control bg-info text-white" step="0.01" value="PENDIENTE" readonly="readonly" required>
     	</div>

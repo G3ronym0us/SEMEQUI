@@ -14,7 +14,7 @@ class DetalleFactura extends Model
 
     protected $fillable =[
     	'orden_servicio_id',
-    	'equipo_id',
+    	'rel_id',
     	'item_id',
     	'cantidad',
     	'valor_unitario',

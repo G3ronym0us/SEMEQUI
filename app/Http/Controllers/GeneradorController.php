@@ -37,16 +37,12 @@ class GeneradorController extends Controller
         ->first();
 
         $detalles=DB::table('detalles_cotizacion as dc')
-            ->join('cotizacion as c','c.id_cotizacion','=','dc.cotizacion_id')
-            ->join('adm_areas as a','a.id','=','dc.area_id')
-            ->join('adm_equipo as eq','eq.id_equipo','=','dc.equipo_id')
+            ->join('rel_area_equipo as rel','rel.id','=','dc.rel_id')
+            ->join('adm_areas as a','a.id','=','rel.areas_id')
+            ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
             ->join('adm_item as it','it.id_item','=','dc.item_id')
-            ->join('rel_area_equipo as re',function($join){
-                $join->on('a.id','=','re.areas_id');
-                $join->on('eq.id_equipo','=','re.equipos_id');
-            })
             ->where('dc.cotizacion_id','=',$id)
-            ->select('dc.*','eq.*','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
+            ->select('dc.*','eq.*','a.nombre_area','rel.serial','rel.placa','rel.descripcion', 'it.*')
             ->get();
 
             $empresa = DB::table('adm_empresa')->get();
@@ -66,20 +62,16 @@ class GeneradorController extends Controller
         ->join('departamentos as d', 'm.departamento_id','=','d.id')
         ->where('os.id','=',$id)
         ->select('os.*','cl.nom_cliente','cl.nit_cliente','m.nom_municipio','d.nom_departamento')
-        ->get();
+        ->first();
 
         $detalles=DB::table('detalles_orden_servicio as dos')
-            ->join('orden_servicio as os','os.id','=','dos.orden_servicio_id')
-            ->join('adm_areas as a','a.id','=','dos.area_id')
-            ->join('adm_equipo as eq','eq.id_equipo','=','dos.equipo_id')
-            ->join('adm_item as it','it.id_item','=','dos.item_id')
-            ->join('rel_area_equipo as re',function($join){
-                $join->on('a.id','=','re.areas_id');
-                $join->on('eq.id_equipo','=','re.equipos_id');
-            })
-            ->select('dos.*','eq.*','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
-            ->where('dos.orden_servicio_id','=',$id)
-            ->get();
+                    ->join('rel_area_equipo as rel','rel.id','=','dos.rel_id')
+                    ->join('adm_areas as a','a.id','=','rel.areas_id')
+                    ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
+                    ->join('adm_item as it','it.id_item','=','dos.item_id')
+                    ->select('dos.*','eq.*','a.id as id_area','a.nombre_area','rel.serial','rel.placa','rel.descripcion', 'it.*')
+                    ->where('dos.orden_servicio_id','=',$id)
+                    ->get();
 
              $empresa = DB::table('adm_empresa')->get();
 
@@ -104,16 +96,12 @@ class GeneradorController extends Controller
         ->first();
 
         $detalles=DB::table('detalles_factura as dc')
-            ->join('facturacion as c','c.id_facturacion','=','dc.factura_id')
-            ->join('adm_areas as a','a.id','=','dc.area_id')
-            ->join('adm_equipo as eq','eq.id_equipo','=','dc.equipo_id')
+            ->join('rel_area_equipo as rel','rel.id','=','dc.rel_id')
+            ->join('adm_areas as a','a.id','=','rel.areas_id')
+            ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
             ->join('adm_item as it','it.id_item','=','dc.item_id')
-            ->join('rel_area_equipo as re',function($join){
-                $join->on('a.id','=','re.areas_id');
-                $join->on('eq.id_equipo','=','re.equipos_id');
-            })
             ->where('dc.factura_id','=',$id)
-            ->select('dc.*','eq.*','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
+            ->select('dc.*','eq.*','a.nombre_area','rel.serial','rel.placa','rel.descripcion', 'it.*')
             ->get();
 
             $empresa = DB::table('adm_empresa')->get();

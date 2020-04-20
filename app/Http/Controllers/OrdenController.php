@@ -75,26 +75,25 @@ class OrdenController extends Controller
                 $orden->tecnico_id=$request->get('tecnico_id');
                 $orden->cod_orden=$request->get('cod_orden');
                 $orden->total=$request->get('total');
+                $orden->contacto=$request->get('contacto');
                 $orden->estado=$request->get('estado');
                 
                 $orden->save();
 
-                $equipo_id = $request->get('equipo_id');
+                $rel_id = $request->get('rel_id');
                 $cantidad = $request->get('cantidad');
                 $item_id = $request->get('item_id');
-                $area_id = $request->get('area_id');
                 $valor_unitario = $request->get('valor_unitario');
                 $valor_total = $request->get('valor_total');
                 $cotizaciones = $request->get('cotizaciones_p');
 
                 $cont = 0;
 
-                while ($cont < count($equipo_id)) {
+                while ($cont < count($rel_id)) {
                     $detalle = new DetalleOrden();
                     $detalle->orden_servicio_id= $orden->id;
                     $detalle->item_id= $item_id[$cont];
-                    $detalle->area_id= $area_id[$cont];
-                    $detalle->equipo_id= $equipo_id[$cont];
+                    $detalle->rel_id= $rel_id[$cont];
                     $detalle->cantidad= $cantidad[$cont];
                     $detalle->valor_unitario= $valor_unitario[$cont];
                     $detalle->valor_total= $valor_total[$cont];
@@ -246,38 +245,29 @@ class OrdenController extends Controller
     {
         if ($request->ajax()) {
             $cotizacion=DB::table('detalles_cotizacion as dc')
-            ->join('cotizacion as c','c.id_cotizacion','=','dc.cotizacion_id')
-            ->join('adm_areas as a','a.id','=','dc.area_id')
-            ->join('adm_equipo as eq','eq.id_equipo','=','dc.equipo_id')
-            ->join('adm_item as it','it.id_item','=','dc.item_id')
-            ->join('rel_area_equipo as re',function($join){
-                $join->on('a.id','=','re.areas_id');
-                $join->on('eq.id_equipo','=','re.equipos_id');
-            })
+                ->join('rel_area_equipo as rel','rel.id','=','dc.rel_id')
+                ->join('adm_areas as a','a.id','=','rel.areas_id')
+                ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
+                ->join('adm_item as it','it.id_item','=','dc.item_id')
             ->where('dc.cotizacion_id','=',$id)
-            ->select('dc.*','eq.*','re.serial','a.nombre_area','a.id as id_area','re.placa','re.descripcion', 'it.*')
+            ->select('dc.*','eq.*','rel.serial','a.nombre_area','a.id as id_area','rel.placa','rel.descripcion', 'it.*')
             ->get();
          return response()->json($cotizacion);
         }
-        
-            //->select('a.id','re.areas_id','eq.id_equipo','re.equipos_id')
+            
     }
 
     public function getDetallesOrden(Request $request, $id)
     {
         if ($request->ajax()) {
             $orden=DB::table('detalles_orden_servicio as dos')
-            ->join('orden_servicio as os','os.id','=','dos.orden_servicio_id')
-            ->join('adm_areas as a','a.id','=','dos.area_id')
-            ->join('adm_equipo as eq','eq.id_equipo','=','dos.equipo_id')
-            ->join('adm_item as it','it.id_item','=','dos.item_id')
-            ->join('rel_area_equipo as re',function($join){
-                $join->on('a.id','=','re.areas_id');
-                $join->on('eq.id_equipo','=','re.equipos_id');
-            })
-            ->select('dos.*','eq.*','a.id as id_area','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
-            ->where('dos.orden_servicio_id','=',$id)
-            ->get();
+                    ->join('rel_area_equipo as rel','rel.id','=','dos.rel_id')
+                    ->join('adm_areas as a','a.id','=','rel.areas_id')
+                    ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
+                    ->join('adm_item as it','it.id_item','=','dos.item_id')
+                    ->select('dos.*','eq.*','a.id as id_area','a.nombre_area','rel.serial','rel.placa','rel.descripcion', 'it.*')
+                    ->where('dos.orden_servicio_id','=',$id)
+                    ->get();
          return response()->json($orden);
         }
         

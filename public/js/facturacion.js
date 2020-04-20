@@ -169,19 +169,40 @@ $( document ).ready(function() {
 	           data: form.serialize(), // serializes the form's elements.
 	           success: function(response)
 	           {
-	           	console.log(response);
-	           		nom_equipo = $("#equipo_id_me option:selected").text();
-	           		if (tipo_cliente == 'JURIDICO') {
-	           		nombre_area = $("#area_id_me option:selected").text();
-	           			fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+response.serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+response.placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+response.descripcion+'</div>';
-	    				$('#tabla-area-equipo').append(fila);
-	           		}else{
-	           			fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+response.serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+response.placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+response.descripcion+'</div>';
-	    				$('#tabla-area-equipo').append(fila);
-	           		}
+	           	$('#modal-asignar-equipos').modal('hide');
 
-	           		$('#equipo_id').append('<option value="'+response.equipos_id+'" selected>'+nom_equipo+'</option>');
-	           		$('#modal-asignar-equipos').modal('hide');
+	           		placa = response.placa;
+	           		descripcion = response.descripcion;
+	           		
+	           		if(response.placa == null){
+						placa = "";
+					}
+					if(response.descripcion == null){
+						descripcion = "";
+					}
+
+	           		nombre_area = $("#area_id_me option:selected").text();
+	           		area_id = $('#area_id_me').val();
+	           		$('#area_id option[value="'+area_id+'"]').prop('selected',true);
+	           		$('#area_id').selectpicker('refresh');
+	           		
+
+	           		$.get("/getEquipos/"+area_id,function(data) {
+						$("#equipo_id").empty();
+						$('#equipo_id').selectpicker('refresh');
+						for (i =0; i<data.length ; i++) {
+							if (data[i].id == response.id) {
+								console.log('si');
+								$("#equipo_id").append('<option value="'+data[i].id+'_'+data[i].descripcion+'" selected>'+data[i].nom_equipo+'</option>');
+							}else{
+								console.log('no');
+								$("#equipo_id").append('<option value="'+data[i].id+'_'+data[i].descripcion+'">'+data[i].nom_equipo+'</option>');
+							}
+						}
+						$('#equipo_id').selectpicker('refresh');
+						toastr.success('EL EQUIPO HA SIDO ASIGNADO',  'PERFECTO!');
+						
+					});	
 
 	           		
 	           }
@@ -312,18 +333,18 @@ function agregar(){
 	item_id=$("#item_id").val();
 	area_id=$("#area_id").val();
 	equipo_a=document.getElementById('equipo_id').value.split('_');
-	equipo_id = equipo_a[0];
+	rel_id = equipo_a[0];
 	descripcion = equipo_a[1];
 	if (descripcion == 'null') {
 		descripcion = '';
 	}
-	if (equipo_id!="" && cantidad!="" && cantidad>0 && valor_unitario!="" && valor_total!="")
+	if (rel_id!="" && cantidad!="" && cantidad>0 && valor_unitario!="" && valor_total!="")
 	{
 		subtotal[cont]=(cantidad*valor_unitario);
 		total=total+subtotal[cont];
 		$("#total").val(total);
 		f = cont + 1;
-		var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+cantidad+'" hidden>'+cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+equipo_id+'"><input type="hidden" name="area_id[]" value="'+area_id+'">'+equipo+' ('+area+')</td><td><input type="hidden" name="item_id[]" value="'+item_id+'">'+item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+valor_unitario+'" hidden>'+valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+valor_total+'" hidden>'+valor_total+'</td></tr>';		
+		var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+cantidad+'" hidden>'+cantidad+'</td><td><input type="hidden" name="rel_id[]" value="'+rel_id+'">'+equipo+' ('+area+')</td><td><input type="hidden" name="item_id[]" value="'+item_id+'">'+item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+valor_unitario+'" hidden>'+valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+valor_total+'" hidden>'+valor_total+'</td></tr>';		
 		cont++;
 		limpiar();
 		$("#totalv").html("COP/. "+total);
@@ -383,7 +404,7 @@ function getEquipo(id){
 	$.get("/getEquipos/"+id,function(response) {
 				$("#equipo_id").empty();
 				for (i =0; i<response.length ; i++) {
-					$("#equipo_id").append('<option value="'+response[i].id_equipo+'_'+response[i].descripcion+'">'+response[i].nom_equipo+'</option>');
+					$("#equipo_id").append('<option value="'+response[i].id+'_'+response[i].descripcion+'">'+response[i].nom_equipo+'</option>');
 					$('#equipo_id').selectpicker('refresh');
 				}
 			});
@@ -412,10 +433,10 @@ function agregarCotizacion(id){
 					total=total+subtotal[cont];
 					$("#total").val(total);
 					if (i == 0) {
-						var fila='<tr class="selected" id="fila'+cont+'"><td><input type="number" name="cotizaciones_list[]" value="'+id+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'"><input type="hidden" name="area_id[]" value="'+response[i].id_area+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
+						var fila='<tr class="selected" id="fila'+cont+'"><td><input type="number" name="cotizaciones_list[]" value="'+id+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
 
 					}else{
-						var fila='<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'"><input type="hidden" name="area_id[]" value="'+response[i].id_area+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+response[i].descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';	
+						var fila='<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+response[i].descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';	
 					}
 					cont++;
 					f++;
@@ -451,10 +472,10 @@ function agregarOrden(id){
 					total=total+subtotal[cont];
 					$("#total").val(total);
 					if (i == 0) {
-						var fila='<tr class="selected" id="fila'+cont+'"><td><input type="number" name="ordenes_list[]" value="'+id+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'"><input type="hidden" name="area_id[]" value="'+response[i].id_area+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
+						var fila='<tr class="selected" id="fila'+cont+'"><td><input type="number" name="ordenes_list[]" value="'+id+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
 
 					}else{
-						var fila='<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'"><input type="hidden" name="area_id[]" value="'+response[i].id_area+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';	
+						var fila='<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';	
 					}
 					cont++;
 					f++;

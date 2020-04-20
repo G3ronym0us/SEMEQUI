@@ -20,9 +20,8 @@
 
             <span data-toggle="tooltip" data-placement="top" title="ASIGNAR AREAS"><a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-asignar-areas" id="btn_asignar_areas"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-building-o" aria-hidden="true"></i></a></span>
 
-            <span data-toggle="tooltip" data-placement="top" title="ASIGNAR EQUIPOS"><a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-asignar-equipos" id="btn_asignar_equipo"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-laptop" aria-hidden="true"></i></a></span>
-            <select name="clientes_id" id="clientes_id" class="form-control bg-info text-white selectpicker" data-live-search="true" required>
-                <option value="0">SELECCIONE UN CLIENTE</option>
+            <span data-toggle="tooltip" data-placement="top" title="ASIGNAR EQUIPOS"><a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-asignar-equipos" id="btn_asignar_equipos"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-laptop" aria-hidden="true"></i></a></span>
+            <select name="clientes_id" id="clientes_id" class="form-control bg-info text-white selectpicker" data-live-search="true" title="SELECCIONE UN CLIENTE" required>
             	@foreach($clientes as $cliente)
             	<option value="{{ $cliente->id }}">{{ $cliente->nom_cliente }}</option>
             	@endforeach
@@ -44,8 +43,7 @@
         <div class="col-xl-3 col-lg-4 col-md-9 col-sm-9 col-xs-12 form-group">
             <label>ITEM:</label>
             <span data-toggle="tooltip" data-placement="top" title="NUEVO ITEM"><a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-nuevo-item" id="btn_nuevo_item"><i class="fa fa-plus" aria-hidden="true"></i></a></span>
-            <select name="item_id" id="item_id" class="form-control bg-info text-white selectpicker" data-live-search="true" >
-                <option value="null">SELECCIONE UN ITEM</option>
+            <select name="item_id" id="item_id" class="form-control bg-info text-white selectpicker" data-live-search="true" title="SELECCIONE UN ITEM">
                 @foreach($items as $it)
                 <option value="{{ $it->id_item }}">{{ $it->nom_item }}</option>
                 @endforeach
@@ -65,7 +63,7 @@
         </div>
         <div class=" col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
             <label>EQUIPO:</label>
-            <select name="equipo_id" id="equipo_id" class="form-control bg-info text-white selectpicker" data-live-search="true" >
+            <select name="equipo_id" id="equipo_id" class="form-control bg-info text-white selectpicker" data-live-search="true" title="SELECCIONE UN EQUIPO">
                 <option>SELECCIONE UN EQUIPO</option>
             </select>
             

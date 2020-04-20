@@ -51,7 +51,7 @@
     </style>
 </head>
 <body>
-    <center><h1>ORDEN DE SERVICIO</h1></center><br>
+    <span class="text-right"><h1>ORDEN DE SERVICIO No. {{ substr($orden->cod_orden,6) }}</h1></span>
     @foreach($empresa as $emp)
     <table class="bordered" id="datos_empresa">
         <tr class="bordered" >
@@ -77,25 +77,25 @@
     @endforeach
 
     <br>
-    @foreach($orden as $or)
+    
     <table class="bordered" id="table_datos_clientes">
         <tr class="bordered">
             <td class="bordered w-20">CLIENTE:</td>
-            <td class="bordered w-37">{{ $or->nom_cliente }}</td>
+            <td class="bordered w-37">{{ $orden->nom_cliente }}</td>
             <td class="bordered w-18">CONTACTO:</td>
-            <td class="bordered w-25"></td>
+            <td class="bordered w-25">{{ $orden->contacto }}</td>
         </tr>
         <tr class="bordered">
             <td class="bordered w-20">CIUDAD:</td>
-            <td class="bordered w-37">{{ $or->nom_municipio.' - '.$or->nom_departamento }}</td>
+            <td class="bordered w-37">{{ $orden->nom_municipio.' - '.$orden->nom_departamento }}</td>
             <td class="bordered w-18">FECHA:</td>
             <td class="bordered w-25"></td>
         </tr>
         <tr class="bordered">
             <td class="bordered w-20">FECHA INGRESO:</td>
-            <td class="bordered w-37">{{ substr($or->created_at,0,10) }}</td>
+            <td class="bordered w-37">{{ substr($orden->created_at,0,10) }}</td>
             <td class="bordered w-18">FECHA SALIDA:</td>
-            <td class="bordered w-25">{{ substr($or->updated_at,0,10) }}</td>
+            <td class="bordered w-25">{{ substr($orden->updated_at,0,10) }}</td>
         </tr>
         <!--<tr class="bordered">
             <td class="bordered w-20">USUARIO:</td>
@@ -110,7 +110,7 @@
             <td class="bordered w-25"></td>
         </tr>-->
     </table>
-    @endforeach
+    
 
 
 

@@ -14,9 +14,8 @@ class DetalleCotizacion extends Model
 
     protected $fillable =[
     	'cotizacion_id',
-    	'equipo_id',
+    	'rel_id',
         'item_id',
-        'area_id',
     	'cantidad',
     	'valor_unitario',
     	'valor_total'

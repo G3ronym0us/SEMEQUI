@@ -75,21 +75,19 @@ class CotizacionController extends Controller
                 $cot->observacion = $request->get('observacion');
                 $cot->save();
 
-                $equipo_id = $request->get('equipo_id');
                 $cantidad = $request->get('cantidad');
                 $item_id = $request->get('item_id');
-                $area_id = $request->get('area_id');
+                $rel_id = $request->get('rel_id');
                 $valor_unitario = $request->get('valor_unitario');
                 $valor_total = $request->get('valor_total');
 
                 $cont = 0;
 
-                while ($cont < count($equipo_id)) {
+                while ($cont < count($rel_id)) {
                     $detalle = new DetalleCotizacion();
                     $detalle->cotizacion_id= $cot->id_cotizacion;
-                    $detalle->equipo_id= $equipo_id[$cont];
                     $detalle->item_id= $item_id[$cont];
-                    $detalle->area_id= $area_id[$cont];
+                    $detalle->rel_id= $rel_id[$cont];
                     $detalle->cantidad= $cantidad[$cont];
                     $detalle->valor_unitario= $valor_unitario[$cont];
                     $detalle->valor_total= $valor_total[$cont];
@@ -129,16 +127,12 @@ class CotizacionController extends Controller
         ->first();
 
         $detalles=DB::table('detalles_cotizacion as dc')
-            ->join('cotizacion as c','c.id_cotizacion','=','dc.cotizacion_id')
-            ->join('adm_areas as a','a.id','=','dc.area_id')
-            ->join('adm_equipo as eq','eq.id_equipo','=','dc.equipo_id')
+            ->join('rel_area_equipo as rel','rel.id','=','dc.rel_id')
+            ->join('adm_areas as a','a.id','=','rel.areas_id')
+            ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
             ->join('adm_item as it','it.id_item','=','dc.item_id')
-            ->join('rel_area_equipo as re',function($join){
-                $join->on('a.id','=','re.areas_id');
-                $join->on('eq.id_equipo','=','re.equipos_id');
-            })
             ->where('dc.cotizacion_id','=',$id)
-            ->select('dc.*','eq.*','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
+            ->select('dc.*','eq.*','a.nombre_area','rel.serial','rel.placa','rel.descripcion', 'it.*')
             ->get();
 
             $empresa = DB::table('adm_empresa')->get();
@@ -159,27 +153,7 @@ class CotizacionController extends Controller
      */
     public function show($id)
     {
-        /*$cotizacion=DB::table('cotizacion as co')
-        ->join('adm_clientes as cl', 'co.cliente_id','=','cl.id')
-        ->where('co.id_cotizacion','=',$id)
-        ->get();
 
-        $detalles=DB::table('detalles_cotizacion as dc')
-        ->join('adm_equipo as eq', 'dc.equipo_id','=','eq.id_equipo')
-        ->join('rel_area_equipo as r', 'dc.equipo_id','=','r.equipos_id')
-        ->where('dc.cotizacion_id','=',$id)
-        ->get();
-
-        return view("cotizacion.show",["cotizacion"=>$cotizacion, "detalles"=>$detalles]);*/
-        $cotizacion=DB::table('detalles_cotizacion as dc')
-            ->join('cotizacion as c','c.id_cotizacion','=','dc.cotizacion_id')
-            ->join('adm_areas as a','a.clientes_id','=','c.cliente_id')
-            ->join('adm_equipo as eq','eq.id_equipo','=','dc.equipo_id')
-            ->join('rel_area_equipo as re','a.id','=','re.areas_id')
-            ->where('dc.cotizacion_id','=',$id)
-            ->get();
-
-            dd($cotizacion);
     }
 
     /**
@@ -198,10 +172,12 @@ class CotizacionController extends Controller
         ->get();
 
         $detalles=DB::table('detalles_cotizacion as dc')
-        ->join('adm_equipo as eq', 'dc.equipo_id','=','eq.id_equipo')
-        ->join('rel_area_equipo as r', 'dc.equipo_id','=','r.equipos_id')
-        ->where('dc.cotizacion_id','=',$id)
-        ->get();
+            ->join('rel_area_equipo as rel','rel.id','=','dc.rel_id')
+            ->join('adm_areas as a','a.id','=','rel.areas_id')
+            ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
+            ->join('adm_item as it','it.id_item','=','dc.item_id')
+            ->where('dc.cotizacion_id','=',$id)
+            ->get();
 
         $items = Item::all();
 
@@ -223,10 +199,9 @@ class CotizacionController extends Controller
         $cotizacion->update();
 
 
-                $equipo_id = $request->get('equipo_id');
+                $rel_id = $request->get('rel_id');
                 $cantidad = $request->get('cantidad');
                 $item_id = $request->get('item_id');
-                $area_id = $request->get('area_id');
                 $valor_unitario = $request->get('valor_unitario');
                 $valor_total = $request->get('valor_total');
                 $id_detalle = $request->get('id');
@@ -235,7 +210,7 @@ class CotizacionController extends Controller
 
                 $detalles = DB::table('detalles_cotizacion')->where('cotizacion_id','=',$id)->select('id_detalle_cotizacion')->get();
 
-                while ($cont < count($equipo_id)) {
+                while ($cont < count($rel_id)) {
                     if ($id_detalle[$cont]) {
                         foreach ($detalles as $det) {
                             $buscar = array_search($det->id_detalle_cotizacion,$id_detalle,false);
@@ -249,8 +224,7 @@ class CotizacionController extends Controller
                         $detalle = new DetalleCotizacion();
                         $detalle->cotizacion_id= $id;
                         $detalle->item_id= $item_id[$cont];
-                        $detalle->area_id= $area_id[$cont];
-                        $detalle->equipo_id= $equipo_id[$cont];
+                        $detalle->rel_id= $rel_id[$cont];
                         $detalle->cantidad= $cantidad[$cont];
                         $detalle->valor_unitario= $valor_unitario[$cont];
                         $detalle->valor_total= $valor_total[$cont];
@@ -299,10 +273,12 @@ class CotizacionController extends Controller
         ->get();
 
         $detalles=DB::table('detalles_cotizacion as dc')
-        ->join('adm_equipo as eq', 'dc.equipo_id','=','eq.id_equipo')
-        ->join('rel_area_equipo as r', 'dc.equipo_id','=','r.equipos_id')
-        ->where('dc.cotizacion_id','=',$id)
-        ->get();
+            ->join('rel_area_equipo as rel','rel.id','=','dc.rel_id')
+            ->join('adm_areas as a','a.id','=','rel.areas_id')
+            ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
+            ->join('adm_item as it','it.id_item','=','dc.item_id')
+            ->where('dc.cotizacion_id','=',$id)
+            ->get();
 
         $equipos = Equipos::all();
 

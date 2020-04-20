@@ -51,15 +51,11 @@
                 </tr>
                 <?php
                   $detalles=DB::table('detalles_orden_servicio as dos')
-                    ->join('orden_servicio as os','os.id','=','dos.orden_servicio_id')
-                    ->join('adm_areas as a','a.id','=','dos.area_id')
-                    ->join('adm_equipo as eq','eq.id_equipo','=','dos.equipo_id')
+                    ->join('rel_area_equipo as rel','rel.id','=','dos.rel_id')
+                    ->join('adm_areas as a','a.id','=','rel.areas_id')
+                    ->join('adm_equipo as eq','eq.id_equipo','=','rel.equipos_id')
                     ->join('adm_item as it','it.id_item','=','dos.item_id')
-                    ->join('rel_area_equipo as re',function($join){
-                        $join->on('a.id','=','re.areas_id');
-                        $join->on('eq.id_equipo','=','re.equipos_id');
-                    })
-                    ->select('dos.*','eq.*','a.id as id_area','a.nombre_area','re.serial','re.placa','re.descripcion', 'it.*')
+                    ->select('dos.*','eq.*','a.id as id_area','a.nombre_area','rel.serial','rel.placa','rel.descripcion', 'it.*')
                     ->where('dos.orden_servicio_id','=',$orden->id)
                     ->get();
                 ?>
