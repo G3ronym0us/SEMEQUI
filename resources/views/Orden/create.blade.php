@@ -23,8 +23,7 @@
             <span data-toggle="tooltip" data-placement="top" title="ASIGNAR AREAS"><a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-asignar-areas" id="btn_asignar_areas"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-building-o" aria-hidden="true"></i></a></span>
 
             <span data-toggle="tooltip" data-placement="top" title="ASIGNAR EQUIPOS"><a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-asignar-equipos" id="btn_asignar_equipo"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-laptop" aria-hidden="true"></i></a></span>
-            <select name="clientes_id" id="clientes_id" class="form-control bg-info text-white selectpicker" data-live-search="true" required>
-                <option value="0">SELECCIONE UN CLIENTE</option>
+            <select name="clientes_id" id="clientes_id" class="form-control bg-info text-white selectpicker" data-live-search="true" title="SELECCIONE UN CLIENTE" required>
             	@foreach($clientes as $cliente)
             	<option value="{{ $cliente->id }}">{{ $cliente->nom_cliente }}</option>
             	@endforeach
@@ -58,7 +57,7 @@
 
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">
             <span class="text-danger">*</span><label>CONTACTO:</label>
-            <input type="text" name="contacto" class="form-control bg-info text-white">
+            <input type="text" name="contacto" class="form-control bg-info text-white" required>
         </div>
         
     	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">
@@ -154,7 +153,7 @@
 				<th></th>
 				<th></th>
 				<th></th>
-				<th><H4 id="totalv">COP/. 0.00</H4></th>
+				<th><h5 id="totalv" style="white-space:nowrap;">COP/. 0.00</h5></th>
 			</tfoot>
         </table>
     </div>

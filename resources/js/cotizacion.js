@@ -120,10 +120,8 @@ $( document ).ready(function() {
 						$('#equipo_id').selectpicker('refresh');
 						for (i =0; i<data.length ; i++) {
 							if (data[i].id == response.id) {
-								console.log('si');
 								$("#equipo_id").append('<option value="'+data[i].id+'_'+data[i].descripcion+'" selected>'+data[i].nom_equipo+'</option>');
 							}else{
-								console.log('no');
 								$("#equipo_id").append('<option value="'+data[i].id+'_'+data[i].descripcion+'">'+data[i].nom_equipo+'</option>');
 							}
 						}
@@ -162,7 +160,7 @@ $( document ).ready(function() {
 	           data: form.serialize(), // serializes the form's elements.
 	           success: function(response)
 	           {
-					$("#tabla-asignar-areas").append('<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">'+response.cod_area+'</div><div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 form-group">'+response.nombre_area+'</div>');
+					console.log(response);
 
 	           		
 	           }
@@ -340,8 +338,10 @@ function calcular(){
 }
 
 function getArea(id) {
+	$("#area_id").empty();
+	$('#area_id').selectpicker('refresh');
+	console.log("okey");
 	$.get("/getArea/"+id,function(response) {
-			$("#area_id").empty();
 			$.get("/getTipoCliente/"+id,function(data) {
 				$("#equipo_id").empty();
 

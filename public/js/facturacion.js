@@ -118,8 +118,6 @@ $( document ).ready(function() {
 		getCodigoArea();
 		id = $("#clientes_id").val();
 		getDatosClienteMA(id);
-		getAreaMA(id);
-		//mostrarAreasME(id);
 	})
 
 	$("#form_asignar_areas").submit(function(e) {
@@ -128,16 +126,18 @@ $( document ).ready(function() {
 
 	    var form = $(this);
 	    var url = form.attr('action');
-	    console.log(form.serialize());
 	    $.ajax({
 	           type: "POST",
 	           url: url,
 	           data: form.serialize(), // serializes the form's elements.
 	           success: function(response)
 	           {
-					$("#tabla-asignar-areas").append('<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">'+response.cod_area+'</div><div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 form-group">'+response.nombre_area+'</div>');
-					$('#area_id').append('<option value="'+response.id+'" selected>'+response.nombre_area+'</option>');
-	           		$('#modal-asignar-areas').modal('hide');	
+					$("#modal-asignar-areas").modal('hide');
+					$("#area_id").append('<option value="'+response.id+'" selected>'+response.nombre_area+'</option>');
+					$('#area_id').selectpicker('refresh');
+					$('#nombre_area_ma').val('');
+					toastr.success('EL AREA HA SIDO ASIGNADA',  'PERFECTO!');
+
 	           }
 	         });
 
@@ -153,7 +153,6 @@ $( document ).ready(function() {
 	$("#btn_asignar_equipo").on('click', function(){
 		id = $("#clientes_id").val();
 		getDatosCliente(id);
-		mostrarAreasME(id);
 	});
 
 	$("#form_asignar_equipo").submit(function(e) {
@@ -251,6 +250,7 @@ $( document ).ready(function() {
 	         });
 
 	    $('#modal-nuevo-item').modal('hide');
+	    toastr.success('EL ITEM HA SIDO AGREGADO',  'PERFECTO!');
 
 	    
 	});
@@ -276,11 +276,11 @@ $( document ).ready(function() {
 	           			$("#form_nueva_factura")[0].reset();
 		           		getClientes();
 		           		$("#area_id").empty();
-		           		$("#area_id").append('<option value="false">SELECCIONE UN AREA</option>');
 		           		$("#area_id").selectpicker('refresh');
 		           		$("#equipo_id").empty();
-		           		$("#equipo_id").append('<option value="false">SELECCIONE UN EQUIPO</option>');
 		           		$("#equipo_id").selectpicker('refresh');
+		           		$("#item_id option:selected").prop("selected", false);
+		           		$("#item_id").selectpicker('refresh');
 		           		$('#detalles_factura tbody').empty();
 		           		cont = 0;
 		           		total=0;
@@ -576,17 +576,6 @@ function getCodigoArea() {
 	});
 }
 
-function getAreaMA(id) {
-	$.get("/getArea/"+id,function(response) {
-
-				$("#tabla-asignar-areas").empty();
-				for (i =0; i<response.length ; i++) {	
-					$("#tabla-asignar-areas").append('<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">'+response[i].cod_area+'</div><div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 form-group">'+response[i].nombre_area+'</div>');
-				}
-
-			});
-}
-
 
 
 /* FIN DE FUNCIONES PARA EL MODAL AREA */
@@ -603,12 +592,10 @@ function getDatosCliente(id) {
     	if(response.tipo_cliente == 'JURIDICO'){
     		$('#div_area').show();
     		tipo_cliente = 'JURIDICO';
-    		mostrarAreasME(id, response.tipo_cliente);
     		
     	}else{
     		$('#div_area').hide();
     		tipo_cliente = 'NATURAL';
-    		mostrarAreasME(id, response.tipo_cliente);
     	}
     		getAreaME(response.id);
     		getEquiposList();
@@ -636,43 +623,6 @@ function getEquiposList(id){
 			});
 }
 
-function mostrarAreasME(id, tipo_cliente){
-
-			$.get("/getEquiposForArea/"+id,function(data) {
-				$('#tabla-area-equipo').empty();
-
-				if (tipo_cliente == 'JURIDICO') {
-					fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>AREA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>EQUIPO</b></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>SERIAL</b></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>PLACA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>DESCRIPCION</b></div>';
-    				$('#tabla-area-equipo').append(fila);
-    				for (c =0; c<data.length ; c++) {
-    					if(data[c].placa == null){
-							placa = "";
-						}
-						if(data[c].descripcion == null){
-							descripcion = "";
-						}
-						fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].nombre_area+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
-	    				$('#tabla-area-equipo').append(fila);
-					}
-				}else{
-					fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>EQUIPO</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>SERIAL</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>PLACA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>DESCRIPCION</b></div>';
-    				$('#tabla-area-equipo').append(fila);
-    				for (c =0; c<data.length ; c++) {
-    					if(data[c].placa == null){
-							placa = "";
-						}
-						if(data[c].descripcion == null){
-							descripcion = "";
-						}
-						fila = '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].nom_equipo+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+data[c].serial+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+placa+'</div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group">'+descripcion+'</div>';
-	    				$('#tabla-area-equipo').append(fila);
-					}
-				}
-				
-				
-			});
-		
-}
 
 //FIN DE FUNCIONES PARA EL MODAL EQUIPO
 

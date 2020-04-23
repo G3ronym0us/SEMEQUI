@@ -295,6 +295,16 @@ class CotizacionController extends Controller
         }
         
     } 
+    public function getAreaP(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $areas=DB::table('adm_areas')
+            ->where('clientes_id','=',$id)
+            ->paginate(3);
+         return response()->json($areas);
+        }
+        
+    } 
      public function getEquipos(Request $request, $id)
     {
         if ($request->ajax()) {

@@ -19,39 +19,18 @@
 			      		<input type="text" name="ajax" id="ajax" value="true" hidden>
 			      		<input type="text" name="id_consecutivo_ma" id="id_consecutivo_ma" hidden>
         				<input type="text" name="num_actual_ma" id="num_actual_ma" hidden>
-			      		<input type="text" name="cod_area_ma" id="cod_area_ma" class="form-control bg-info text-white" required>
+			      		<input type="text" name="cod_area_ma" id="cod_area_ma" class="form-control bg-info text-white" readonly="readonly" required>
 			    	</div>
 			        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
 			    		<label>NOMBRE</label>
-			    		<input type="text" name="nombre_area_ma" onkeyup="mayusculas(this);" class="form-control bg-info text-white" required>
+			    		<input type="text" name="nombre_area_ma" id="nombre_area_ma" onkeyup="mayusculas(this);" class="form-control bg-info text-white" required>
 			    	</div>
 					<div class="col-lg-12 col-md-12 col-sm-12">
                           <div class="form-group">
                             <button class="btn btn-success" type="submit">Guardar</button> 
                           </div>
                         </div> </div></form>
-              <div class="row">
-
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<div class="row">
-							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
-								<b>CODIGO</b>
-							</div>
-							<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 form-group">
-								<b>NOMBRE</b>
-							</div>
-
-						</div>
-						
-						
-						<div class="row" id="tabla-asignar-areas">
-						
-							
-                    </div>
-</div>
-
-  
-    </div>
+            
 </div>
 
     <div class="modal-footer">

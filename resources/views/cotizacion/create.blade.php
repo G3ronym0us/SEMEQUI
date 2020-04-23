@@ -56,15 +56,14 @@
     	</div>
         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group" id="div_area_id">
             <label>AREA:</label>
-            <select name="area_id" id="area_id" class="form-control bg-info text-white selectpicker" data-live-search="true" >
-                <option>SELECCIONE UN AREA</option>
+            <select name="area_id" id="area_id" class="form-control bg-info text-white selectpicker" data-live-search="true" title="SELECCIONE UN AREA">
+               
             </select>
             
         </div>
         <div class=" col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
             <label>EQUIPO:</label>
             <select name="equipo_id" id="equipo_id" class="form-control bg-info text-white selectpicker" data-live-search="true" title="SELECCIONE UN EQUIPO">
-                <option>SELECCIONE UN EQUIPO</option>
             </select>
             
         </div>
@@ -111,7 +110,7 @@
 
             <tfoot>
 				<th colspan="7">TOTAL</th>
-				<th><H4 id="totalv">COP/. 0.00</H4></th>
+				<th ><h5 id="totalv" style="white-space:nowrap;">COP/. 0.00</h5></th>
 			</tfoot>
         </table>
     </div>

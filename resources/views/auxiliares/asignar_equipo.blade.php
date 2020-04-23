@@ -53,9 +53,6 @@
 
   </div>
   </form>
-<div class="row" id="tabla-area-equipo">
-	
-</div>
 </div>
 <div class="modal-footer">
 

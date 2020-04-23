@@ -48,30 +48,40 @@
             width: 34%; 
         }
 
+        .border-top{
+            border-top: 1px solid #000;
+        }
+
     </style>
 </head>
 <body>
-    <span class="text-right"><h1>ORDEN DE SERVICIO No. {{ substr($orden->cod_orden,6) }}</h1></span>
+    <center><h1>ORDEN DE SERVICIO</h1></center><br>
     @foreach($empresa as $emp)
-    <table class="bordered" id="datos_empresa">
-        <tr class="bordered" >
+    <table class="" id="datos_empresa">
+        <tr class="" >
             <td style="width: 120px;" rowspan="6"><center><img id="logo" src="{{public_path('img/empresa/'.$emp->logo)}}" width="100px" height="100px"></center></td>
-            <td class="bordered">{{ $emp->nom_empresa }}</td>
+            <td class="">{{ $emp->nom_empresa }}</td>
+            <td style="width: 120px;" class="text-center">ORDEN</td>
         </tr>
-        <tr class="bordered">
-            <td class="bordered">{{ $emp->nom_empresa }}</td>
+        <tr class="">
+            <td class="">{{ $emp->dir_empresa }}</td>
+            <td class="text-center">N° de orden</td>
         </tr>
-        <tr class="bordered">
-            <td class="bordered">NIT: {{ $emp->nit_empresa }}</td>
+        <tr class="">
+            <td class="">EMAIL - {{ $emp->mail }}</td>
+            <td class="text-center border-top">{{ substr($orden->cod_orden,6) }}</td>
         </tr>
-        <tr class="bordered">
-            <td class="bordered">DIRECCION: {{ $emp->dir_empresa }}</td>
+        <tr class="">
+            <td class="">TEL. {{ $emp->tel_empresa }} + CELULAR: {{ $emp->cel_empresa }}</td>
+            <td></td>
         </tr>
-        <tr class="bordered">
-            <td class="bordered">TEL. {{ $emp->tel_empresa }} + CELULAR: {{ $emp->cel_empresa }}</td>
+        <tr class="">
+            <td class="">NIT: {{ $emp->nit_empresa }}</td>
+            <td class="text-center border-top">Fecha</td>
         </tr>
-        <tr class="bordered">
-            <td class="bordered">EMAIL - {{ $emp->mail }}</td>
+        <tr class="">
+            <td class=""></td>
+            <td class="text-center border-top">{{ date("d.m.Y") }}</td>
         </tr>
     </table>
     @endforeach
