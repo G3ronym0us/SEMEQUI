@@ -7,13 +7,7 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	   <!--  Bootstrap 3.3.5 -->
-    <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/AdminLTE.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/bootstrap-select.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/test.css')}}">
-    <link rel="stylesheet" href="{{asset('css/toastr.css')}}">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
 
   </head>
   <body class="hold-transition skin-red-light sidebar-mini">
@@ -284,23 +278,9 @@
         </div>
         <strong>Copyright &copy;  <a href=""></a>.</strong> All rights reserved.
       </footer>
-
-      
-    <!-- jQuery 2.1.4 -->
-    <script src="{{asset('js/jQuery-3.4.1.min.js')}}"></script>
-    @stack('scripts')
-    <!-- Bootstrap 3.3.5 -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="{{asset('js/bootstrap.min.js')}}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{asset('js/app.min.js')}}"></script>
-
-
-    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js "></script>
-
-    <script src="{{asset('js/bootstrap-select.min.js')}}"></script>
-    <script src="{{asset('js/toastr.js')}}"></script>
+      <script src="{{asset('js/jquery-3.4.1.min.js')}}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+      <script src="{{asset('js/app.js')}}"></script>
     @yield('script')
     <script type="text/javascript">
         $('#password_last').keyup(comprobar);

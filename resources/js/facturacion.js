@@ -1,32 +1,66 @@
 $( document ).ready(function() {
-	
+
+	// EVENTOS INICIADOS AL CARGAR LA PAGINA
 	$('#btn_asignar_areas').hide();
-	$('#btn_asignar_equipo').hide();
+	$('#btn_asignar_equipo').hide();	
 	$("#cantidad").val(1);
-
-	id_orden = $("#id").val();
-	getDetallesOrden(id_orden);
-
 	id = $("#clientes_id").val();
 
-	
-	//OBTIENE LOS DATOS DEL CLIENTE PARA LA VISATA EDIT
+	id_facturacion = $("#id_facturacion").val();
+	agregarFacturacion(id_facturacion);
 
+	//FIN DE LOS EVENTOS INICIADOS AL CARGAR LA PAGINA
+	
 	if($("#clientes_id").val() != 0){
 		id = $("#clientes_id").val();
-		getCotizaciones(id);
 		getAreas(id);
-		getUbicacion(id);
-		gestionarBotones(id); // Activa o Desactiva botones segun el tipo de cliente (personal/juridico)
-	}
 
-	// OBTIENE LOS DATOS PARA PODER GENERARLE UNA FACTURA AL CLIENTE SELECCIONADO
+	}		
+	
+	//CAMBIA LOS DATOS AL CAMBIAR DE CLIENTE
 	$("#clientes_id").change(function(){
 		id = $("#clientes_id").val();
 		gestionarBotones(id); // Activa o Desactiva botones segun el tipo de cliente (personal/juridico)
 		getAreas(id);
 		getCotizaciones(id);
+		getOrdenes(id);
 		getUbicacion(id);
+	});
+
+	//AGREGA COTIZACION PENDIENTE
+	$("#btn_agregarCotizacion").click(function(){
+		id = $("#cotizaciones").val();
+		agregarCotizacion(id);
+	});
+
+	//AGREGA ORDEN DE SERVICIO PENDIENTE
+	$("#btn_agregarOrden").click(function(){
+		id = $("#ordenes").val();
+		agregarOrden(id);
+	});
+
+	//CAMBIA EL VALOR TOTAL SI CANTIDAD O VALOR UNITARIO ES ALTERADO
+	$("#cantidad").keyup(calcular);
+	$("#valor_unitario").keyup(calcular);
+
+
+	//SELECCIONA EL VALOR UNITARIO DEL ITEM
+	$("#item_id").change(function(){
+		item_id = $("#item_id").val();
+		getItem(item_id);
+	});
+
+	//AGREGA EL ITEM ENVIADO A LA TABLA DE DETALLES FACTURA
+
+	$('#btn_detalle_factura').click(function(){
+		agregar();
+
+	})
+
+		//SELECCIONA EL VALOR UNITARIO DEL ITEM
+	$("#item_id").change(function(){
+			item_id = $("#item_id").val();
+			getItem(item_id);
 	});
 
 	// Al presionar el boton de nuevo cliente carga el codigo del cliente y los departamentos.
@@ -34,11 +68,6 @@ $( document ).ready(function() {
 		getCodigoCliente();
 		getDepartamentos();
 	})
-
-	$("#btn_agregarCotizacion").click(function(){
-		id = $("#cotizaciones").val();
-		agregarCotizacion(id);
-	});
 
 	//SELECCIONA EL VALOR UNITARIO DEL ITEM
 	$("#item_id").change(function(){
@@ -72,7 +101,7 @@ $( document ).ready(function() {
 	           		$('#clientes_id').append(fila);
 	           		$('#clientes_id').selectpicker('refresh');
 	           		gestionarBotones(response);
-	           		getUbicacion();
+	           		getUbicacion(response);
 	           }
 	         });
 
@@ -140,7 +169,7 @@ $( document ).ready(function() {
 	           data: form.serialize(), // serializes the form's elements.
 	           success: function(response)
 	           {
-	           $('#modal-asignar-equipos').modal('hide');
+	           	$('#modal-asignar-equipos').modal('hide');
 
 	           		placa = response.placa;
 	           		descripcion = response.descripcion;
@@ -164,16 +193,18 @@ $( document ).ready(function() {
 						for (i =0; i<data.length ; i++) {
 							if (data[i].id == response.id) {
 								console.log('si');
-								$("#equipo_id").append('<option value="'+data[i].id+'_'+data[i].serial+'_'+data[i].placa+'_'+data[i].descripcion+'" selected>'+data[i].nom_equipo+'</option>');
+								$("#equipo_id").append('<option value="'+data[i].id+'_'+data[i].descripcion+'" selected>'+data[i].nom_equipo+'</option>');
 							}else{
 								console.log('no');
-								$("#equipo_id").append('<option value="'+data[i].id+'_'+data[i].serial+'_'+data[i].placa+'_'+data[i].descripcion+'">'+data[i].nom_equipo+'</option>');
+								$("#equipo_id").append('<option value="'+data[i].id+'_'+data[i].descripcion+'">'+data[i].nom_equipo+'</option>');
 							}
 						}
 						$('#equipo_id').selectpicker('refresh');
 						toastr.success('EL EQUIPO HA SIDO ASIGNADO',  'PERFECTO!');
 						
 					});	
+
+	           		
 	           }
 	         });
 
@@ -226,7 +257,7 @@ $( document ).ready(function() {
 
 	/* FIN DE EVENTOS PARA EL MODAL NUEVO ITEM */
 
-	$("#form_nueva_orden").submit(function(e) {
+	$("#form_nueva_factura").submit(function(e) {
 
     	e.preventDefault(); // avoid to execute the actual submit of the form.
 
@@ -242,7 +273,7 @@ $( document ).ready(function() {
 	           success: function(response)
 	           {
 	           		if ($('#imprimir').is(":checked")) {
-	           			$("#form_nueva_orden")[0].reset();
+	           			$("#form_nueva_factura")[0].reset();
 		           		getClientes();
 		           		$("#area_id").empty();
 		           		$("#area_id").append('<option value="false">SELECCIONE UN AREA</option>');
@@ -250,16 +281,17 @@ $( document ).ready(function() {
 		           		$("#equipo_id").empty();
 		           		$("#equipo_id").append('<option value="false">SELECCIONE UN EQUIPO</option>');
 		           		$("#equipo_id").selectpicker('refresh');
-		           		$('#detalles_orden tbody').empty();
+		           		$('#detalles_factura tbody').empty();
 		           		cont = 0;
 		           		total=0;
 		           		$("#totalv").html("COP/. "+total);
 		           		limpiar();
-		           		getCodigoOr();
-		           		$('#mensaje').html('<div class="alert alert-success alert-dismissible fade show" role="alert">LA ORDEN HA SIDO CREADA CON EXITO<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-		           		window.open('/imprimir/orden_servicio/'+response,'_blank');
+		           		getCodigoFac();
+		           		$('#mensaje').html('<div class="alert alert-success alert-dismissible fade show" role="alert">LA FACTURA HA SIDO CREADA CON EXITO<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+		           		window.open('/imprimir/facturacion/'+response,'_blank');
 	           		}else{
-	           			window.location.href = "/operacion/orden_servicio/create";
+	           			$('#mensaje').html('<div class="alert alert-success alert-dismissible fade show" role="alert">LA FACTURA HA SIDO CREADA CON EXITO<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	           			window.location.href = "/facturacion/facturacion/create";
 	           		}
 	           		
 	           }
@@ -268,8 +300,14 @@ $( document ).ready(function() {
 	    
 	});
 
-
-
+	$('#observacion').hide(); 	
+	$("#obs_check").click(function() {
+        if($(this).is(":checked")){
+            $('#observacion').show();         
+        }else{
+            $('#observacion').hide(); 
+        }
+    }); 
 
 });
 
@@ -277,56 +315,53 @@ var f=1;
 var cont=0;
 var total=0;
 var subtotal=[];
-var tipo_cliente='';
 var c_cot=0;
+
+$("#guardar").hide();
+
+
 
 function agregar(){
 
-	$('#clientes_id option:not(:selected)').remove();
-	nom_equipo=$("#equipo_id option:selected").text();
-	nom_item=$("#item_id option:selected").text();
+	
+	equipo=$("#equipo_id option:selected").text();
 	area=$("#area_id option:selected").text();
+	item=$("#item_id option:selected").text();
 	cantidad=$("#cantidad").val();
 	valor_unitario=$("#valor_unitario").val();
 	valor_total=$("#valor_total").val();
-	id_item=$("#item_id").val();
+	item_id=$("#item_id").val();
 	area_id=$("#area_id").val();
-	equipo_id=document.getElementById('equipo_id').value.split('_');
-	rel_id = equipo_id[0];
-	serial = equipo_id[1];
-	placa = equipo_id[2];
-	descripcion = equipo_id[3];
-	if (placa == 'null') {
-		placa = '';
-	}
+	equipo_a=document.getElementById('equipo_id').value.split('_');
+	rel_id = equipo_a[0];
+	descripcion = equipo_a[1];
 	if (descripcion == 'null') {
 		descripcion = '';
 	}
-	if (equipo_id!="" && cantidad!="" && cantidad>0 && valor_unitario!="" && valor_total!="")
+	if (rel_id!="" && cantidad!="" && cantidad>0 && valor_unitario!="" && valor_total!="")
 	{
 		subtotal[cont]=(cantidad*valor_unitario);
 		total=total+subtotal[cont];
 		$("#total").val(total);
-			var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+cantidad+'" hidden>'+cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+id_item+'">'+nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+rel_id+'">'+nom_equipo+' ('+area+')</td><td><input type="text" name="serial[]" value="'+serial+'" hidden>'+serial+'</td><td><input type="text" name="placa[]" value="'+placa+'" hidden>'+placa+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+valor_unitario+'" hidden>'+valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+valor_total+'" hidden>'+valor_total+'</td></tr>';
+		f = cont + 1;
+		var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+cantidad+'" hidden>'+cantidad+'</td><td><input type="hidden" name="rel_id[]" value="'+rel_id+'">'+equipo+' ('+area+')</td><td><input type="hidden" name="item_id[]" value="'+item_id+'">'+item+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+valor_unitario+'" hidden>'+valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+valor_total+'" hidden>'+valor_total+'</td></tr>';		
 		cont++;
-		f++;
 		limpiar();
 		$("#totalv").html("COP/. "+total);
 		evaluar();
-		$('#detalles_orden').append(fila);
+		$('#detalles_factura').append(fila);
+		$('#clientes_id option:not(:selected)').remove();
 	}
 	else
 	{
 		alert("Error al ingresar los detalles de ingreso, revise los datos del articulo");
 	}
 }
-
 function limpiar(){
 	$("#cantidad").val(1);
 	$("#valor_unitario").val("");
 	$("#valor_total").val("");
 }
-
 function evaluar(){
 	if(total>0)
 	{
@@ -337,25 +372,14 @@ function evaluar(){
 		$("#guardar").hide();
 	}
 }
-
-function getClientes(){
-	$.get("/getClientes/",function(response) {
-				$("#clientes_id").empty();
-				$("#clientes_id").append('<option value="">SELECCIONE UN CLIENTE</option>');
-				for (i =0; i<response.length ; i++) {
-					$("#clientes_id").append('<option value="'+response[i].id+'">'+response[i].nom_cliente+'</option>');
-					$('#clientes_id').selectpicker('refresh');
-				}
-			});
-}
-
 function eliminar(index)
 {
 	total=total-subtotal[index];
-	$('#total').html("COP/. "+total);
+	$('#totalv').html("Bs/. "+total);
 	$('#fila'+index).remove();
 	evaluar();
 }
+
 
 function calcular(){
 	cantidad=$("#cantidad").val();
@@ -366,7 +390,6 @@ function calcular(){
 function getAreas(id){
 	$.get("/getArea/"+id,function(response) {
 		$("#area_id").empty();
-		$("#equipo_id").empty();
 		for (i =0; i<response.length ; i++) {
 			if (i === 0) {
 				getEquipo(response[i].id);
@@ -381,7 +404,7 @@ function getEquipo(id){
 	$.get("/getEquipos/"+id,function(response) {
 				$("#equipo_id").empty();
 				for (i =0; i<response.length ; i++) {
-					$("#equipo_id").append('<option value="'+response[i].id+'_'+response[i].serial+'_'+response[i].placa+'_'+response[i].descripcion+'">'+response[i].nom_equipo+'</option>');
+					$("#equipo_id").append('<option value="'+response[i].id+'_'+response[i].descripcion+'">'+response[i].nom_equipo+'</option>');
 					$('#equipo_id').selectpicker('refresh');
 				}
 			});
@@ -391,23 +414,18 @@ function getCotizaciones(id){
 	$.get("/getCotizaciones/"+id,function(response) {
 				$("#cotizaciones").empty();
 				for (i =0; i<response.length ; i++) {
-					$("#cotizaciones").append('<option value="'+response[i].id_cotizacion+'">'+response[i].cod_cotizacion+' / '+response[i].total+' COP</option>');
+					$("#cotizaciones").append('<option value="'+response[i].id_cotizacion+'">'+response[i].cod_cotizacion+' - '+response[i].total+'</option>');
 				}
 			});
 }
 
-
 function agregarCotizacion(id){
-	$('#clientes_id option:not(:selected)').remove();
 	$.get("/agregarCotizacion/"+id,function(response) {
+		console.log(response);
 				$("#cotizaciones option:selected").remove();
-				console.log(response);
 				for (i =0; i<response.length ; i++) {
 					placa = response[i].placa;
 					descripcion = response[i].descripcion;
-					if (placa == null) {
-						placa = '';
-					}
 					if (descripcion == null) {
 						descripcion = '';
 					}
@@ -415,60 +433,70 @@ function agregarCotizacion(id){
 					total=total+subtotal[cont];
 					$("#total").val(total);
 					if (i == 0) {
-						var fila='<tr class="selected" id="fila'+cont+'"><td><input type="number" name="cotizaciones_p[]" value="'+id+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+'</td><td><input type="text" name="serial[]" value="'+response[i].serial+'" hidden>'+response[i].serial+'</td><td><input type="text" name="placa[]" value="'+placa+'" hidden>'+placa+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
+						var fila='<tr class="selected" id="fila'+cont+'"><td><input type="number" name="cotizaciones_list[]" value="'+id+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
 
 					}else{
-						var fila='<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+'</td><td><input type="text" name="serial[]" value="'+response[i].serial+'" hidden>'+response[i].serial+'</td><td><input type="text" name="placa[]" value="'+placa+'" hidden>'+placa+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';	
+						var fila='<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+response[i].descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';	
 					}
 					cont++;
 					f++;
-					console.log(cont);
 					limpiar();
 					$("#totalv").html("COP/. "+total);
 					evaluar();
-					$('#detalles_orden').append(fila);
+					$('#detalles_factura').append(fila);
 				}
 
 			});
 	c_cot++;
 }
 
-function getDetallesOrden(id){
-	$.get("/getDetallesOrden/"+id,function(response) {
-		console.log(response);
-		for (i =0; i<response.length ; i++) {
-			placa = response[i].placa;
-			descripcion = response[i].descripcion;
-			if (placa == null) {
-				placa = '';
-			}
-			if (descripcion == null) {
-				descripcion = '';
-			}
-			console.log(cont);
-			subtotal[cont]=(response[i].cantidad*response[i].valor_unitario);
-			total=total+subtotal[cont];
-			$("#total").val(total);
-			var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="'+response[i].id+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'"><input type="hidden" name="area_id[]" value="'+response[i].id_area+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="serial[]" value="'+response[i].serial+'" hidden>'+response[i].serial+'</td><td><input type="text" name="placa[]" value="'+placa+'" hidden>'+placa+'</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
-			cont++;
-			f++;
-			console.log(cont);
-			limpiar();
-			$("#totalv").html("COP/. "+total);
-			evaluar();
-			$('#detalles_orden').append(fila);
-		}
-	});
+function getOrdenes(id){
+	$.get("/getOrdenes/"+id,function(response) {
+				$("#ordenes").empty();
+				for (i =0; i<response.length ; i++) {
+					$("#ordenes").append('<option value="'+response[i].id+'">'+response[i].cod_orden+' - '+response[i].total+'</option>');
+				}
+			});
 }
 
+function agregarOrden(id){
+	$.get("/agregarOrden/"+id,function(response) {
+
+				$("#ordenes option:selected").remove();
+				for (i =0; i<response.length ; i++) {
+					descripcion = response[i].descripcion;
+					if (descripcion == null) {
+						descripcion = '';
+					}
+					subtotal[cont]=(response[i].cantidad*response[i].valor_unitario);
+					total=total+subtotal[cont];
+					$("#total").val(total);
+					if (i == 0) {
+						var fila='<tr class="selected" id="fila'+cont+'"><td><input type="number" name="ordenes_list[]" value="'+id+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
+
+					}else{
+						var fila='<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="hidden" name="rel_id[]" value="'+response[i].rel_id+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="text" name="descripcion[]" value="'+descripcion+'" hidden>'+descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';	
+					}
+					cont++;
+					f++;
+					limpiar();
+					$("#totalv").html("Bs/. "+total);
+					evaluar();
+					$('#detalles_factura').append(fila);
+				}
+			});
+}
+
+//OBTIENE LA UBICACION DEL CLIENTE AL CARGAR LA PAGINA (DEPARTAMENTO - MUNICIPIO)
 function getUbicacion(id){
 	$.get("/getUbicacion/"+id,function(response) {
-				console.log(response);
 				for (i =0; i<response.length ; i++) {
 					$("#ubicacion").val(response[i].nom_municipio+' - '+response[i].nom_departamento);
 				}
 			});
 }
+
+// SELECCIONA EL VALOR UNITARIO DEL ITEM
 
 function getItem(id){
 	cliente_id = $("#clientes_id").val();
@@ -480,6 +508,7 @@ function getItem(id){
 					calcular();
 	  });
 }
+
 
 function gestionarBotones(id){
 	$.get("/getTipoCliente/"+id,function(response) {
@@ -611,6 +640,7 @@ function mostrarAreasME(id, tipo_cliente){
 
 			$.get("/getEquiposForArea/"+id,function(data) {
 				$('#tabla-area-equipo').empty();
+
 				if (tipo_cliente == 'JURIDICO') {
 					fila = '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>AREA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>EQUIPO</b></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>SERIAL</b></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 form-group"><b>PLACA</b></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 form-group"><b>DESCRIPCION</b></div>';
     				$('#tabla-area-equipo').append(fila);
@@ -660,6 +690,25 @@ function getCodigo(nom_consecutivo) {
 
 /* FIN DE FUNCIONES PARA EL MODAL NUEVO ITEM */
 
+//Obtiene los detalles de la factura para la vista EDIT 
+
+function agregarFacturacion(id){
+	$.get("/agregarFacturacion/"+id,function(response) {
+		console.log(response);
+				for (i =0; i<response.length ; i++) {
+					subtotal[cont]=(response[i].cantidad*response[i].valor_unitario);
+					total=total+subtotal[cont];
+					$("#total").val(total);
+					var fila='<tr class="selected" id="fila'+cont+'"><td><input type="text" name="id[]" value="'+response[i].id_detalle_cotizacion+'" hidden><button type="button" class="btn btn-danger" onclick="eliminar('+cont+');">X</button></td><td>'+f+'</td><td><input type="number" name="cantidad[]" value="'+response[i].cantidad+'" hidden>'+response[i].cantidad+'</td><td><input type="hidden" name="equipo_id[]" value="'+response[i].id_equipo+'"><input type="hidden" name="area_id[]" value="'+response[i].id_area+'">'+response[i].nom_equipo+' ('+response[i].nombre_area+')</td><td><input type="hidden" name="item_id[]" value="'+response[i].id_item+'">'+response[i].nom_item+'</td><td><input type="text" name="descripcion[]" value="'+response[i].descripcion+'" hidden>'+response[i].descripcion+'</td><td><input type="number" name="valor_unitario[]" value="'+response[i].valor_unitario+'" hidden>'+response[i].valor_unitario+'</td><td><input type="number" name="valor_total[]" value="'+response[i].valor_total+'" hidden>'+response[i].valor_total+'</td></tr>';
+					cont++;
+					f++;
+					limpiar();
+					$("#totalv").html("COP/. "+total);
+					evaluar();
+					$('#detalles_factura').append(fila);
+				}
+			});
+}
 
   $('.verificar').keyup(function(){
     costo = parseInt($('#precio_compra').val());
@@ -673,12 +722,22 @@ function getCodigo(nom_consecutivo) {
     }
   });
 
-  function getCodigoOr() {
-	$.get("/getCodigoOr/",function(response) {
-		console.log(response);
-		$('#cod_orden').val(response.prefijo_doc+' - '+response.num_actual);
-		$('#num_actual_or').val(response.num_actual);
-		$('#id_consecutivo_or').val(response.id_adm_consecutivo);
+    function getCodigoFac() {
+	$.get("/getCodigoFac/",function(response) {
+		$('#cod_factura').val(response.prefijo_doc+' - '+response.num_actual);
+		$('#num_actual_fac').val(response.num_actual);
+		$('#id_consecutivo_fac').val(response.id_adm_consecutivo);
 
 	});
+}
+
+function getClientes(){
+	$.get("/getClientes/",function(response) {
+				$("#clientes_id").empty();
+				$("#clientes_id").append('<option value="">SELECCIONE UN CLIENTE</option>');
+				for (i =0; i<response.length ; i++) {
+					$("#clientes_id").append('<option value="'+response[i].id+'">'+response[i].nom_cliente+'</option>');
+					$('#clientes_id').selectpicker('refresh');
+				}
+			});
 }
