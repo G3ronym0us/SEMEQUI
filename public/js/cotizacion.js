@@ -436,23 +436,43 @@ function getCodigoCliente() {
 	});
 }
 
+$('#id_departamento').on('change',function(){
+		$("#id_municipio").empty();
+      id = $('#id_departamento').val();
+      getMunicipio(id);
+        });
+
+//Funcion que carga los departamentos en el modal NUEVO CLIENTE
 function getDepartamentos(){
   $.get("/getDepartamentos/",function(response) {
+  	id_mun = null;
     for (i =0; i<response.length ; i++) {
-      $("#id_departamento").append('<option value="'+response[i].id+'">'+response[i].nom_departamento+'</option>');
-      if (i == 0) {
-      	getMunicipio(response[i].id);
-      }
+    	if(response[i].nom_departamento == 'NARIÑO'){
+    		$("#id_departamento").append('<option value="'+response[i].id+'" selected>'+response[i].nom_departamento+'</option>');
+    		id_mun = response[i].id;
+    	}else{
+    		$("#id_departamento").append('<option value="'+response[i].id+'">'+response[i].nom_departamento+'</option>');
+    	}
+      
       
     }
+      if (id_mun) {
+      	getMunicipio(id_mun);
+      }
   });
 }
 
+//Funcion que carga los municipios en el modal NUEVO CLIENTE
 function getMunicipio(id){
+    
   $.get("/getMunicipios/"+id,function(response) {
-    $("#id_municipio").empty();
     for (i =0; i<response.length ; i++) {
-      $("#id_municipio").append('<option value="'+response[i].id+'">'+response[i].nom_municipio+'</option>');
+    	if(response[i].nom_municipio == 'PASTO'){
+    		$("#id_municipio").append('<option value="'+response[i].id+'" selected>'+response[i].nom_municipio+'</option>');
+    	}else{
+    		$("#id_municipio").append('<option value="'+response[i].id+'">'+response[i].nom_municipio+'</option>');
+    	}
+      
     }
   });
 }

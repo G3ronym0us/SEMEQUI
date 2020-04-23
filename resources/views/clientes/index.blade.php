@@ -19,7 +19,11 @@
   		<span class="text-danger">*</span><label>DEPARTAMENTO:</label>
   		<select name="id_departamento"  id="id_departamento" class="form-control bg-info text-white selectpicker" data-live-search="true">
         @foreach($departamentos as $d)
-          <option value="{{ $d->id }}">{{ $d->nom_departamento }}</option>
+          @if($d->nom_departamento == 'NARIÑO')
+            <option value="{{ $d->id }}" selected>{{ $d->nom_departamento }}</option>
+          @else
+            <option value="{{ $d->id }}">{{ $d->nom_departamento }}</option>
+          @endif
         @endforeach  
       </select>
   	</div>

@@ -17,7 +17,7 @@
   					<input type="text" class="form-control bg-info text-white" name="detalles[]" value="null" hidden>	
   					@foreach($detalles as $det)
   							<input type="checkbox" class="cajas" name="detalles[]" value="{{$det->id}}"  checked="true">
-  							<label>{{ $det->cantidad.' '.$det->nom_item.' - '.$det->nom_equipo.' / $'.number_format($det->valor_total, 2,'.',',') }}</label>
+  							<label>{{ $det->cantidad.' '.$det->nom_item.' - '.$det->nom_equipo.' / $ '.number_format($det->valor_total, 2,'.',',') }}</label>
   							<div class="observaciones" id="obs_{{$det->id}}">
   								<input type="text" class="form-control bg-info text-white" name="id_detalle[]" value="{{$det->id}}" hidden>	
   								<input type="text" class="form-control bg-info text-white" name="observaciones[]" >

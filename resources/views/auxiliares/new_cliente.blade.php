@@ -39,12 +39,12 @@
 			    	</div>
 			    	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
 				  		<span class="text-danger">*</span><label>DEPARTAMENTO:</label>
-				  		<select name="id_departamento"  id="id_departamento" class="form-control bg-info text-white">
+				  		<select name="id_departamento"  id="id_departamento" class="form-control bg-info text-white" title="SELECCIONE UN DEPARTAMENTO">
 				      	</select>
 				  	</div>
 				  	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 form-group">
 				  		<span class="text-danger">*</span><label>MUNICIPIO:</label>
-				  		<select name="id_municipio" id="id_municipio" class="form-control bg-info text-white">
+				  		<select name="id_municipio" id="id_municipio" class="form-control bg-info text-white" title="SELECCIONE UN MUNICIPIO">
 				     	</select>
 				  	</div>
 
