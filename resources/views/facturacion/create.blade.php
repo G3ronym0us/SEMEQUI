@@ -141,7 +141,7 @@
             <tfoot>
 				<th colspan="7">TOTAL</th>
 
-				<th><H4 id="totalv">COP/. 0.00</H4></th>
+				<th nowrap><H4 id="totalv">COP/. 0.00</H4></th>
 			</tfoot>
         </table>
     </div>

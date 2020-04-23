@@ -375,7 +375,7 @@ function evaluar(){
 function eliminar(index)
 {
 	total=total-subtotal[index];
-	$('#totalv').html("Bs/. "+total);
+	$('#totalv').html("COP/. "+total);
 	$('#fila'+index).remove();
 	evaluar();
 }
