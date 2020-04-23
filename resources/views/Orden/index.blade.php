@@ -33,8 +33,8 @@
                     <td>{{$orden->created_at}}</td>
                     <td>{{$orden->total}}</td>
                     <td>{{$orden->estado}}</td>
-                    <td>
-                      <div style="white-space:nowrap;">
+                    <td nowrap>
+                      
                         <a href="{{url('imprimir/orden_servicio/'.$orden->id)}}" target="_blank" data-toggle="tooltip" data-placement="top" title="IMPRIMIR"><button type="button" id="modal_mostrar" class="btn btn-info"><i class="fa fa-print" aria-hidden="true"></i></button></a>
                         @if($orden->estado == 'PENDIENTE')
                           <a href="{{url('operacion/orden_servicio/'.$orden->id.'/edit')}}" data-toggle="tooltip" data-placement="top" title="EDITAR"><button type="button" id="modal_editar" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
@@ -45,8 +45,7 @@
                         @if(Auth::user()->rol == 'ADMINISTRADOR')
                           <span data-toggle="tooltip" data-placement="top" title="ELIMINAR"><button type="button" id="modal_eliminar" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-{{$orden->id}}"><i class="fa fa-trash-o" aria-hidden="true"></i></button></span>
                         @endif
-                      </div>
-                        
+                                              
                     </td>
                 </tr>
                 <?php
