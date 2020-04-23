@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-
+	$('span.number').number( true, 2 );
 	$('#btn_asignar_areas').hide();
 	$('#btn_asignar_equipos').hide();
 	$("#btn_guardar_cotizacion").hide();

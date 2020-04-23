@@ -30,7 +30,7 @@
                     <td>{{$factura->nom_cliente}}</td>
                     <td>{{$factura->created_at}}</td>
                     <td>{{$factura->estado}}</td>
-                    <td class="text-right">$ {{$factura->total}}</td>
+                    <td class="text-right">$ <span class="number">{{$factura->total}}</span></td>
                     <td nowrap>
                         <a href="{{url('imprimir/facturacion/'.$factura->id_facturacion)}}" target="_blank" data-toggle="tooltip" data-placement="top" title="IMPRIMIR"><button type="button" id="modal_mostrar" class="btn btn-info"><i class="fa fa-print" aria-hidden="true"></i></button></a>
                         <a href="{{url('facturacion/facturacion/'.$factura->id_facturacion.'/edit')}}" data-toggle="tooltip" data-placement="top" title="EDITAR"><button type="button" id="modal_editar" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
@@ -55,6 +55,7 @@
 
     <script type="text/javascript">
   $(document).ready(function() {
+    $('span.number').number( true, 2 );
       $('#facturas').DataTable({
         language: {
           info: "_TOTAL_ REGISTROS",

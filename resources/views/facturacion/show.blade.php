@@ -145,8 +145,8 @@
                         <td class="bordered col_item text-center w-8">{{ $det->cantidad }}</td>
                         <td class="bordered col_equipo text-left w-23">{{ $det->nom_item }}</td>
                         <td class="bordered col_v_unitario text-left w-35">{{ $det->nombre_area.' - '.$det->nom_equipo }}</td>
-                        <td class="bordered col_v_unitario text-right w-15">$ {{ $det->valor_unitario }}</td>
-                        <td class="bordered col_v_unitario text-right w-15">$ {{ $det->valor_total }}</td>
+                        <td class="bordered col_v_unitario text-right w-15">$ {{ number_format($det->valor_unitario, 2,'.',',') }}</td>
+                        <td class="bordered col_v_unitario text-right w-15">$ {{ number_format($det->valor_total, 2,'.',',') }}</td>
                     </tr>
                     <?php $c++ ?>
                 @endforeach
@@ -155,7 +155,7 @@
                 <tr>
                     <th colspan="4"></th>
                     <th class="bordered">TOTAL</th>
-                    <th class="bordered text-right">$ {{$factura->total}}</th>
+                    <th class="bordered text-right">$ {{ number_format($factura->total, 2,'.',',') }}</th>
                 </tr>
             </tfoot>
         </table>

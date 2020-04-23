@@ -81,8 +81,8 @@
         @endif
           <td>{{$item->cod_item}}</td>
           <td>{{$item->nom_item}}</td>
-          <td>{{$item->precio_compra}}</td>
-          <td>{{$item->precio_venta}}</td>
+          <td class="text-right">$ {{ number_format($item->precio_compra, 2,',','.') }}</td>
+          <td class="text-right">$ {{ number_format($item->precio_venta, 2,',','.') }}</td>
           @if($item->servicio == true)
             <td>SERVICIO</td>
           @else

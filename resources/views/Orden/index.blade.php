@@ -31,7 +31,7 @@
                     <td>{{$orden->nom_cliente}}</td>
                     <td>{{$orden->name}}</td>
                     <td>{{$orden->created_at}}</td>
-                    <td>{{$orden->total}}</td>
+                    <td class="text-right">$ <span class="number">{{ $orden->total}}</span></td>
                     <td>{{$orden->estado}}</td>
                     <td nowrap>
                       
@@ -75,6 +75,7 @@
 
     <script type="text/javascript">
   $(document).ready(function() {
+    $('span.number').number( true, 2 );
       $('#orden_tabla').DataTable({
         language: {
           info: "_TOTAL_ REGISTROS",

@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-
+	$('span.number').number( true, 2 );
 	// EVENTOS INICIADOS AL CARGAR LA PAGINA
 	$('#btn_asignar_areas').hide();
 	$('#btn_asignar_equipo').hide();	

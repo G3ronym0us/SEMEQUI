@@ -32,7 +32,7 @@
                     <td>{{$cotizacion->cod_cotizacion}}</td>
                     <td>{{$cotizacion->nom_cliente}}</td>
                     <td>{{$cotizacion->created_at}}</td>
-                    <td>{{$cotizacion->total}}</td>
+                    <td class="text-right">$ <span class="number">{{ $cotizacion->total }}</span></td>
                     <td>{{$cotizacion->estado}}</td>
                     <td>
                         <a href="{{url('imprimir/cotizacion/'.$cotizacion->id_cotizacion)}}" target="_blank" data-toggle="tooltip" data-placement="top" title="IMPRIMIR"><button type="button" id="modal_mostrar" class="btn btn-info"><i class="fa fa-print" aria-hidden="true"></i></button></a>
@@ -62,6 +62,8 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+      $('span.number').number( true, 2 );
+
       $('#cotizacion_table').DataTable({
         language: {
           info: "_TOTAL_ REGISTROS",

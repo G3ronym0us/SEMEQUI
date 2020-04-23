@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-	
+	$('span.number').number( true, 2 );
 	$('#btn_asignar_areas').hide();
 	$('#btn_asignar_equipo').hide();
 	$("#cantidad").val(1);
