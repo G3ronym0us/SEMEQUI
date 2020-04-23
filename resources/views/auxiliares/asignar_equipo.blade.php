@@ -39,16 +39,6 @@
 			    		<input type="text" name="descripcion" id="descripcion" class="form-control bg-info text-white" >
 			    	</div>
 
-					<div class="col-lg-12 col-md-12 col-sm-12">
-                          <div class="form-group">
-                            <button class="btn btn-success" type="submit" id="btn_asignar_equipo">Guardar</button> 
-                          </div>
-                        </div> 
-              
-
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						
-                    </div>
 
 
   </div>
@@ -57,6 +47,7 @@
 <div class="modal-footer">
 
                 	<button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+                	<button class="btn btn-success" type="submit" id="btn_asignar_equipo">Guardar</button>
                 </div>
                         
                        

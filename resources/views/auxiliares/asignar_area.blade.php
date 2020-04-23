@@ -25,17 +25,14 @@
 			    		<label>NOMBRE</label>
 			    		<input type="text" name="nombre_area_ma" id="nombre_area_ma" onkeyup="mayusculas(this);" class="form-control bg-info text-white" required>
 			    	</div>
-					<div class="col-lg-12 col-md-12 col-sm-12">
-                          <div class="form-group">
-                            <button class="btn btn-success" type="submit">Guardar</button> 
-                          </div>
-                        </div> </div></form>
+					
             
 </div>
 
     <div class="modal-footer">
 
                 	<button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+                	<button class="btn btn-success" type="submit">Guardar</button> 
                 </div>
                         
                        

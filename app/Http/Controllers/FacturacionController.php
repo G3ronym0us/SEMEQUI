@@ -331,4 +331,18 @@ class FacturacionController extends Controller
         
         
     } 
+
+    public function pagarFactura(Request $request){
+
+        $id_facturacion = $request->get('id_facturacion');
+
+        $factura = Facturacion::findOrFail($id_facturacion);
+        $factura->estado = 'PAGADA';
+        $factura->update();
+        
+
+        return Redirect::to('facturacion/facturacion');
+
+
+    }
 }

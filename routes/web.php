@@ -83,6 +83,7 @@ Route::get('/imprimir/cotizacion/{id}', 'GeneradorController@imprimirCotizacion'
 Route::get('/imprimir/orden_servicio/{id}', 'GeneradorController@imprimirOrden');
 Route::get('/imprimir/facturacion/{id}', 'GeneradorController@imprimirFacturacion');
 
+Route::post('/facturacion/pagar/', 'FacturacionController@pagarFactura');
 Route::post('/completar/orden_servicio/', 'OrdenController@completarOrden');
 Route::post('/seguridad/usuarios/cPassword', 'UsersController@cPassword');
 
