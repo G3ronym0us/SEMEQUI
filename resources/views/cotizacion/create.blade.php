@@ -146,7 +146,7 @@
 
 @section('script')
 
-	<script src="http://localhost:8000/js/cotizacion.js"></script>
+	<script src="{{asset('js/cotizacion.js')}}"></script>
     <script>
         function mayusculas(e) {
             e.value = e.value.toUpperCase();

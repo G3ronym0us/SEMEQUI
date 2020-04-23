@@ -176,7 +176,7 @@
 
 @section('script')
 
-	<script src="http://localhost:8000/js/facturacion.js"></script>
+	<script src="{{asset('js/facturacion.js')}}"></script>
     <script>
         function mayusculas(e) {
             e.value = e.value.toUpperCase();
