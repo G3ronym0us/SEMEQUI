@@ -18,7 +18,8 @@ mix.scripts([
 	'resources/js/dataTables.bootstrap4.min.js',
 	'resources/js/bootstrap-select.min.js',
 	'resources/js/jquery.number.min.js',
-	'resources/js/toastr.js'
+	'resources/js/toastr.js',
+	'resources/js/vue.js'
 	], 'public/js/app.js').version();
 
 mix.styles([

@@ -48,7 +48,7 @@
                       
                       <center><h5 style="color: #000;">{{ Auth::user()->name }}</h5></center>
                       <center><small style="color: #000;">{{ Auth::user()->rol }}</small></center>
-                      <center><button data-toggle="modal" data-target="#modal-cambiar-password" class="btn btn-danger"><i class="fa fa-cog" aria-hidden="true"></i> CONTRASEÑA</button></center>
+                      <center><a href="{{url('user/profile')}}"><button class="btn btn-danger"><i class="fa fa-cog" aria-hidden="true"></i>PERFIL</button></a></center>
                     </p>
                   </li>
                   
@@ -271,7 +271,6 @@
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
       <!--Fin-Contenido-->
-      @include('seguridad.usuarios.cambiar_password')
       <footer class="main-footer">
         <div class="pull-right hidden-xs">
           <b>Version</b> 

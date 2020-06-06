@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'HomeController@showDashboard');
 
 Route::get('users', 'UsersController@index');
+Route::get('user/profile', 'UsersController@profile');
 
 Route::get('users-list', 'UsersController@usersList'); 
 

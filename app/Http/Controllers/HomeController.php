@@ -81,7 +81,7 @@ class HomeController extends Controller
         if ($total_pasado->total_f == null) {
             $porcentaje_ventas = 100;
         }else{
-            $porcentaje_ventas = (($total_actual->total_f / $total_pasado->total_f) * 100) - 100;
+            $porcentaje_ventas = (($ventas_actual / $total_pasado->total_f) * 100) - 100;
             if ($porcentaje_ventas > 100) {
                 $porcentaje_ventas = 100;
             }

@@ -136,4 +136,8 @@ class UsersController extends Controller
             return response()->json($result);
 
     }
+
+    public function profile(){
+        return view('seguridad/usuarios/profile');
+    }
 }
